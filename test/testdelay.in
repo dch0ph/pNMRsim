@@ -18,8 +18,8 @@ par {
 
 #delay 10
 #pulseid 5.0 100e3 0
-pulse 10 0e3 0
-#delay 10
+#pulse 10 0e3 0
+delay 10
 #pulseid 5.0 100e3 180
 #delay 10
 store txix
