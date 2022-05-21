@@ -5,13 +5,13 @@ LIBRARIES=-lcmatrix -lrt -lopenblas
 
 # Not generally helpful to include optimisation flags below - optimisation is very time consuming and gains little
 # -O3
-CXXFLAGS= -I../spirit-1.8.5-miniboost -I../libcmatrix/include -msse3 -mfpmath=sse -DNEED_SEPARATE_COUNT_T -std=c++11 -DNMRSIM_USE_CXX11  -Wall -Wno-sign-compare -DLCM_USE_EXTERNAL -DHAVE_SYS_RESOURCE -DHAVE_STRTOK_R -DUSE_LIBCMATRIX -g  -Wall -Wno-sign-compare
+CXXFLAGS= -I../spirit-1.8.5-miniboost -I../../libcmatrix/include -msse3 -mfpmath=sse -DNEED_SEPARATE_COUNT_T -std=c++11 -DNMRSIM_USE_CXX11  -Wall -Wno-sign-compare -DLCM_USE_EXTERNAL -DHAVE_SYS_RESOURCE -DHAVE_STRTOK_R -DUSE_LIBCMATRIX -g  -Wall -Wno-sign-compare
 # -DENABLE_DL -DUSE_MINUIT
 PNMRSIMHOME= ..
 
 #Used automatically by some makes, otherwise need explicit rule below
 COMPILE=$(CXX) $(CXXFLAGS) -c
-LINK= $(CXX) $(CXXFLAGS) -L../libcmatrix/lib
+LINK= $(CXX) $(CXXFLAGS) -L../../libcmatrix/lib
 
 %.o: %.cc
 	$(COMPILE) -o $@ $<
