@@ -1,0 +1,16 @@
+par {
+	variable vert $(1)
+	variable dist 2.5V
+	variable diff (`./calcdrss 2 $dist`-$1)^2
+#	variable diff |10,20|
+#	minimise tolerance 0.1
+	minimise sum
+	minimise precision 1e-8
+	np 1
+}
+initialproc {
+	fill $diff
+}
+finalise {
+	save $(name).fid
+}

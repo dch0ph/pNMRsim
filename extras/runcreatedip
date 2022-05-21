@@ -1,0 +1,30 @@
+#!/bin/sh
+#./createdip HH - 1 1cell 2.5 0 0 0 1.75 0 n H y y E
+#./createdip 2 1 2cells 2.5 0 0 - 0 1.75 0 n y y n
+#./createdip H 1 3cells 2.5 0 0 n H y y E
+#./createdip HH - 1 3cells 2.5 0 0 0 1.75 0 n H n y E
+#./createdip HH 10 1 3cells 2.5 0 0 0 1.75 0 n H n y E
+#./createdip 2 10 1 2cells 2.5 0 0 - 0 1.75 0 n y y n
+#./createdip 2 - 1 2cells 2.5 0 0 - 0 1.75 0 n y y n
+#./createdip 1 1 3cells 2.5 0 0 - n n y
+#./createdip H 2 1cells 0 0 2.5 2cells 2.5 0 0 y -
+#Using mz
+#./createdip 1 2 1cells 0 0 2.5 2cells 2.5 0 0 - n y y n
+#./createdip H 2 2cells 2.5 0 0 2cells 0 0 2.5 n H y y E
+#./createdip H 2 3cells 2.0 0 0 3cells 0 0 3.0 n H y y E
+#./createdip 1 2 1cells 0 0 2.5 3cells 2.5 0 0 - n n n
+#./createdip 2 2 1cells 0 0 0 3cells 2.5 0 0 - 0 0 2.5 n y y y
+#./createdip H 3 2cells 2.5 0 0 2cells 0 0 2.5 3cells 0 2.5 0 n H y y N
+#./createdip 3 120 0 1.75 0 0 0.875 1.51554 0 n y y y
+#./createdip 3 120 1 2cells 0 0 2.5 1.75 0 0 0.875 1.51554 0 n y y y
+#./createdip CHH 1 2 2.5 0 0 0 0.58 0.935 0 0.58 -0.935 n geom2CH2 - y
+#./createdip CHH 1 3 2.5 0 0 0 0.58 0.935 0 0.58 -0.935 n geom3CH2 - y
+#./createdip CHH 1 2 2.5 0 0 0 0.58 0.935 0 0.58 -0.935 n geomCH4 - n 1,2,3,5,6
+#./createdip CHH 1 3 2.5 0 0 0 0.58 0.935 0 0.58 -0.935 n geomCH6 - n 2,3,4,5,6,8,9
+./createdip CHH 1 4 2.5 0 0 0 0.58 0.935 0 0.58 -0.935 n geomCH8 - n 2,3,4,5,6,8,9,11,12
+#./createdip HHC - 0 -1.51554 0.875 0 1.51554 0.875 0 n CH n y E
+#./createdip CHH 021 1 2cells 0 0 2.5  -1.51554 0.875 0 1.51554 0.875 0 y -
+#n y n y
+#./createdip H 2 3cells 2.73 0 0 3cells 0 2.73 0 y -
+# H y y N
+

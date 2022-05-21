@@ -1,0 +1,8 @@
+spinsys {
+	include ../test/geom2.inc
+#	verbose -general
+}
+par {
+	sw 200e3
+	np 16
+}

@@ -1,0 +1,16 @@
+spinsys {
+	proton_frequency 200e6
+	include $1.inc
+}
+par {
+	crystal_file zcw:20
+	sw 250p
+	np 512
+}
+proc {
+	addlb 200 1
+	zerofill 2
+#	save $1_static.fid
+	ft
+	save $1_static.spe
+}

@@ -1,0 +1,19 @@
+"13/8/15  tensorordering; IUPAC nuclear spin properties; save -original; save -reversefrequency\n\
+10/4/15  V as qualifier to ||; tweaks to fitting; initial support for syntax; -test:<optimisation> (experimental); fitmask -reversefrequency; named function arguments\n\
+ 8/8/13  Enhanced matrix output (-structure,-eigenbasis,-statistics); fixes to MPI and propagation edge case; change to coherenceorder\n\
+31/1/13  Better handling of referencing in processing; fixed updating regression associated with smartprop optimisation; MAS timing jitter (experimental)\n\
+ 2/8/12  Better analysis of variable usage; $! variant of $?; restored initialproc; merging of initialproc and proc (mergeprocessing optimisation); fixes / improvements to fitting (optimise block)\n\
+27/3/12  Extended support for spin-order filtering; output of coherence filters extended; fixed phasemodulation bug for poor synchronisation; gcd and lcm; do loop (experimental)\n\
+21/12/11  Improvements to Matlab filename filtering; added precision -complexcompact; fixed various bugs in non-first-order quadrupole treatments; fixed precision problem with include; tolerance -phase; Indicesof; spin-order filtering (experimental)\n\
+29/9/11  Duration of pulse can be specified as list (expanded fulltrans.inc); roman numerals progress counter; significant bug fixes for general RF (not phasemodulation), single gamma angle, sync_ratio, slow gamma angle integration\n\
+20/7/11  Bugfix version, largely correcting regressions in recent versions\n\
+14/6/11  allow p (ppm) to be used more generally; improved sfrq handling; multi-core operation; transpose; switch offset signs; histogram <logfile> -append; (proc) set; bug fixes\n\
+ 6/3/11  smartprop optimisation for prop and propfor; changed syntax for cycled lists; changed syntax for sum arrays (||); code cleanup (fix proc update issue)\n\
+14/11/10  Minor fixes; normalise -area; NMRSIM_FORMAT\n\
+ 1/4/10  Significant fix to detection involving blocked Hermitian operators; gamma_angles included in orientational weighting; improvements/fixes to handling of off-resonance/CW irradiation\n\
+3/12/09  Major fixes to updated RF sequences, multiple Fz blocking, 'c' operator in block-diagonal systems, operator matrices, array on orientation; extension of 'combinepropagators' to PhaseModulation; ftindirect, splitsincos in pNMRproc; more flexible Matlab read; more flexible extract; row-based profiling; -verbose; pulse180 (experimental); putmatrix -full\n\
+ 1/9/09  More robust and informative parsing; several fixes/improvements to pNMRproc; Matlab output more gsim compatible; fit mask; major fix to RF+MAS (w/o PhaseModulation) + minor fixes; replace, switchdefault; removed failed\n\
+ 2/7/09  Fix to transferred quadrupole effects; pNMRproc; modified zerofill; preventoverwrite option; minor fixes\n\
+10/3/09  apply, exchange, timeadjust, matrix set general, setenv, acqn, acqpoint directives; Error function; various fixes/tweaks\n\
+ 7/1/09  Normalise processing directive + normalisation in fitting; restriction of half-integer quadrupoles to central transition; RF with generalised quadrupole treatment *may* now work; -enable:classicQ to force classic qpole treatment for multiple spins; various minor fixes\n\
+...\n";

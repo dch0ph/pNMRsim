@@ -1,0 +1,46 @@
+# Template MAS simulation at 500 MHz
+# Useage: pNMRsim makespec500.in <spinsystemname> <spinning rate / Hz> <linewidth (def=300)/Hz> <sw / spinning rate (def=12)>
+
+spinsys {
+	proton_frequency 500e6
+# include spin system - name shoud be supplied *without* .inc
+	include $1.inc
+}
+par {
+# number of points - this may well beed tweaking, depending on linewidth
+	np 768
+	spin_rate $2
+
+# Default is spectral width = 12 x spinning rate. It would make sense to reduce this if no spinning sidebands are involved
+	variable nsbs $(4?12)
+	sw $spin_rate*$nsbs
+
+# This may need tweaking if $nsbs is low. Good idea to keep at multiple of $nsbs
+	gamma_angles $nsbs
+
+# Decent number of crystallite orientations. This can be optimised using autoopt
+	crystal_file zcw:20
+	variable lw $(3?300)
+
+# Inc means only central transition is detected for quadrupolar nuclei. Switch to Inp to detect all +1 coherences
+# start_operator not strictly required, but prevents warnings
+	start_operator Inx
+	detect_operator Inc
+}
+proc {
+# scale by any multiplicity factors
+	scale $scalefactors
+
+# add Gaussian line-broadening
+	addlb $lw 1
+
+# Uncomment to save FID
+#	save $1.fid
+
+# Zerofill x 4 and FT
+	zerofill 4
+	ft
+
+# Save by default in SIMPSON format. -positivesfrq need for programs like gsim which are upset by -ve Larmor frquencies
+	save $1.spe -positivesfrq $SAVEFLAGS
+}

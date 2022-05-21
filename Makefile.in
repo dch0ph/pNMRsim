@@ -1,0 +1,88 @@
+
+CXX=@CXX@
+
+LIBRARIES=-lcmatrix @LIBS@
+
+# Not generally helpful to include optimisation flags below - optimisation is very time consuming and gains little
+CXXFLAGS=@CPPFLAGS@ @CXXFLAGS@
+
+#Used automatically by some makes, otherwise need explicit rule below
+COMPILE=$(CXX) $(CXXFLAGS) -c
+LINK= $(CXX) $(CXXFLAGS) @LDFLAGS@
+
+%_g.o: %.cc
+	$(COMPILE) -g -o $@ $<
+
+%.o: %.cc
+	$(COMPILE) -DNDEBUG -o $@ $<
+
+%-noexec.o: %.cc
+	$(COMPILE) -DNDEBUG -DDISABLE_EXEC -o $@ $<
+
+programs: pNMRsim pNMRproc
+	(cd extras; make magres2pNMRsim createdip)
+
+#Change name of binary and source code files
+pNMRsim: Action.o Process.o Interaction.o fit.o NMR.o NMR_acq.o NMR_RF.o pNMRsim.o Parser.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o parser_RF.o autoopt.o Looping.o common.o
+	$(LINK) -o $@ pNMRsim.o Action.o Process.o Interaction.o Parser.o NMR.o NMR_acq.o NMR_RF.o fit.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o parser_RF.o autoopt.o Looping.o common.o $(LIBRARIES)
+
+pNMRsimg: Action_g.o Process_g.o Interaction_g.o fit_g.o NMR_g.o NMR_acq_g.o NMR_RF_g.o pNMRsim_g.o Parser_g.o parser_definition_g.o expression_definition_g.o standard_functions_g.o parser_additional_g.o parser_RF_g.o autoopt_g.o Looping_g.o common_g.o
+	$(LINK) -o $@ pNMRsim_g.o Action_g.o Process_g.o Interaction_g.o Parser_g.o NMR_g.o NMR_acq_g.o NMR_RF_g.o fit_g.o parser_definition_g.o expression_definition_g.o standard_functions_g.o parser_additional_g.o parser_RF_g.o autoopt_g.o Looping_g.o common_g.o -lcmatrix-g @LIBS@
+
+pNMRproc: pNMRproc.o Process.o Parser.o parser_definition.o expression_definition.o standard_functions.o Looping.o common.o NMRstub.o NMR_acqstub.o fitstub.o 2Dproc.o
+	$(LINK) -o $@ pNMRproc.o Process.o Parser.o parser_definition.o expression_definition.o standard_functions.o Looping.o common.o NMR_acqstub.o fitstub.o NMRstub.o 2Dproc.o $(LIBRARIES)
+
+stubs: NMR_RFstub.o fitstub.o Loopingstub.o NMR_acqstub.o Actionstub.o NMRstub.o
+
+pNMRsim.o: pNMRsim.cc
+	$(COMPILE) -o $@ $<
+
+#	libtool --mode=link $(LINK) -export-dynamic -o $@ NMRsim.o Action.o Interaction.o Parser.o NMR.o fit.o $(LIBRARIES) @LIBLTDL@
+
+#LIBTOOL_DEPS = @LIBTOOL_DEPS@
+#libtool: $(LIBTOOL_DEPS)
+#	$(SHELL) ./config.status --recheck
+
+#extras.la: extras.cc
+#	libtool --mode=compile $(CXX) $(CXXFLAGS) -c -o extras.lo extras.cc
+#	libtool --mode=link $(CXX) -no-undefined -avoid-version -export-dynamic -module $(CXXFLAGS) -o extras.la extras.lo
+
+VERSION=V150813
+ARCH=linux64
+TOTALVERSION=$(ARCH)_$(VERSION)
+
+binaryarchive: programs
+	strip pNMRsim@EXEEXT@ pNMRproc@EXEEXT@ extras/magres2pNMRsim@EXEEXT@ 
+	-rm -rf ../pNMRsim_$(TOTALVERSION)
+	mkdir ../pNMRsim_$(TOTALVERSION)
+	mkdir ../pNMRsim_$(TOTALVERSION)/extras	
+	cp -r pNMRsim@EXEEXT@ pNMRproc@EXEEXT@ test ../pNMRsim_$(TOTALVERSION)
+	cp -r extras/magres2pNMRsim@EXEEXT@ extras/*.inc extras/*.sed extras/*.py ../pNMRsim_$(TOTALVERSION)/extras
+	rm -f ../pNMRsim_$(TOTALVERSION)/*/*~
+# tar.gz option
+	cd ..; tar cf pNMRsim_binaries_$(TOTALVERSION).tar pNMRsim_$(TOTALVERSION)
+	gzip -f ../pNMRsim_binaries_$(TOTALVERSION).tar
+# zip version
+#	cd ..; zip -r pNMRsim_binaries_$(TOTALVERSION).zip pNMRsim_$(TOTALVERSION)
+
+spirittest: spirittest.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o
+	$(LINK) -o $@ spirittest.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o $(LIBRARIES)
+
+ptrans: ptrans.o Parser.o Action-noexec.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o NMR-noexec.o
+	$(LINK) -o $@ ptrans.o Parser.o NMR-noexec.o Action-noexec.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o $(LIBRARIES)
+
+archive: distclean
+	cd .. ; tar --exclude=*~ --exclude config.status --exclude Makefile -cvf pNMRsim_source_$(VERSION).tar pNMRsim
+	gzip -f ../pNMRsim_source_$(VERSION).tar
+
+html:
+	(cd docs; doxygen)
+	tar -cvf ../pNMRsim_html.tar docs/html
+	gzip -f ../pNMRsim_html.tar
+
+clean:
+	(cd extras; make clean)
+	-rm *.o *.exe extras/*.o extras/*.exe *.fid *.spe *.mat test/*.stackdump test/*.spe test/*.fid test/*log test/*_SIMPSON.in test/*_NOPER.in test/*_XTAL.in *.stackdump .make.state pNMRsim pNMRproc pNMRsimg
+
+distclean: clean
+	-rm -rf *.cache *.log docs/html

@@ -1,0 +1,23 @@
+REMARK  99 Created by crys_dip from GDIS_CSD_CIF_GLYCIN15_3x3x3.pdb
+REMARK  99 Starting from C2
+REMARK  99 Selecting C2,H*
+REMARK  99 Atom C2 is 0 A from origin
+REMARK  99 Atom H4 is 1.1028 A from origin
+REMARK  99 Atom H5 is 1.1043 A from origin
+REMARK  99 Atom H2 is 2.0723 A from origin
+REMARK  99 Atom H3 is 2.1032 A from origin
+REMARK  99 Atom H1 is 2.1228 A from origin
+REMARK  99 Atom H7 is 2.9148 A from origin
+REMARK  99 Atom H10 is 3.0613 A from origin
+REMARK  99 Atom H15 is 3.2123 A from origin
+REMARK  99 Atom H8 is 3.461 A from origin
+HETATM    1 C2   UNK 0   0       0.000   0.000   0.000  1.00  0.00
+HETATM    2 H4   UNK 0   0       0.805   0.637   0.403  1.00  0.00
+HETATM    3 H5   UNK 0   0       0.244  -1.053   0.226  1.00  0.00
+HETATM    4 H2   UNK 0   0      -1.518   1.338   0.447  1.00  0.00
+HETATM    5 H3   UNK 0   0      -2.051  -0.285   0.368  1.00  0.00
+HETATM    6 H1   UNK 0   0      -1.191   0.266   1.737  1.00  0.00
+HETATM    7 H7   UNK 0   0       2.446   0.775  -1.383  1.00  0.00
+HETATM    8 H10  UNK 0   0       0.112  -2.605  -1.604  1.00  0.00
+HETATM    9 H15  UNK 0   0       1.522  -1.943   2.056  1.00  0.00
+HETATM   10 H8   UNK 0   0      -2.928   1.126  -1.462  1.00  0.00

@@ -1,0 +1,23 @@
+REMARK  99 Created by crys_dip from GLYCIN15_geomopt.pdb
+REMARK  99 Starting from C2
+REMARK  99 Selecting C2,H*
+REMARK  99 Atom C2 is 0 A from origin
+REMARK  99 Atom H4 is 1.096 A from origin
+REMARK  99 Atom H5 is 1.0967 A from origin
+REMARK  99 Atom H2 is 2.0664 A from origin
+REMARK  99 Atom H3 is 2.1029 A from origin
+REMARK  99 Atom H1 is 2.1349 A from origin
+REMARK  99 Atom H2 is 2.915 A from origin
+REMARK  99 Atom H1 is 3.584 A from origin
+REMARK  99 Atom H4 is 3.7039 A from origin
+REMARK  99 Atom H4 is 3.9293 A from origin
+HETATM    1 C2   UNK 0   1       0.000   0.000   0.000  1.00  0.00
+HETATM    2 H4   UNK 0   1       0.796   0.634   0.407  1.00  0.00
+HETATM    3 H5   UNK 0   1       0.238  -1.046   0.228  1.00  0.00
+HETATM    4 H2   UNK 0   1      -1.510   1.340   0.441  1.00  0.00
+HETATM    5 H3   UNK 0   1      -2.051  -0.283   0.368  1.00  0.00
+HETATM    6 H1   UNK 0   1      -1.196   0.268   1.748  1.00  0.00
+HETATM    7 H2   UNK 0   2       2.440   0.782  -1.390  1.00  0.00
+HETATM    8 H1   UNK 0   2       3.211   1.590  -0.082  1.00  0.00
+HETATM    9 H4   UNK 0   3      -0.816   2.837   2.237  1.00  0.00
+HETATM   10 H4   UNK 0   2       1.898   3.132  -1.424  1.00  0.00

@@ -1,0 +1,4 @@
+#!/bin/sh
+# use createdip to calculate drss for a 2 spin unit cell
+./createdip 1H,1H 1 $1 $2 0 0 0 1.75 0 - - junk - n - | grep 'without ang' | awk '{print $9}'
+

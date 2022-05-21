@@ -1,0 +1,17 @@
+spinsys {
+	proton_frequency 200e6
+	include F3.inc
+}
+par {
+	spin_rate 9e3
+	crystal_file zcw:8
+	gamma_angles 8
+	sw $gamma_angles*$spin_rate
+	np 1024
+}
+proc {
+	zerofill 2
+	addlb 50 1
+	ft
+	save $(name).spe
+}
