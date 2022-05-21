@@ -1,0 +1,42 @@
+spinsys {
+#include geom$1.inc
+nuclei 13C 1H
+dipole 1 2 -10e3 0 0 0
+channels 13C 1H
+}
+
+par {
+#     verbose
+     start_operator   1H:x
+     detect_operator  13C:x
+#     crystal_file  beta30 -hemisphere
+     crystal_file zcw10
+     gamma_angles 16
+     spin_rate 8e3
+     np 64
+     sw 16*$spin_rate
+
+     variable sb_order -1
+     variable rfC 100e3
+     variable rfH {90e3:1e3:100e3} 
+# ($sb_order*$spin_rate)/sqrt(2)+$rfC
+
+	variable offset $rfH/sqrt(2)
+
+#     pulse 0.5e6/$sw $rfC 0 $rfH 0
+     pulse 1e6 $rfC 0 0 $rfH 0 $offset -coherent
+     store cp
+
+	variable ma (54.7e6)/(360*$rfH)
+	pulse $ma 0 0 $rfH -y 
+	store magic
+}
+
+pulseq {
+	prop magic
+	acq 0 cp
+}
+
+proc {
+   save $(name).fid
+}

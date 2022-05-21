@@ -1,0 +1,29 @@
+spinsys {
+#	verbose -parse
+#	cells 2
+	nuclei 13C 1H 1H
+	channels 1H
+	dipole 2 3 20e3
+#	shift 1 0
+}
+par {
+	sw 1000
+	pulseid 4 50e3 y
+	store 90pulse
+	np 256
+	start_operator 13C:x
+	detect_operator 13C:+
+#	matrix set plus1 coherenceorder [-1,1]
+	matrix set Cplus1 coherenceorder Indicesof('13C') 1
+}
+pulseq {
+#	putmatrix plus1
+	putmatrix Cplus1
+#	prop 90pulse
+	echo Before filter
+	putmatrix density
+	putmatrix density -full
+	putmatrix density -statistics Indicesof() Cplus1
+	echo After coherence filter
+	putmatrix density
+}

@@ -1,0 +1,47 @@
+spinsys {
+#include system1.in
+nuclei 13C 1H
+dipole 1 2 -10e3 0 0 0
+channels 13C 1H
+}
+
+par {
+#     verbose -general
+	precision 4
+     start_operator   1H:x
+     detect_operator  13C:+
+#     crystal_file  beta30 -hemisphere
+     crystal_file 3zcw49
+#     gamma_angles 8
+     spin_rate 8e3
+	n1 16
+     np 512
+	sw1 64*$spin_rate
+     sw 8*$spin_rate
+#     maxdt 1.0
+
+     variable sb_order -1
+     variable rfC 100e3
+     variable rfH $sb_order*$spin_rate+$rfC
+
+#     pulse 0.5e6/$sw $rfC 0 $rfH 0
+     pulse 1e6 $rfC 0 $rfH 0
+     store cp
+
+	pulse 1e6 0 0 $rfH 0
+	store CW
+}
+
+pulseq {
+	acq cp
+	acq 0 CW
+}
+
+proc {
+   addlb 50
+   save $(name).fid
+	zerofill 2
+	ft
+	extract 513
+  save $(name).spe
+}

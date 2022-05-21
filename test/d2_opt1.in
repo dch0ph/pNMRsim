@@ -1,0 +1,23 @@
+spinsys {
+	nuclei 2H
+	quadrupole 1 1 15e3V 0.9V 30 30 30
+}
+
+par {
+	fit exp d2_right.spe
+#	fit noiselevel 0.02
+	verbose -optimise -profile
+	histogram
+	start_operator  Fx
+	detect_operator Fp
+	crystal_file    zcw10
+	spin_rate 	1e3
+	gamma_angles	50
+	sw		50e3
+	np		$sw/$spin_rate
+}
+
+proc {
+    scale 12e3V
+    save $(name).spe
+}

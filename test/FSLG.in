@@ -1,0 +1,57 @@
+spinsys {
+#    include geom93D.inc
+	nuclei 1H
+    channels 1H
+    shift 1 1000
+#    shift 2 1000
+#    shift 3 1000
+}
+
+FSLGelement {
+pulse $tau_lg $rf_real $LGphase $off -coherent
+pulse $tau_lg $rf_real 180+$LGphase -$off -coherent
+}
+
+par {
+     start_operator   Fy
+     detect_operator  Fp
+#     crystal_file     zcw5
+     gamma_angles 10
+     np   2048
+     verbose -general
+
+#**************************************User defined variables
+     variable rf_nom 100e3
+     variable fraction {0.86,0.88,0.9,0.92}
+     variable rf_real $fraction*$rf_nom
+     variable LGphase 0
+     variable perT2 1
+     variable SwSrRatio 5
+
+#*********************************************auto variables
+        variable tau_lg 0.81649658e6/$rf_nom
+	echo tau_lg $tau_lg
+	variable off $rf_nom/1.4142
+
+     sw 1e6/(2*$tau_lg*$perT2)
+     echo sw $sw
+     spin_rate $sw/$SwSrRatio
+
+pulseid 1.52 100e3 90
+#delay $tau_win
+pulse $tau_lg $rf_real $LGphase $off -coherent
+pulse $tau_lg $rf_real 180+$LGphase -$off -coherent
+#include FSLGelement [1:$perT2]
+#delay $tau_win
+pulseid 1.52 100e3 270
+store FSLG
+
+}
+
+pulseq {
+     acq 0 FSLG
+}
+
+proc {
+    save $(name).fid
+}

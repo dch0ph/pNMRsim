@@ -1,0 +1,31 @@
+spinsys {
+	nuclei 1H 1H
+	shift 1 0 3e3 0.2
+	shift 2 0 2e3 0.5
+}
+par {
+	ni 64 2
+	np 256
+
+	sw 10e3
+	sw1 10e3	
+
+	crystal_file zcw:16
+
+	start_operator I1x
+	detect_operator I2+
+	
+	matrix set statesdetect {I1x,I1y}
+}
+pulseq {
+	acq
+	transfer statesdetect I2x
+	acq 0
+}
+proc {
+	addlb 150 0 250 0
+	save $(name)td -matlab -scale
+	ft2d
+	save $(name)fd -matlab -scale
+}
+

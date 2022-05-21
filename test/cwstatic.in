@@ -1,0 +1,34 @@
+#CW decoupling
+spinsys {
+#	verbose
+	include geom$1.inc
+	channels 1H
+}
+par {
+	variable spin_rate 30.03e3
+	crystal_file single 20 30 40
+# zcw20 -hemisphere
+	np 2048
+#	gamma_angles 8
+	sw 8*$Xspin_rate
+	start_operator 13C:x
+	detect_operator 13C:p
+
+#	verbose
+	variable vrf 150e3
+	
+	pulse 1e6 $vrf x
+	store CW
+
+}
+pulseq {
+	acq 0 CW
+}
+proc {
+	save $(name)$1.fid
+	addlb 50 0
+	zerofill 2
+	ft
+	save $(name)$1.spe
+}
+

@@ -1,0 +1,45 @@
+
+spinsys {
+	nuclei 13C
+	channels
+##DELETENEXT
+	proton_frequency 500e6
+	shift 1 0p 100p 0.5 0 0 0
+}
+	
+par {
+##INSERT proton_frequency 500e6
+	method gcompute
+#	fit exp CSAexp.spe
+#	fit normalise
+	np 1024
+#	fit mask [0.25*$np:0.75*$np]
+#	fit tolerance 1e-3
+#	fit iterations 4
+#	fit interactive
+	start_operator Inx
+	detect_operator Inp
+	crystal_file zcw20
+	gamma_angles 16
+#	include optopt 'gamma_angles' 2 $(1?)
+#	include optopt 'powderquality' 3 $(2?)
+	spin_rate 4000
+	sw 64000
+}
+
+proc {
+	save $(name).fid
+#	save fred -ascii -nodata -parameters
+#	scale $scale
+	zerofill 4096
+	addlb 100 0.5
+	ft
+	save $(name).spe
+}
+
+#finalise {
+#	save $(name).spe -source
+#	fit statistics -release_constraints
+#	save fredfinal -ascii -nodata -parameters
+#	$(1?:save "" autoopt_results -nodata -ascii)
+#}

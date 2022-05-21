@@ -1,0 +1,89 @@
+
+##title:<i>Simulation (time domain) of <sup>13</sup>C CSA powder pattern under MAS (full spectrum)</i>
+##title:<b>Hints:</b> Use slightly underestimated value for the linewidth to avoid possible truncation effect.
+##title:Steps in gamma angle integration (GAMMA_ANGLES) should be >= number of spinning sidebands
+##title:and be a multiple of "number of observations" (check for warning in pNMRsim log)
+
+##par:CSHIFT;1000.0;variable;Isotropic shift (Hz)
+##par:ANISO;10000.0;variable;Anisotropy (Hz)
+##par:ASYM;0.1;variable;Asymetry
+##par:SCALE;2.0;variable;Spectrum vertical scale
+##par:LB;300.0;variable;Line broadening (Hz)
+##par:GL;0.999;variable;Guassian/Lorentzian fraction
+##par:SPINRATE;-;variable;MAS rate (Hz)
+##par:OFFSET;0;variable;DC offset
+##par:CUSTOM1;0;variable;Custom parameter 1
+##par:CUSTOM2;0;variable;Custom parameter 2
+##par:NOISELEVEL;0;fixed;noise level
+##par:TOLERANCE;1e-4;fixed;fitting tolerance
+##par:MASK; ;fixed;fit mask
+##par:FREQ;500.0;fixed;Proton frequency (MHz)
+##par:CRYSFILE;zcw:8;fixed;Crystal file
+##par:GAMMA_ANGLES;8;fixed;No. of gamma steps
+##par:SW;-;fixed;Spectrum width (Hz)
+##par:NP;-;fixed;Number of points in FID
+##par:REF;-;fixed;Reference shift (Hz)
+
+function min extract(#1,head(sortindex(#1))) L
+$(CUSTOM1! variable custom1 $CUSTOM1:)
+$(CUSTOM2! variable custom2 $CUSTOM2:)
+
+spinsys {
+        proton_frequency $FREQ*1e6
+    	nuclei 13C
+	variable rawshift |$CSHIFT|
+	shift 1 $rawshift-$REF |$ANISO| |$ASYM| 0 0 0
+}
+
+par {
+    $(FNAME? fit exp $FNAME:)
+    $(FNAME? fit method -real:)
+	fit tolerance $TOLERANCE
+	fit noiselevel $NOISELEVEL
+	$(FNAME? fit mask $MASK:)
+    verbose -optimise
+    start_operator   Inx
+    detect_operator  Inp
+    crystal_file $CRYSFILE
+    spin_rate $SPINRATE
+    variable expsw $SW
+    variable lb |$LB|
+#minimul value of the linebroadening taken from above
+    variable minlb min(Valuesof('lb'))
+    variable expnp $NP
+	gamma_angles $GAMMA_ANGLES
+#experimental dwell time
+    variable expdw 1.0/$expsw
+#factor shows what portion of spinning rate is the dwell time of simulation
+    variable factor ceil(1/$spin_rate/$expdw)+1
+#simulated dwell time
+    variable simdw 1/$spin_rate/$factor
+    echo expdw: $expdw s  factor: $factor  simdw: $simdw s
+#simulated sw
+    sw 1/$simdw
+    echo Simulated sw $sw
+
+#compute the number of points needed to avoid truncations
+    np ceil(5/$minlb/$expdw)
+#    echo np $np
+    echo $(name)
+}
+
+initialproc {
+    scale |$SCALE|
+    addlb $lb |$GL|
+}
+
+proc {
+	zerofill 2
+	save $(name).fid
+    ft
+    resample $expnp $expsw 0.0
+	offset $OFFSET
+}
+finalise {
+    save $(name).spe -source
+	fit statistics -release_constraints
+	save $(name) -ascii -nodata -parameters
+}
+

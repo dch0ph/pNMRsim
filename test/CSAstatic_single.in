@@ -1,0 +1,35 @@
+
+spinsys {
+    nuclei 13C
+	channels
+##DELETENEXT
+    proton_frequency 500e6
+    shift 1 10p 50p 0.6 20 80 60
+}
+
+##INSERT proc pulseq {} {
+##INSERT 	global par
+##INSERT 
+##INSERT 	delay [expr 1e6/$par(sw)]
+##INSERT 	store 1
+##INSERT 
+##INSERT 	reset
+##INSERT 	acq $par(np) 1
+##INSERT }
+
+par {
+##INSERT proton_frequency 500e6
+     start_operator   I1x
+    detect_operator  I1p
+     crystal_file     singleorient
+     np   128
+     sw 30000
+}
+
+proc {
+    addlb 300 0
+	save $(name).fid
+
+    ft
+    save $(name).spe
+}

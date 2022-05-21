@@ -1,0 +1,29 @@
+
+spinsys {
+    nuclei 13C
+	channels
+##DELETENEXT
+    proton_frequency 500e6
+    shift 1 10p 50p 0.6 0 0 0
+}
+
+par {
+##INSERT proton_frequency 500e6
+	method gcompute
+     start_operator   I1x
+    detect_operator  I1p
+     crystal_file     zcw376
+     spin_rate        200
+     gamma_angles 200
+     np   2048
+#	    verbose
+     sw 40000
+}
+
+proc {
+	zerofill 8192
+    addlb 80 0.5
+	save $(name).fid
+    ft
+    save $(name).spe
+}

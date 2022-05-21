@@ -1,0 +1,66 @@
+spinsys {
+	nuclei 2H
+	channels 2H
+#	shift 1 1.5e3
+	quadrupole 1 1 20e3 0 0 60 0
+}
+par {
+	sw 10e3
+	start_operator Fz
+	detect_operator F+
+	variable tex 1
+	variable ph1 {0,90,180,270}
+	variable ph5 {0,0,0,0}
+#,90,90,90,90,180,180,180,180,270,270,270,270}
+	variable detect {90,270,90,270}
+#,180,0,180,0,270,90,270,90,0,180,0,180}
+
+	pulse 50 5e3 0
+	store pulse90x
+	
+	filter DQ [2,-2]
+	filter ZQ [0]
+#	filter SQ [1,-1]
+
+	variable t1 10
+	variable tmix 0
+#{0:2:10}
+
+	np 512
+#	verbose -general
+}
+
+pulseq {
+#	prop pulse90x+$ph1
+#	putmatrix density
+#	propfor $tex
+#	putmatrix density
+#	prop pulse90x+$ph1
+#	putmatrix density
+#	filter DQ
+#	putmatrix density
+#	propfor $t1
+#	putmatrix density
+	prop pulse90x
+#	putmatrix density
+	propfor $tex
+#	putmatrix density
+	prop pulse90x
+	filter ZQ
+#	putmatrix density
+	propfor $tmix
+	prop pulse90x+$ph5
+#	filter SQ
+#	putmatrix density
+	acq $detect
+}
+
+proc {
+	addlb 50
+#	save $(name).fid
+	zerofill 2
+	ft
+	save $(name).spe -sum
+}
+
+

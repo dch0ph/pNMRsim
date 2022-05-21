@@ -1,0 +1,11 @@
+spinsys {
+	nuclei 1H
+	proton_frequency $NMRFREQ
+	shift $(CS1_ISO?fred) $CS1_ANISO () $CS1_ASYM
+}
+par {
+	spin_rate $SPIN_RATE
+	gamma_angles 16
+}
+	
+	

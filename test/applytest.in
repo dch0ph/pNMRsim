@@ -1,0 +1,11 @@
+par {
+	np 256
+	sw 1000
+	verbose -general
+	function subtract #1-#2
+}
+proc {
+	addsignals 0 1 0
+	apply subtract 3 10 -complexpair
+	save $(name).fid
+}

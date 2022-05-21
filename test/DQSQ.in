@@ -1,0 +1,56 @@
+# DQ/SQ correlation
+spinsys {
+	nuclei 1H 1H
+	channels 1H
+	dipole 1 2 -10000 0 0 0
+}
+include POSTC7.inc
+par {
+#	verbose
+	spin_rate 12e3
+	gamma_angles 8
+	precision 4
+	sw 8*$spin_rate
+	maxdt 1
+	np 256
+#	histogram -
+	start_operator Inz
+	detect_operator Inp
+	variable N 1
+	crystal_file single 20 30 0
+
+	variable vrf 7*$spin_rate
+#	variable vrf 56e3
+
+	variable DQ {90,180,270,0}
+#	variable DQ 0
+	variable tau90 0.25e6/$vrf
+
+# POST-C7 element
+#	pulse 8*$tau90 $vrf 0
+#	pulse 8*$tau90 $vrf 51.4286
+	include C7 $tau90 $vrf 0
+	store recouple
+
+#z filter delay + conversion pulse
+	pulseid $tau90 $vrf 180
+	store ZF
+}
+
+pulseq {
+	prop $DQ+recouple $N
+	putmatrix density
+	prop recouple $N
+	prop ZF
+	putmatrix density
+	acq {90,270,90,270}
+}
+
+proc {
+	addlb 100 0
+	save $(name).fid -sum
+	ft
+#	save $(name).spe -simplot
+	save $(name) -ascii -sum -nodata
+	save $(name).spe -simplot -sum
+}

@@ -1,0 +1,44 @@
+spinsys {
+	nuclei 2H
+	quadrupole 1 20e3 0
+}
+par {
+	sw 40e3
+	sw1 40e3
+	np 256
+	ni 16
+
+	variable phi1 0
+#(0,180,0,180,0,180,0,180,90,270,90,270,90,270,90,270)
+	variable phi2 0
+#(0,0,0,0,0,0,0,0,0,90,90,90,90,90,90,90,90,180,180,180,180,180,180,180,180,270,270,270,270,270,270,270,270)
+	variable phi3 0
+#(0,0,90,90,180,180,270,270,90,90,180,180,270,270,0,0)
+	variable phi4 90
+#(90,90,180,180,270,270,0,0,180,180,270,270,0,0,90,90)
+	variable rec 180
+#(180,0,270,90,0,180,90,270,270,90,0,180,90,270,180,0,0,180,90,270,180,0,270,90,90,270,180,0,270,90,0,180)
+	variable tau_echo 4
+
+	pulseid 2.5 100e3 x
+	store pw90x
+
+	delay tau_echo
+	store delay
+}
+pulseq {
+	prop pw90x+$phi1
+	acq
+	prop pw90x+$phi2
+	prop pw90x+$phi3
+	prop delay
+	prop pw90x+$phi4
+	prop delay
+	acq $rec
+}
+proc {
+	zerofill 2
+	ft
+	save $(name).spe
+}
+	

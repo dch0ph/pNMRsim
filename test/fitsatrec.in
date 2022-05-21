@@ -1,0 +1,21 @@
+
+
+function calct1 echo(#1*(1-exp(#3*(-1.0/#2)))) SSL
+
+par {
+	fit exp p55-H2DP-pdcheck.spe
+	variable t1 {2V,2V}
+	variable amp {1e3V,1e3V}
+}
+proc {
+	offset [1,2,4,8,16,32,64]
+	apply calct1 3 $amp $t1 -real
+	echo $i_evaluation
+	save XXX$(i_evaluation).spe -simpson
+	save XXX$(i_evaluation) -nodata -ascii -parameters
+}
+finalise {
+	save $(name).spe -source
+	save $(name) -nodata -ascii -parameters
+	echo $final_parameters
+}
