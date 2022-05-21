@@ -55,8 +55,11 @@ autom4te.cache
 # can automatically generate from config.status script
 # (which is called by configure script))
 Makefile
+extras/Makefile
 
 .vscode/
 
 pNMRsim
 pNMRproc
+extras/createdip
+extras/magres2pNMRsim
