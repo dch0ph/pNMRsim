@@ -1,0 +1,71 @@
+#xix decoupling
+spinsys {
+#	include geom$1.inc
+	nuclei 13C 1H
+	dipole 1 2 -22.6e3 0 0 0
+	channels 1H
+}
+par {
+	verbose 1011
+	spin_rate 30e3
+	crystal_file zcw232
+	np 2048
+	gamma_angles 8
+	sw spin_rate
+	start_operator I1x
+	detect_operator I1p
+	method direct
+
+	variable vrf 150e3
+	variable maxcycles 20
+	variable x 0.25
+	variable period 1e6/$spin_rate
+	variable rfperiod $period*$actx
+	variable tx 0.5*$rfperiod
+
+#	log_file varsgv -ascii
+}
+proc pulseq {} {
+	global par
+
+	maxdt 1
+    set counter [expr $par(np)/4]
+	set dt [expr 0.25e6/$par(sw)]
+
+#	reset
+#	pulse $dt $par(vrf) 0
+#	store 1
+	
+#	reset
+#	pulse $dt $par(vrf) 180
+#	store 2
+
+#	reset
+#	pulse $dt $par(vrf) 0
+#	store 3
+
+#	reset
+#	pulse $dt $par(vrf) 180
+#	store 4
+
+	reset
+    for {set j 1} {$j <= $counter} {incr j} {
+	acq
+	pulse $dt $par(vrf) 0
+	acq
+	pulse $dt $par(vrf) 180
+	acq
+	pulse $dt $par(vrf) 0
+	acq
+	pulse $dt $par(vrf) 180
+   }	
+}
+proc main {} {   
+	global par
+    set f [fsimpson]
+    fsave $f $par(name).fid
+	faddlb $f 20 0
+	fft $f
+	fsave $f $par(name).spe
+}
+

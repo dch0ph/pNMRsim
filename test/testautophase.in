@@ -1,0 +1,5 @@
+proc {
+	verbose -general
+	autophase
+	save $(name)_phased -matlab
+}

@@ -1,0 +1,5 @@
+#!/bin/sh
+sed -f ../extras/pNMRsim2SIMPSON.sed < $1.in > $1_SIMPSON.in
+../pNMRsim $2 $1.in > $1.log
+simpson $1_SIMPSON.in > $1_SIMPSON.log
+simplot $1.spe $1_SIMPSON.spe

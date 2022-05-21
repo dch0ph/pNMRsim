@@ -1,0 +1,66 @@
+# simulate T2' under CW decoupling
+# Cannot use -enable:gammacompute
+
+spinsys {
+	proton_frequency $4e6
+	include lattice$1.inc
+	channels 1H
+}
+par {
+	variable rf $2e3
+	spin_rate $3e3
+	variable n_rot $5
+	sw $spin_rate
+	
+	variable rotor_period 1e6/$spin_rate
+	variable two_tau 0.002*$n_rot*$rotor_period
+	echo 2tau $two_tau ms
+	np 2*$n_rot+1
+
+	pulse 1e6 $rf x
+	store CW $rotor_period
+
+	crystal_file single 30 40 50
+#	crystal_file $(CRYSTALFILE?3zcw150) -hemisphere
+
+	variable indsC Indicesof('13C')
+	variable FID_scale 1/(2^($indsC-2))
+
+	start_operator 13C:x
+	detect_operator 13C:p
+	
+#	setenv BASENAME $(name)_$1_B0$4_MAS$3_RF$2_nrot$5
+	setenv BASENAME $(name)_$1_single_30_40_50_B0$4_MAS$3_RF$2_nrot$5_test
+	log_file $BASENAME -matlab
+#	log_file T2CW_putmat_$1_single_30_40_50_B0$4_MAS$3_RF$2_nrot$5 -matlab
+	echo nspins=$indsC;
+	echo np=$np;
+	echo n_rot=$n_rot;
+	echo taustep=$rotor_period;
+	echo two_tau=$two_tau;
+
+	
+}
+pulseq {
+	putmatrix detect
+	putmatrix hamiltonian
+	putmatrix density
+	acqpoint 0
+	do $n_rot
+		propfor $rotor_period CW
+		putmatrix density
+		acqpoint 0
+	end do
+	pulse180 13C x
+	putmatrix density
+	do $n_rot
+		propfor $rotor_period CW
+		putmatrix density
+		acqpoint 0
+	end do
+
+}
+proc {
+	scale $FID_scale
+	save $BASENAME.fid -source
+}

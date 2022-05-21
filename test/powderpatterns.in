@@ -1,0 +1,17 @@
+spinsys {
+	nuclei 1H
+	shift 1 0 {0,1000} {0,1}
+}
+par {
+#	crystal_file zcw3
+	crystal_file zcw15
+	np 1024
+	sw 3000
+#	verbose -general
+}
+proc {
+	addlb 40 1
+	ft
+#	scale 0.1
+	save $(name).spe
+}

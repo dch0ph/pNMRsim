@@ -1,0 +1,27 @@
+#test spin-locking under the influence of CSA
+spinsys {
+	proton_frequency 500e6
+	nuclei 19F
+	shift 1 0 150ppm 0 0 30 0
+	channels 19F
+}
+par {
+	spin_rate 10e3
+	sw $spin_rate/8
+	gamma_angles 8
+#	crystal_file
+	np 100
+	variable totalt 1e3*$np/$sw
+	echo Lock duration: $totalt ms
+
+	start_operator Fx
+	detect_operator F+
+
+	pulse 1e6 100e3 0
+	store CW
+}
+pulseq {
+	acq 0 CW
+}
+
+	

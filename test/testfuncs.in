@@ -1,0 +1,15 @@
+function max extract(#1,last(sortindex(#1))) L
+function min extract(#1,head(sortindex(#1))) L
+function sort extract(#1,sortindex(#1)) L
+
+par {
+#	variable testvals [100,400,200,250]
+#	variable maxr max($testvals)
+#	variable minr min($testvals)
+#	variable sortr sort($testvals)
+	variable varval 100V
+	variable dvar [1:10]*$varval
+	variable array |$varval,10|
+	echo $varval $dvar $array
+	verbose -general
+}

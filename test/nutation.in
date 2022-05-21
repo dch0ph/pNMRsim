@@ -1,0 +1,23 @@
+spinsys {
+	nuclei 1H
+	channels 1H
+	variable N 32
+	variable delta 300
+	shift 1 {-$delta:2*$delta/($N-1):$delta}
+}
+par {
+	sw 1e3
+	ni $N
+	np 128
+	histogram
+	sw1 800e3
+	variable vrf {50e3:50e3/($N-1):100e3}
+	
+	pulse 1e6 $vrf 90
+	store RF
+	verbose
+}
+pulseq {
+	acq RF
+	acq
+}

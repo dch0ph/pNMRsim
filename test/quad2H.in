@@ -1,0 +1,26 @@
+
+spinsys {
+    nuclei 2H
+   quadrupole 1 1 170e3 0 0 0 0
+}
+
+par {
+	method gcompute
+     start_operator   Inx
+    detect_operator  Inp
+     crystal_file     zcw:12
+#	crystal_file single 30 30 30
+	spin_rate 8e3
+     gamma_angles 64
+     np   4096
+#	    verbose
+     sw $gamma_angles*$spin_rate
+}
+
+proc {
+	zerofill 4
+    addlb 200 0.5
+	save $(name).fid
+    ft
+    save $(name).spe
+}

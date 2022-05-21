@@ -1,0 +1,68 @@
+#simulation of PMLG under MAS, RF can be varied
+
+spinsys {
+    nuclei 1H 1H 1H
+#    include geom93D.inc
+    channels 1H
+    shift 1 1000
+    shift 2 1000
+    shift 3 1000
+}
+
+PMLGelement {
+     variable ph_inc 207.85/$PMLG_n
+     variable ph1 $ph_inc/2
+     variable ph3 387.85-$ph_inc/2
+    variable tau_step $tau_lg/$PMLG_n
+	pulse $tau_step $rf_act [$ph1:$ph_inc:$ph1+$ph_inc*($PMLG_n-1)]
+	pulse $tau_step $rf_act [$ph3:-$ph_inc:$ph3-$ph_inc*($PMLG_n-1)]
+}
+
+par {
+     start_operator   Fy
+     variable t_angle 54.75
+# Tilted detect operator allows detecting a qudrature image-free signal without tilting pulses
+# which degrades the simulation speed
+     detect_operator  sin($t_angle)*Fz+cos($t_angle)*Fx+i*Fy
+#     crystal_file     3zcw5
+     np               8192
+
+#     variable rf_nom {50e3,100e3,150e3,200e3}
+	variable rf_nom 100e3
+	spin_rate 10e3
+
+	verbose -general		
+#number of steps in each ramp
+     variable PMLG_n 11
+	variable rf_inhomo 1.0
+
+    variable target_tau_lg 0.81649658e6/($rf_nom*$rf_inhomo)
+
+	variable m,n sync_ratio(2e-6*$target_tau_lg*$spin_rate,20)
+	variable synctime 1e6*$m/$spin_rate
+	variable tau_lg if($m,1e6*$m/($spin_rate*$n),$target_tau_lg)/2
+
+	gamma_angles if($n,$n*ceil(16/$n),16)
+
+    variable rf_act 0.81649658e6/$tau_lg
+
+     sw $spin_rate
+
+     include PMLGelement
+     store PMLG $synctime
+}
+
+pulseq {
+	echo $m $n
+	echo Synctime: $synctime us   Target tau_lg: $target_tau_lg us   Actual tau_lg: $tau_lg us
+#    echo sw: $sw Hz
+	echo gamma_angles: $gamma_angles
+    acq 0 PMLG
+}
+
+proc {
+    save $(name)rf$(rf_inhomo).fid -source
+	zerofill 2
+	ft
+    save $(name)rf$(rf_inhomo).spe
+}

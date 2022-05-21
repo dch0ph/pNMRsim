@@ -1,0 +1,36 @@
+#simulate CP with set and get operations
+
+spinsys {
+	verbose -general
+	nuclei 1H 13C
+	channels 1H
+}
+
+par {
+	start_operator 1H:x
+	detect_operator 13C:+
+
+	matrix set detectH 1H:x
+	matrix set detectC 13C:x
+
+#	variable fred 2
+
+	sw 10e3
+	np 256
+}
+
+pulseq {
+	transfer detectH detectC	
+	get cpint detectH
+	echo Magnetisation transferred: $cpint
+	acq 0
+}
+
+proc {
+	addlb 50
+	zerofill 2
+	ft
+	save $(name).spe
+}
+
+	

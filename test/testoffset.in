@@ -1,0 +1,29 @@
+spinsys {
+	nuclei 1H
+	channels 1H
+	shift 1 10e3
+}
+par {
+	sw 30e3
+	np 1024
+
+	pulse 1e6 2e3 y 10e3 -coherent
+	store offCW
+	
+	start_operator Fx
+	detect_operator F+
+
+	variable taumax 0.5e3
+	variable steps 10
+#	variable tau {0:$taumax/($steps-1):$taumax}
+}
+pulseq {
+	propfor $taumax offCW
+	acq 0
+}
+proc {	
+	addlb 50
+	zerofill 4
+	ft
+	save $(name).spe
+}

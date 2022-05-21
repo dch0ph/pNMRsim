@@ -1,0 +1,39 @@
+
+spinsys {
+    nuclei 23Na
+	channels
+##DELETENEXT
+	proton_frequency 200e6
+   quadrupole 1 2 600e3 0 0 0 0
+}
+
+##INSERT proc pulseq {} {
+##INSERT 	global par
+##INSERT 
+##INSERT 	delay [expr 1e6/$par(sw)]
+##INSERT 	store 1
+##INSERT 
+##INSERT 	reset
+##INSERT 	acq $par(np) 1
+##INSERT }
+
+par {
+	method direct
+##INSERT proton_frequency 200e6
+     start_operator   Inx
+    detect_operator  Inc
+   crystal_file     zcw143
+#single 30 30 30
+#     gamma_angles 32
+#	spin_rate 20e3
+     np   8192
+     sw 640e3
+}
+
+proc {
+    addlb 80 0
+	save $(name).fid
+	zerofill 16384
+    ft
+    save $(name).spe
+}

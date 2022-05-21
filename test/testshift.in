@@ -1,0 +1,36 @@
+spinsys {
+	proton_frequency 500e6
+	nuclei 1H 1H 13C
+}
+par {
+	precision 5 -complexcompact
+	variable Cfreq 1p1
+	setenv NUCL '1H'
+	variable inds Indicesof($NUCL)
+	echo Indices for $NUCL : $inds
+	echo 13C frequency: $Cfreq MHz
+	matrix set filter spinorder 1 [1] 
+	start_operator 13C:+
+	detect_operator I1p
+	variable x 1V
+	variable loops {1:2}
+	variable fred $loops+$i_orientation
+	variable bert 2*$x
+}
+pulseq {
+	putmatrix filter
+	scale $bert
+#	putmatrix start
+#	putmatrix density
+#	do $loops
+#	scale 20
+#	putmatrix density
+#	end do
+	acq
+}	
+initialproc {
+	scale 2
+}
+proc {
+	scale $fred
+}

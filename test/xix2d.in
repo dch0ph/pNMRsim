@@ -1,0 +1,50 @@
+#xix decoupling
+spinsys {
+#	include geom$1.inc
+#	verbose
+	nuclei 13C 1H
+	dipole 1 2 -23e3 0 30 0
+#	shift 1 15e3
+	channels 1H
+
+}
+par {
+	verbose -general
+#	maxdt 0.25
+	precision 4
+	spin_rate 30e3
+#	crystal_file 3zcw9
+	np 2048
+	sw1 4*$spin_rate
+	ni 8
+#	gamma_zero 45
+	gamma_angles 32
+	sw 8*$spin_rate
+	start_operator 13C:x
+	detect_operator 13C:p
+
+	variable vrf 150e3
+	variable maxcycles 15
+	variable x 0.5
+	variable actx sync_ratio($x,$maxcycles)
+	variable period 1e6/$spin_rate
+	variable rfperiod $period*$actx
+	variable tx 0.5*$rfperiod
+	variable synctime sync_time($rfperiod,$period,$maxcycles)
+
+	pulse $tx $vrf 0
+	pulse $tx $vrf 180
+	store xix $synctime
+}
+pulseq {
+	acq xix
+	acq
+}
+proc {
+	save $(name).fid
+	addlb 50 0
+	zerofill 2
+	ft
+	save $(name).spe
+}
+

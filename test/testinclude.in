@@ -1,0 +1,9 @@
+pulseexpand {
+	pulseid 1 $2 $1-90
+	pulse 10 $2 $1
+	pulseid 1 $2 $1+90
+}
+par {
+	include pulseexpand [0:90:270] '50e3'
+	store shaped
+}

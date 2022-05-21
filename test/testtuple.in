@@ -1,0 +1,10 @@
+par {
+#	variable startlist random(mutable(1),8)
+	variable x;y;z [1]
+	echo x: $x  y: $y  z: $z
+#	variable index [1:3]
+#	np 1
+}
+#proc {
+#	echo $x $y $z
+#}

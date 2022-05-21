@@ -1,0 +1,36 @@
+
+spinsys {
+    nuclei 1H 1H
+#	channels 1H 19F
+#	truncate dipole
+	dipole 1 2 -20e3 20 30 40
+#	verbose -general
+}
+
+par {
+#	method gcompute
+     start_operator   1H:x
+    detect_operator  1H:p
+#     crystal_file     zcw:4
+	crystal_file single 30 30 30
+     spin_rate        10000
+#     gamma_angles 16
+     np   2048
+#	histogram
+#	    verbose
+     sw 80000
+#	log_file tmp
+}
+pulseq {
+#	putmatrix hamiltonian -statistics -once
+	putmatrix hamiltonian -eigenbasis -once
+	putmatrix density -statistics -once
+#	putmatrix density -structure -once
+	acq
+}
+proc {
+    addlb 50 0
+	save $(name).fid
+    ft
+    save $(name).spe
+}

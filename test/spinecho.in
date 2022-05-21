@@ -1,0 +1,58 @@
+spinsys {
+		nuclei 11B:c 11B:c
+# 11B
+# 11B:c
+#		channels 11B
+		proton_frequency 600e6
+
+		shift 1 0
+#		shift 2 0
+
+		dipole 1 2 -848  93.391 119.904  -83.220
+}
+
+par {
+#	verbose -general
+		spin_rate        $1
+	variable rotor_period 1e6/$spin_rate
+		start_operator   I1x
+		detect_operator  Inc
+#		crystal_file     3zcw6
+#		maxdt            1
+
+# just record first point of FID:
+		np               1
+		sw               10000
+
+# arrayed variable will setup n-Dimensional "spectrum"
+# taubytwo will step every 100us from 0 to 1000us
+#		delay {0:100:1000}
+		delay $rotor_period
+		store delay
+# $rotor_period
+#	variable rotor_count {0:9}
+	variable rotor_count 2
+	variable taubytwo $rotor_count*$rotor_period
+
+#		pulseid 10 50e3 x
+#		store pulse180x
+
+#	log_file densdump
+}
+
+pulseq {
+#		propfor $taubytwo delay
+	prop delay $rotor_count
+#		prop pulse180x
+	pulse180 x
+#		propfor $taubytwo delay
+	prop delay $rotor_count
+		acq
+#	get 'I1x' I1x
+#	get 'I2x' I2x
+#	echo $I1x $I2x	
+}
+
+#proc {
+#		save $(name).fid
+#}

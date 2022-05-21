@@ -1,0 +1,41 @@
+
+spinsys {
+    nuclei 11B
+	channels 11B
+	proton_frequency 500e6
+	quadrupole 1 2 0.5e6 0 0 0 0
+#	shift 1 0 0 0 0 0 0
+}
+
+par {
+#	verbose
+##INSERT crystal_file alpha0beta0
+     start_operator   Fz
+    detect_operator  Fp
+     np   128
+     sw 3000
+##DELETENEXT
+	pulse 2.5 50e3 0
+#	pulseauto + {0:5:20} 50e3 0
+##DELETENEXT
+	store pulse90
+}
+
+pulseq {
+##INSERT 	delay [expr 1e6/$par(sw)]
+##INSERT 	store 1
+##INSERT 
+##INSERT 	reset
+##INSERT	pulseid 5 50e3 0
+##INSERT 	acq $par(np) 1
+##DELETENEXT
+	prop pulse90
+##DELETENEXT
+#	putmatrix density
+}
+proc {
+    addlb 50 0
+	save $(name).fid
+    ft
+    save $(name).spe
+}

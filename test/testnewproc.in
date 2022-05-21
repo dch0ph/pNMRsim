@@ -1,0 +1,8 @@
+par {
+include $1.in
+include $2.in
+	verbose -general
+}
+include $3.in '$4'
+
+	

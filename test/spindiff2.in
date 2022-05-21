@@ -1,0 +1,42 @@
+# two dipolar coupled borons, values are from lithium diborate with random quadrupolar tensor orientations
+spinsys {
+    channels 11B
+    nuclei 11B 11B
+    shift 1 18.2p 12.3p 0.425 0 0 0
+    shift 2 2.3p -10.4p 0.036 0 0 0
+    quadrupole 1 1 2560000 0.2 2 68 66
+    quadrupole 2 1 520000 0.5 61 31 6
+    dipole 1 2 -1500 0 0 0
+}
+
+# the magnetisation starts on one boron in the z-direction. 20 data points are taken
+par {
+    method           direct
+    spin_rate        1500
+    start_operator   I1z
+	detect_operator I2c
+    gamma_angles     3
+    crystal_file     zcw986
+    proton_frequency 600e6
+    np               20
+    sw               spin_rate
+		verbose          1101
+}
+
+# the magnetisation is detected across the central populations states, but you could use I2z instead
+proc pulseq {} {
+    global par
+
+    delay [expr 1e6/$par(sw)]
+		store 1
+		reset
+
+		acq $par(np) 1
+}
+
+# the puts/time commands are optional, this simulation took 406 seconds on a 3.6 GHz P4
+proc main {} {
+    global par
+
+		puts [time {fsave [fsimpson] "spindiff2.fid"}]
+}

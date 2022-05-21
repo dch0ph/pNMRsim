@@ -1,0 +1,4 @@
+proc {
+	zerofill 2 2
+	save $1 -matlab
+}

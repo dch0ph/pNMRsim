@@ -1,0 +1,23 @@
+spinsys {
+	nuclei 13C 1H
+	dipole 1 2 -23.6e3 0 0 0
+}
+
+par {
+	spin_rate 10e3
+	gamma_angles 20
+	rotor_angle 53
+#	verbose -general
+	np 8192
+	sw 200000
+	crystal_file zcw9 -octant
+	start_operator 13C:x
+	detect_operator 13C:+
+}
+
+proc {
+	addlb 200
+	save $(name).fid
+	ft
+	save $(name).spe
+}

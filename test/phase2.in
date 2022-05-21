@@ -1,0 +1,28 @@
+
+spinsys {
+	verbose -general
+    nuclei 11B:c
+	channels 11B
+	proton_frequency 500e6
+#	quadrupole 1 2 0.5e6 0 0 30 0
+#	shift 1 0 0 0 0 0 0
+}
+par {
+     start_operator   Fz
+    detect_operator  Fp
+     np   1
+     sw 3000
+	pulseid {0:1:10} 50e3 y
+	store pulse90
+}
+pulseq {
+	prop pulse90
+#	putmatrix density
+	acq 0
+}
+proc {
+#    addlb 50 0
+	save $(name).fid
+#    ft
+#    save $(name).spe
+}

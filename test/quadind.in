@@ -1,0 +1,39 @@
+
+spinsys {
+	nuclei 13C 14N
+	channels 14N
+	proton_frequency 300e6
+	quadrupole 2 2 -2.3e6 0 0 0 0
+	dipole 1 2 1.44e3 0 0 0
+#    nuclei 13C 35Cl
+#	proton_frequency 100e6
+#   quadrupole 2 2 -73e6 0 0 0 0
+#	dipole 1 2 510 0 0 0
+#	jcoupling 1 2 20
+#    nuclei 119Sn 35Cl
+#	proton_frequency 200e6
+#   quadrupole 2 2 34e6 0 0 0 0
+#	dipole 1 2 300 0 0 0
+#	jcoupling 1 2 220
+#	verbose -general
+}
+
+par {
+	start_operator I1x
+	detect_operator I1+
+#     crystal_file zcw:15
+	crystal_file single 30 30 30
+	spin_rate 3e3
+#    gamma_angles 16
+	np 2048
+     sw $spin_rate
+	histogram log_file - 1e-3
+}
+
+proc {
+    addlb 2
+	save $(name).fid
+	zerofill 2
+    ft
+    save $(name).spe
+}

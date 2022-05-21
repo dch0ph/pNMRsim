@@ -1,0 +1,30 @@
+spinsys {
+#	include geom$1.inc
+	nuclei 13C 1H
+	dipole 1 2 -22.6e3 0 0 0
+	channels 1H
+}
+par {
+#	verbose -general
+	precision 3
+	spin_rate 30e3
+	crystal_file {zcw20}
+	np 2048
+	gamma_angles 8
+	sw $spin_rate
+	start_operator 13C:x
+	detect_operator 13C:p
+
+	pulse 1e6 $spin_rate x
+	store CW
+}
+pulseq {
+	acq 0 CW
+}
+proc {
+	addlb 50 0
+	save $(name).fid
+#	zerofill 2
+	ft
+	save $(name).spe
+}

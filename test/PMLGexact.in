@@ -1,0 +1,94 @@
+#simulation of PMLG under MAS, RF can be varied
+
+spinsys {
+    nuclei 1H
+#    include geom93D.inc
+    channels 1H
+    shift 1 500
+#    shift 2 500
+#    shift 3 500
+}
+
+variable lambdaT 3
+variable lambdaQ 0
+#variable nsteps 30
+variable microT 0.1
+variable timeconstantsT 4
+
+include fulltrans.inc
+
+PMLGelement {
+     variable ph_inc 207.85/$PMLG_n
+     variable ph1 $ph_inc/2
+     variable ph3 387.85-$ph_inc/2
+
+#	variable phaselist [$ph1:$ph_inc:$ph1+$ph_inc*($PMLG_n-1),$ph3:-$ph_inc:$ph3-$ph_inc*($PMLG_n-1)]
+	variable phaselist [15,-15]
+	echo PMLG phase list: $phaselist
+
+    variable tau_step $tau_lg/$PMLG_n
+#	variable phase_step $tau_step/$nsteps
+#	echo transient step time: $phase_step us
+	
+#	variable rawphases expandtransphase($phaselist,0,$tau_step,$nsteps)
+#	variable rawamps $rf_act*expandtransamp($phaselist,0,$tau_step,$nsteps)
+	variable rawdurs,rawamps,rawphases expandtrans($rf_act,$phaselist,2*$tau_step)
+
+	echo Raw durations: $rawdurs
+	echo Raw phase list: $rawphases
+	echo Raw amplitude list: $rawamps
+
+	pulse $rawdurs $rawamps $rawphases
+}
+
+par {
+     start_operator   Fy
+     variable t_angle 54.75
+# Tilted detect operator allows detecting a qudrature image-free signal without tilting pulses
+# which degrades the simulation speed
+     detect_operator  sin($t_angle)*i*Fz+cos($t_angle)*i*Fx+Fy
+#     crystal_file     3zcw5
+     np               2048
+
+#     variable rf_nom {50e3,100e3,150e3,200e3}
+	variable rf_nom 100e3
+	spin_rate 10e3
+	precision 6
+
+	verbose -general		
+#number of steps in each ramp
+     variable PMLG_n 11
+	variable rf_inhomo $1
+	maxjumpdt 0.5
+
+    variable target_tau_lg 0.81649658e6/($rf_nom*$rf_inhomo)
+
+	variable m,n sync_ratio(2e-6*$target_tau_lg*$spin_rate,20)
+	variable synctime 1e6*$m/$spin_rate
+	variable tau_lg if($m,1e6*$m/($spin_rate*$n),$target_tau_lg)/2
+
+#	gamma_angles if($n,$n*ceil(12/$n),12)
+
+    variable rf_act 0.81649658e6/$tau_lg
+
+     sw $spin_rate/8
+
+     include PMLGelement
+     store PMLG $synctime
+}
+
+pulseq {
+	echo $m $n
+	echo Synctime: $synctime us   Target tau_lg: $target_tau_lg us   Actual tau_lg: $tau_lg us
+#    echo sw: $sw Hz
+	echo gamma_angles: $gamma_angles
+    acq 0 PMLG
+}
+
+proc {
+    save $(name)rf$(rf_inhomo).fid -source
+	save $(name)rf$(rf_inhomo) 'rawdurs' 'rawamps' 'rawphases' -ascii
+	zerofill 2
+	ft
+    save $(name)rf$(rf_inhomo).spe
+}

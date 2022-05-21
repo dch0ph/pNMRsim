@@ -1,0 +1,30 @@
+spinsys {
+    verbose
+    nuclei 1H
+    channels 1H
+    proton_frequency 500e6
+     transients simple 0.03
+}
+
+par {
+     verbose
+     #log_file output
+     start_operator   I1z
+     detect_operator  I1x
+#     crystal_file     zcw0
+     spin_rate        0
+     np   256
+     #sw 1098901
+    sw 50000
+
+delay 2.5
+pulse 5.0 100e3 0
+delay 5.0
+pulse 5.0 100e3 180
+delay 2.5
+store txix
+}
+
+pulseq {
+     acq 0 txix
+}

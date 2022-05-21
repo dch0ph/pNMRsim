@@ -1,0 +1,35 @@
+par {
+	verbose -parse
+	variable vararray {10,20V,30}
+	variable simplevar 10V2
+	verbose -general -optimise
+	variable simple 10
+	variable array {10,20,30}
+	variable expr 2*$vararray
+#	variable sumarray (25,35)
+#	variable botharray (45,{10,20,30})
+	variable a Valueof('array')
+	variable b Valuesof('array')
+	variable c Errorof('simplevar')
+	variable e Errorof('vararray')
+	variable f Errorsof('vararray')
+	echo $a $b $c $e $f
+}
+initialproc {
+	echo initialproc
+	echo $a $c $e $f
+#	echo $simple $simplevar $array $vararray $expr $sumarray $botharray
+#	save testvari 'simple' 'array' 'expr' 'sumarray' -parameters -nodata -ascii
+}
+proc {
+	echo proc
+	echo $a $e $f
+#	echo $simple $simplevar $array $vararray $expr $sumarray
+#	save testvarp 'simple' 'array' 'expr' 'sumarray' -parameters -nodata -ascii
+	save fred -ascii -nodata -parameters
+}
+#finalise {
+#	echo finalise
+#	echo $simple $simplevar $array $vararray
+#	save testvarf 'simple' 'array' 'expr' 'sumarray' -parameters -nodata -ascii
+#}

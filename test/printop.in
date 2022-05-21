@@ -1,0 +1,14 @@
+spinsys {
+	nuclei 13C 2H
+}
+par {
+	start_operator  2H:2,3
+	detect_operator I1:1,2
+	np 1
+	sw 10e3
+	precision 0
+}
+pulseq {
+	putmatrix start
+	putmatrix detect
+}

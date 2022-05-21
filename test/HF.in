@@ -1,0 +1,37 @@
+
+spinsys {
+    nuclei 1H 19F
+    channels 1H 19F
+    dipole 1 2 -10000 0 0 0
+#    verbose
+}
+
+par {
+     verbose -powder
+     start_operator   I2x
+     detect_operator  I1p
+     crystal_file     zcw143 -octant
+     spin_rate        16000
+      maxdt 1.0
+     gamma_angles     64
+     np               2048
+     sw                 64000
+
+  channel 1
+    pulse 1e6 84000 x
+  channel 2
+    pulse 1e6 100000 x
+    store cp
+}
+
+pulseq {
+   acq 0 cp
+ }
+
+proc {
+    addlb 50 0
+    save $name.fid -simpson
+    zerofill 8192
+    ft
+    save $name.spe
+}

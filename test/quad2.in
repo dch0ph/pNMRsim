@@ -1,0 +1,31 @@
+
+spinsys {
+    nuclei 23Na
+	channels
+##DELETENEXT
+	proton_frequency 200e6
+   quadrupole 1 2 600e3 0 0 0 0
+	verbose -general
+}
+
+par {
+	method gcompute
+##INSERT proton_frequency 200e6
+     start_operator   Inx
+    detect_operator  Inp
+     crystal_file zcw143
+#	crystal_file single 30 30 30
+	spin_rate 20e3
+     gamma_angles 32
+     np   8192
+#	    verbose
+     sw 640e3
+}
+
+proc {
+    addlb 80 0
+	save $(name).fid
+	zerofill 16384
+    ft
+    save $(name).spe
+}

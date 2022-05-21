@@ -1,0 +1,8 @@
+#!/bin/sh
+sed -e "s/^spinsys {/spinsys {\n  cells $2/" $1.in > $1_XTAL.in
+cp $1_XTAL.in $1_NOPER.in
+../NMRsim $3 -noperiodic $1_NOPER.in > $1_NOPER.log
+../NMRsim $3 $1_XTAL.in > $1_XTAL.log
+#sed -e "s/detect_operator  */detect_operator 4*/" -f ../NMRsim2SIMPSON.sed < $1.in > $1_SIMPSON.in
+#simpson $1_SIMPSON.in > $1_SIMPSON.log
+simplot $1_NOPER.spe $1_XTAL.spe

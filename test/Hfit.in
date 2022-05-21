@@ -1,0 +1,40 @@
+spinsys {
+    proton_frequency 500e6
+    nuclei 1H 
+	channels
+        shift 1 0.3p 0 0 0 0 0
+#	verbose
+#	usercoupling mycoupling
+#	dipole 1 2 -7500 0 120 0 
+#	quadrupole 2 2 -3.2e6 0.1 01 109 01  
+#	verbose
+}
+
+par {
+#	method gcompute
+     start_operator   I1x
+     detect_operator  I1p
+     crystal_file    zcw2 
+     spin_rate        1221.97
+     gamma_angles 32
+     verbose -optimise
+     sw 1221.97
+#     autoopt 1e-4 powderquality
+     fit add 14Ndec.spe
+# 20:30
+#     fit method -simplex
+	fit method -real
+     fit noiselevel 1000000
+     np   $np_exp1
+}
+proc {
+    	addlb 280V 0.13
+	save $(name).fid
+# scalefirst 0.5
+    	scale 2.75e7
+    	ft
+    	save $(name)$(i_evaluation).spe
+}
+finalise {
+    	save $(name).spe
+}

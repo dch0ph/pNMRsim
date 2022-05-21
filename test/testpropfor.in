@@ -1,0 +1,30 @@
+spinsys {
+#	verbose -general
+	nuclei 1H
+	channels 1H
+}
+par {
+	sw 1e3
+	np 1
+	
+	variable dur 5
+	variable nurf 50e3
+	start_operator Fx
+
+	pulse $dur $nurf 90
+	pulse $dur $nurf 270
+	pulse 4*$dur $nurf 90
+	store flips
+
+	pulse $dur 0.1*$nurf 90
+	store cw
+
+	store flipslist flips
+
+	variable nextdur {0:$dur:3*$dur}
+}
+pulseq {
+	propfor $dur flipslist
+	propfor $nextdur flipslist -reset
+	acq
+}

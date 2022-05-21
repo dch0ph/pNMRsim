@@ -1,0 +1,22 @@
+spinsys {
+# read in (dipolar) parameters
+include geom2.inc
+# define CSAs
+	shift 1 0 15000 0 0 -54.7 0
+	shift 2 0 15000 0 0 54.7 0
+	verbose -general
+}
+par {
+     verbose -powder
+     start_operator   Inx
+     detect_operator  Inp
+     crystal_file zcw5
+     gamma_angles 16
+     spin_rate 20e3
+     np 512
+     sw $gamma_angles*$spin_rate
+     histogram
+}
+proc {
+    save $(name).spe -simpson
+}

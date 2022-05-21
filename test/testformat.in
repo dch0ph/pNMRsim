@@ -1,0 +1,5 @@
+par {
+	variable fred 3.3333333
+	variable fred3 3
+	echo $fred $fred3
+}

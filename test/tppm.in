@@ -1,0 +1,42 @@
+spinsys {
+#verbose
+    include geom3CH2.inc
+    channels 1H
+    shift 1 1000
+}
+
+par {
+     verbose -powder
+     crystal_file zcw3
+# 3zcw5
+     np   4096
+     variable tppmAngle 160
+     variable tppmPhase 5
+     variable rf_dec 100e3
+     variable nTPPMperDw 1
+
+     variable tppmPulse 1e6/$rf_dec/360*$tppmAngle
+     echo tppmPulse $tppmPulse
+
+      sw 1e6/($nTPPMperDw*2*$tppmPulse)
+      echo sw $sw
+
+    spin_rate $sw/10
+	echo MAS $spin_rate
+
+     start_operator 13C:x
+     detect_operator 13C:+
+
+     pulse $tppmPulse $rf_dec 0
+     pulse $tppmPulse $rf_dec $tppmPhase
+     store TPPM
+}
+
+pulseq {
+	acq 0 TPPM
+}
+
+proc {
+
+	save $(name).fid -simpson
+}

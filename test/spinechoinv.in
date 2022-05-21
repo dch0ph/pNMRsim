@@ -1,0 +1,20 @@
+spinsys {
+	nuclei 1H
+	shift 1 100
+}
+
+par {
+	np 1
+
+	variable taubytwo {0:100:1000}
+	sw 1e4
+	delay 1e6
+	store delay
+}
+
+pulseq {
+	propfor $taubytwo delay
+	pulse180 x
+	propfor $taubytwo delay
+	acq
+}

@@ -1,0 +1,26 @@
+
+spinsys {
+	nuclei 2H 14N
+	proton_frequency 400e6
+	quadrupole 1 2 110e3 0 0 0 0
+	quadrupole 2 2 -2.3e6 0 0 0 0
+	dipole 1 2 1.3e3 0 0 0
+}
+
+par {
+	start_operator I1x
+	detect_operator I1+
+     crystal_file zcw:15
+	spin_rate 3e3
+     gamma_angles 16
+	np 2048
+     sw $spin_rate
+}
+
+proc {
+    addlb 50
+	save $(name).fid
+	zerofill 2
+    ft
+    save $(name).spe
+}

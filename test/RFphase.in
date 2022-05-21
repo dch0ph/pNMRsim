@@ -1,0 +1,38 @@
+
+spinsys {
+    nuclei 15N
+	channels 15N
+}
+
+par {
+	verbose -optimise
+     start_operator   I1z
+    detect_operator  I1p
+     np   128
+     sw 3000
+	pulseid 4V 50e3 90
+	store pulse90
+	maximise interactive
+}
+
+pulseq {
+##INSERT 	delay [expr 1e6/$par(sw)]
+##INSERT 	store 1
+##INSERT 
+##INSERT 	reset
+##INSERT	pulseid 5 50e3 0
+##INSERT 	acq $par(np) 1
+##DELETENEXT
+	prop pulse90
+	acq
+#	prop {0+pulse90,90+pulse90,180+pulse90}
+##DELETENEXT
+#	putmatrix density
+}
+
+proc {
+    addlb 50 0
+#	save $(name).fid
+    ft
+    save $(name).spe
+}

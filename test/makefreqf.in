@@ -1,0 +1,17 @@
+spinsys {
+	nuclei 1H
+	proton_frequency 500e6
+	shift 1 10p
+}
+par {
+	sw 12e3
+	np 1024
+	histogram lineshape 50 0
+}
+proc {
+	set -ref 50e3
+	addsignals 1p 2
+#	addlb 50
+#	ft
+	save $(name).spe
+}	

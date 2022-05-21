@@ -1,0 +1,4 @@
+#!/bin/bash
+../pNMRsim CSA.in
+echo Finished optimisation
+../pNMRsim CSA.in `cat autoopt_results`

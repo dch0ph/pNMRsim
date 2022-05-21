@@ -1,0 +1,32 @@
+
+spinsys {
+    nuclei 13C 1H
+	channels
+	 verbose
+    jcoupling 1 2 100
+}
+
+##INSERT proc pulseq {} {
+##INSERT 	global par
+##INSERT 
+##INSERT 	delay [expr 1e6/$par(sw)]
+##INSERT 	store 1
+##INSERT 
+##INSERT 	reset
+##INSERT 	acq $par(np) 1
+##INSERT }
+
+par {
+     start_operator   I1x
+    detect_operator  I1p
+#     crystal_file     zcw4180
+     np   128
+     sw 2000
+}
+
+sumproc {
+	save $(name).fid
+    addlb 30 0
+    ft
+    save $(name).spe
+}

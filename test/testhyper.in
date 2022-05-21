@@ -1,0 +1,14 @@
+showvalue {
+	variable tmp $1($$2)
+	echo $1(x): $tmp
+	echo
+}
+par {
+	include extrafunctions.inc
+	variable x [-1:0.1:1]
+	include showvalue 'sinh' 'x'
+	include showvalue 'cosh' 'x'
+	include showvalue 'tanh' 'x'
+	include showvalue 'norm' 'x'
+#	include showvalue 'log10' 'x'
+}

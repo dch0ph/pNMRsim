@@ -1,0 +1,12 @@
+function scalarrepeat repeat(#1,#2) SS
+
+par {
+	variable m [1,2]
+	variable n [10,20,30]
+
+	variable listofns repeat($n,size($m))
+	variable listofms scalarrepeat($m,size($n))
+	echo $listofns $listofms
+}
+
+	

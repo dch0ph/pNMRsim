@@ -1,0 +1,30 @@
+# two dipolar coupled borons, values are from lithium diborate with random quadrupolar tensor orientations
+spinsys {
+    nuclei 11B 11B
+# Note that unused RF channels should not be specified as this slows the calculation
+#    channels 11B
+# proton_frequency must be specified before using 'p'
+    proton_frequency 600e6
+    shift 1 18.2p 12.3p 0.425 0 0 0
+    shift 2 2.3p -10.4p 0.036 0 0 0
+    quadrupole 1 1 2560000 0.2 2 68 66
+    quadrupole 2 1 520000 0.5 61 31 6
+    dipole 1 2 -1500 0 0 0
+}
+
+# the magnetisation starts on one boron in the z-direction. 20 data points are taken
+par {
+#    method           direct
+    spin_rate        1500
+    start_operator   I1z
+	detect_operator I2z
+# only 3 gamma angles seems a bit feeble!
+    gamma_angles     3
+    crystal_file     zcw986
+    np               20
+    sw               $spin_rate
+#	verbose -general
+#		verbose          1101
+}
+
+# simulation took 27 s on an older laptop (1.4 GHz P4?)

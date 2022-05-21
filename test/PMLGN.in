@@ -1,0 +1,46 @@
+spinsys {
+#    include adamantane9_model.inc
+    nuclei 1H 1H 1H
+    channels 1H
+    shift 1 1000
+    shift 2 1000
+    shift 3 1000
+    dipole 1 2 -20e3 0 0 0
+    dipole 1 3 -20e3 0 30 0
+    dipole 2 3 -20e3 0 -30 0
+}
+
+par {
+#     verbose -general
+     start_operator   Fy
+     detect_operator  Fp
+     crystal_file     zcw5
+     np               4096
+
+	variable rf 50e3
+	variable n $1
+	variable perT2   1
+     variable pwMA 1.52
+
+	include PMLG.inc $n $rf
+     store PMLG
+   
+     sw 1e6/(2*$perT2*$tcycleLG)
+     echo sw $sw Hz
+#     spin_rate $sw/5
+#     spin_rate 10.32528e3
+#     gamma_angles 8
+#     echo spin_rate $spin_rate
+
+}
+
+pulseq {
+     acq 0 PMLG 
+}
+
+proc {
+    save $(name).fid
+	zerofill 2
+    ft
+    save $(name).spe
+}

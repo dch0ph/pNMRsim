@@ -1,0 +1,13 @@
+verbose -parse
+varian {
+	setenv NAME UnityPlus
+	setenv PD 10
+}
+par {
+	include $1
+	echo $NAME $PD
+}
+bruker {
+	setenv NAME DSX
+	setenv PD 5
+}

@@ -1,0 +1,32 @@
+
+spinsys {
+    nuclei 1H 1H
+	channels 1H
+#	dipole 1 2 -20e3 20 30 40	
+}
+
+par {
+     start_operator   0.5779 I1z + 0.8161 I1x 
+    detect_operator   0.5779 I1z + 0.8161 I1x 
+#     crystal_file     zcw88
+     np   2048
+	    verbose
+     sw 61.237e3
+
+	variable rf 50e3
+	variable offset $rf/1.414214
+	
+	pulse 1e6 $rf 0 $offset
+	store LG
+}
+
+pulseq {
+	acq 0 LG
+}
+
+proc {
+    addlb 50 0
+	save $(name).fid
+    ft
+    save $(name).spe
+}

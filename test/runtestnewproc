@@ -1,0 +1,8 @@
+#../pNMRsim -noexecute testnewproc.in multiple time multiplep mtm > testnewproc_mtm.in
+#../pNMRsim -noexecute testnewproc.in multiple time singlep mts > testnewproc_mts.in
+#../pNMRsim -noexecute testnewproc.in multiple frequency multiplep mfm > testnewproc_mfm.in
+#../pNMRsim -noexecute testnewproc.in multiple frequency singlep mfs > testnewproc_mfs.in
+#../pNMRsim -noexecute testnewproc.in 2D time multiplep 2tm > testnewproc_2tm.in
+#../pNMRsim -noexecute testnewproc.in 2D time singlep 2ts > testnewproc_2ts.in
+#../pNMRsim -noexecute testnewproc.in 2D frequency multiplep twofm > testnewproc_2fm.in
+#../pNMRsim testnewproc.in 2D frequency singlep 2fs

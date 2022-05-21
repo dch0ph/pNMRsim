@@ -1,0 +1,13 @@
+par {
+	np 1024
+	sw 1000
+}
+proc {
+	addsignals [0,50,250,300] 1 0
+	addlb 3
+	extract [$1:$np]
+	save $(name)$1.fid
+	zerofill 4
+	ft
+	save $(name)$1.spe
+}

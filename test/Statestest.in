@@ -1,0 +1,61 @@
+# Simple 2D with States
+spinsys {
+# :c restricts to central transition (classic quadrupole treatment only)
+	nuclei 11B:c 11B:c
+	channels 11B
+# Don't really need to distinguish spins with different shifts if using idealised transfer
+	shift 1 1000
+	shift 2 -1000
+	proton_frequency 400e6
+# Two 2nd order quadrupoles with different PAS orientations
+	quadrupole 1 1 1e6 0 0 0 0
+	quadrupole 2 1 1e6 0 0 30 0
+}
+par {
+	sw 5000
+	sw1 4000
+
+# Will need to increase no. of orientations for serious work
+#	crystal_file zcw:13	
+
+	np 256
+# Total of 32 FIDs, time increments every 2
+	ni 32 2
+
+#NB Need Rabi factor of 2 for central transition if using pulse
+	pulseid 5 50e3 y
+	store pulse90y
+
+#States phase cycling
+#	variable Statesphase {0,90}
+
+#start on x of spin 1 (avoids initial 90) and detect on spin 2
+	start_operator I1x
+	detect_operator I2c	
+
+#	verbose -general
+	matrix set X general [0,0,0,1,0,1,0,0]
+}
+pulseq {
+# t1 dimension
+	acq
+# transfer one component to z
+#	prop pulse90y+$Statesphase
+# idealised transfer from I1z to I2z (in fact we could use idealised transfers rather than pulses throughout)
+#	transfer I1z I2z
+	exchange I1x I2x X
+#	timeadjust 100
+
+#	prop pulse90y
+#detect
+	acq x
+}
+proc {
+# 100 Hz Lorentzian LB in t2, 200 Hz in t1
+	addlb 100 0 200 0
+#	save $(name)td -matlab -scale
+# 2D FT for amplitude-modulated data.  By default includes scaling of 1st point by 1/2 and data shift to put zero in middle of middle of spectrum
+	ft
+#	save $(name)fd -matlab -scale -sum
+	save $(name)fd.spe -simpson
+}
