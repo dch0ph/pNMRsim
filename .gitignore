@@ -56,6 +56,8 @@ autom4te.cache
 # (which is called by configure script))
 Makefile
 extras/Makefile
+*.fid
+*.spe
 
 .vscode/
 
