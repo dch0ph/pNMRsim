@@ -1,0 +1,33 @@
+    spinsys {
+    verbose 
+    nuclei 1H
+    channels 1H
+    proton_frequency 500e6
+#  transients simple 0
+#{0.00:0.02:1.00}
+}
+
+par {
+     verbose
+     start_operator   I1x
+     detect_operator  I1x
+#     crystal_file     single 0 30 0
+#     spin_rate        0
+     np  1
+     sw 100e3
+
+#delay 10
+#pulseid 5.0 100e3 0
+pulse 10 0e3 0
+#delay 10
+#pulseid 5.0 100e3 180
+#delay 10
+store txix
+}
+
+pulseq {
+	putmatrix start
+            prop txix 5
+     acq
+}
+
