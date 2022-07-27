@@ -2001,6 +2001,8 @@ ThreadWarning<> ignoring_transients_warning("-transients specified when transien
 //int EventID::size(bool allownull) const
 int EventID::size() const
 {
+  if (isdelay())
+	return 1; // simple delays have effectively one pulse
   accumulator acclength;
   if (durs_)
     acclength.add(durs_->value().size());

@@ -1,0 +1,41 @@
+# program to test embedded delays in pulse sequences, while looking at the evolution during the RF sequence
+spinsys {
+	nuclei 1H
+    shift 1 100
+	channels 1H
+}
+
+par {
+    verbose -general
+    start_operator I1z
+	detect_operator I1x
+	variable nP 1024
+	np $nP
+	variable dT .0001
+	sw 1/$dT 
+#density of points on FID is 10pts/ms. Duration of plot is 102.4ms
+
+## attempt 1 to define a 20msdelay+10ms90+20msdelay+10ms90 pulse sequence     
+#	delay .02*1e6 
+#    pulse 10e3 .25e6/10e3 90	
+#nb: duration in us, nutation freq in Hz, phase in deg 
+#	delay .02*1e6 
+#	pulse 10e3 .25e6/10e3 -90	
+# expect to see: 
+#	static Iz amplitude .5 for 20ms, 
+#	transition to Iz amplitude 0 in 10ms, 
+#	static Iz amplitude 0 for 20ms, 
+#	transition to Iz amplitude -.5 in 10ms 
+#   Static Iz the until the end of 102.4ms acq duration /or above sequence repeats to fill the acq time. 
+
+# attempt 2 bellow might work if the 0 amplitude pulses did not produce the Undefined: BlockedMatrix<T>::row error.
+
+    pulse [.02e6, .01e6, .02e6, .01e6] [0.0, .25e-2, 0.0, .25e-2] [90,90, -90, -90]
+#above generates Undefined: BlockedMatrix<T>::row error
+
+	store delayandpulse
+}
+
+pulseq {
+	acq 0 delayandpulse
+}

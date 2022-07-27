@@ -62,6 +62,7 @@ extras/Makefile
 .vscode/
 
 pNMRsim
+pNMRsimg
 pNMRproc
 extras/createdip
 extras/magres2pNMRsim

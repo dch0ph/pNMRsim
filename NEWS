@@ -1,4 +1,5 @@
-"13/8/15  tensorordering; IUPAC nuclear spin properties; save -original; save -reversefrequency\n\
+"26/7/22  Bug and portability fix version of version dated 13/8/15.\n\
+13/8/15  tensorordering; IUPAC nuclear spin properties; save -original; save -reversefrequency\n\
 10/4/15  V as qualifier to ||; tweaks to fitting; initial support for syntax; -test:<optimisation> (experimental); fitmask -reversefrequency; named function arguments\n\
  8/8/13  Enhanced matrix output (-structure,-eigenbasis,-statistics); fixes to MPI and propagation edge case; change to coherenceorder\n\
 31/1/13  Better handling of referencing in processing; fixed updating regression associated with smartprop optimisation; MAS timing jitter (experimental)\n\
