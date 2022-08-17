@@ -276,7 +276,21 @@ std::ostream& operator<< (std::ostream&, const PhasedSequence&);
 int round_int(double);
 inline int rawround_int(double f) { return (f<0.0) ? -int(0.5-f) : int(0.5+f); }
 
-typedef LIST<productoperator_spec> multioperator_spec; //!< list of ::productoperator_spec
+class multioperator_spec : public LIST<productoperator_spec> {
+public:
+  multioperator_spec() { reset_(); }
+  multioperator_spec(const productoperator_spec& spec)
+	: LIST<productoperator_spec>(1, spec) { reset_(); }
+
+  void clear() { LIST<productoperator_spec>::clear(); reset_(); }
+  void swap(multioperator_spec&);
+  void setnucleus(); //!< check for common nucleus
+  size_t nucleus() const { return nuc_; }
+  size_t arraytag_; //!< virtual dimension tag (0 if none) - shouldn't really be public (ease of parsing)
+private:
+  size_t nuc_; //!< common nucleus id (NULL_NUCLEUS if none)
+  void reset_() { arraytag_ = 0; nuc_ = NULL_NUCLEUS; }
+};
 
 class Expression;
 class ExpressionNamedBase;

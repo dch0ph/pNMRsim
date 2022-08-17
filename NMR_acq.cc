@@ -2590,12 +2590,16 @@ void dump_operator(const char* name, const productoperator_spec& spec, const Blo
     spyprint(ostr,op);
 }
 
-void update_auxiliary_vars()
+void update_auxiliary_vars(bool considercurrent)
 {
+  detect_freq = 0.0;  // explicitly flag that detection frequency is unknown (2022-08-17)
+  gammaX = 0.0;
   if (detect_specp) {
-    const productoperator_spec& detect_spec(detect_specp->current());
-    gammaX=gamma(nuclei_spec(detect_spec.nucleus()));
-    detect_freq=proton_freq*gammaX/get_gamma1H();
+	const size_t nuc = considercurrent ? (detect_specp->current()).nucleus() : detect_specp->nucleus();
+	if (nuc != NULL_NUCLEUS) {
+		gammaX=gamma(nuclei_spec(nuc));
+		detect_freq=proton_freq*gammaX/get_gamma1H();
+	}
   }
 }
 
@@ -2801,7 +2805,7 @@ void DataStore::create(size_t r, size_t c, const complex& v)
   //  sws_.create(r,swv);
   if (c==0)
     throw InternalError("DataStore::create: zero columns");
-  update_auxiliary_vars(); //!< bodge to ensure detect_freq created
+  update_auxiliary_vars(false); //!< (reduced) bodge to ensure detect_freq created
   procstates_.reserve(ndims);
   procstates_.create(size_t(0));
   for (size_t i=0;i<ndims-1;i++)

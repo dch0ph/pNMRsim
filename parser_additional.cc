@@ -8,6 +8,8 @@
 
 using namespace boost::spirit;
 
+ContextWarning<> unexpectedvdim_warning("virtual dimension set but only one operator expression (dimension ignored)!", &NMRsim_repeat_warning);
+
 //bool nondiagonal_opspec=false;
 LIST<productoperator_spec*> opspecstack;
 
@@ -42,6 +44,7 @@ struct OperatorSpecBuilder {
   struct Add;
   struct AddList;
   struct AddProduct;
+  struct FailedTag;
   struct Reset;
 };
   
@@ -59,7 +62,7 @@ struct ext_grammar : public grammar<ext_grammar>
     typedef rule<ScannerT> rule_t;
 
     rule< typename lexeme_scanner<ScannerT>::type > opspec;
-    rule_t opterm,productopspec,multiopspec;
+    rule_t opterm, productopspec, multiopspec, tag;
 
     definition(const ext_grammar&);
   };
@@ -82,6 +85,12 @@ struct OperatorSpecBuilder::Reset
   OperatorSpecBuilder& builder_;
 };
 
+struct OperatorSpecBuilder::FailedTag
+{
+  template<typename IteratorT> void operator()(const IteratorT&, const IteratorT&) const {
+    error_abort("Failed to parse virtual dimension qualifier. Syntax is :<dimension> where <dimension> is a dimension number 1,2,...");
+  }
+};
 
 template <typename ScannerT> ext_grammar::definition<ScannerT>::definition(const ext_grammar& self)
 {  
@@ -108,17 +117,19 @@ template <typename ScannerT> ext_grammar::definition<ScannerT>::definition(const
       >> !( (!(ch_p('-')[assign_const_a(self.opbuilder_.isminus_,true)]) >> ch_p('i') >> ch_p('*'))[assign_const_a(self.opbuilder_.iscomplex_,true)])
       >> lexeme_d[opspec][OperatorSpecBuilder::Add(self.opbuilder_)]
 	 >> *(  (ch_p('*') >> lexeme_d[opspec][OperatorSpecBuilder::Add(self.opbuilder_)]) ))[OperatorSpecBuilder::AddList(self.opbuilder_)];
-  
+ 
+  tag = ch_p(':') >> ( uint_p[assign_a(self.opbuilder_.multispec_.arraytag_)] | eps_p[OperatorSpecBuilder::FailedTag()]);
+ 
   productopspec
     = opterm >>
     // - sign is acknowledged but parsed later
     *(  (ch_p('+') | eps_p('-')) >> opterm);
 
   multiopspec
-    = (ch_p('{') >> list_p( productopspec[OperatorSpecBuilder::AddProduct(self.opbuilder_)], ch_p(','),'}') >> ch_p('}'))
+    = (ch_p('{') >> list_p( productopspec[OperatorSpecBuilder::AddProduct(self.opbuilder_)], ch_p(','),'}') >> ch_p('}') >> !tag)
     | productopspec[OperatorSpecBuilder::AddProduct(self.opbuilder_)];
 
-  this->start_parsers(productopspec,multiopspec);
+  this->start_parsers(productopspec, multiopspec);
 }
 
 void OperatorSpecBuilder::reset()
@@ -298,7 +309,7 @@ void OperatorSpecBuilder::reset(int flags)
   varbuilder_.reset(flags | F_ISPHASE);
   multispec_.clear();
   spec_.clear();
-  scale_=1.0;
+  scale_ = 1.0;
 }
 
 ext_grammar::ext_grammar(expr_grammar& exprgram)
@@ -338,9 +349,17 @@ setableoperator_spec* create_setableoperator(char* curptr, int flags)
   }
   setableoperator_spec* resultp=new setableoperator_spec(opspec_const);
   resultp->swap(ext_parser.setableoperator());
-  const size_t n=resultp->size();
+  resultp->setnucleus(); //!< try to find common nucleus
+  const size_t n = resultp->size();
+  const size_t tag = resultp->arraytag();
   if (n>1)
-    array_dims.set(0,n); //register size
+    array_dims.set(tag, n); //register size
+    if (verbose & VER_PARSE)
+      parser_printthread(std::cerr) << "createsetableoperator: setting productoperator list with " << n << " entries and virtual dimension " << tag << '\n';
+  else {
+	if (tag)
+		unexpectedvdim_warning.raise();
+  }
   markobj.flush(resultp);
   return resultp;
 }
@@ -389,6 +408,8 @@ void setableoperator_spec::set(double val, subsid_t subsid)
 void setableoperator_spec::print(std::ostream& ostr) const
 {
   ostr << (*this);
+  if (arraytag_)
+	ostr << ':' << arraytag_;
 }
 
 //NB unique only within object

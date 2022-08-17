@@ -126,33 +126,35 @@ public:
 //! mix of ::multioperator_spec and ::Setable to allow co-efficients to be varied
 /*! \note A separate class is defined for the mix since ::multioperator_spec needs
   to be visible to the parser which does not know (or want to know) about ::Setable */
-struct setableoperator_spec : public multioperator_spec, public Setable {
+class setableoperator_spec : public multioperator_spec, public Setable {
 public:
   setableoperator_spec(const operator_spec& spec_, const basespin_system& sys_) 
     :  
-    LIST<productoperator_spec>(1,productoperator_spec(spec_,sys_)),
-      isconst_(true) {} //!< construct ::multioperator_spec
+    multioperator_spec(productoperator_spec(spec_,sys_)),
+      isconst_(true) {} //!< construct ::setableoperator_spec
 
   setableoperator_spec(const productoperator_spec& spec_)
-    : LIST<productoperator_spec>(1,spec_), isconst_(true) {}
+    : multioperator_spec(spec_), isconst_(true) {}
 
   setableoperator_spec(const operator_spec& spec_) 
     : 
-    LIST<productoperator_spec>(1,productoperator_spec(spec_)),
-      isconst_(true) {} //!< construct ::multioperator_spec
+    multioperator_spec(productoperator_spec(spec_)),
+      isconst_(true) {} //!< construct ::setableoperator_spec
 
   explicit setableoperator_spec(bool isconstv =true) 
     : isconst_(isconstv) {} //!< create empty (which can be added to)
 
-  const productoperator_spec& current() const; //!< return current (array-indexed) product operator specification
-  productoperator_spec& current();
+  const productoperator_spec& current() const { return (*this)(currentindex()); } ; //!< return current (array-indexed) product operator specification
+  productoperator_spec& current() { return (*this)(currentindex()); } 
 
+  size_t arraytag() const { return arraytag_; }
   void set(double, subsid_t =S_NONE); //!< set coefficient method (subsid_t codes for 
   void print(std::ostream&) const;
   void printvariablename(std::ostream&, subsid_t) const;
   bool isconstant() const { return (size()==1) && isconst_; } //!< \c false if operator specification is non-trivial (a list and/or contains variable co-efficients)
   bool operator!() const { return empty(); }
 private:
+  size_t currentindex() const;  //!< return current index
   bool isconst_; //!< \c false if operator specification contains variable co-efficients
 };
 
@@ -947,7 +949,7 @@ struct dimension_set
   static incommensurate_warning_t incommensurate_warning2;
 };
 
-void update_auxiliary_vars();
+void update_auxiliary_vars(bool considercurrent = true);
 double gammatimeoffset(); //!< express current powder gamma angle as time offset in Hsys
 extern dimension_set array_dims; //!< dimension set for array
 extern dimension_set sum_dims; //!< dimension set for sum

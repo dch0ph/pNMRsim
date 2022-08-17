@@ -124,7 +124,7 @@ void operator_stats::logstats(logfile_controller& logcon, const statsobj& stats,
   else
     strncpy(superbase,base,sizeof(superbase));
 
-  char title[256];
+  char title[280];
   snprintf(title,sizeof(title),"%s_nonzerocounts",superbase);
   logcon.write(stats.nzcount,title);
   snprintf(title,sizeof(title),"%s_counts",superbase);
@@ -1373,7 +1373,7 @@ void MasterObj::recreate_Hs()
   if (allowreal) {
     //    const bool allowdiagonal=!acqseqp && !haveactions && !!(phasep->simple_opgenp); //CrystalOpGen doesn't support diagonal 
     //    if (Hstruct.isdiagonal() && !hasacquisition_rf() && !haveactions && (quadrupole_order!=0))
-    if (Hstructp->isdiagonal() && !haveactions && ((quadrupole_order==1) || (quadrupole_order!=0) && !isclassicQ())) {
+    if (Hstructp->isdiagonal() && !haveactions && ((quadrupole_order==1) || ((quadrupole_order!=0) && !isclassicQ()))) {
       if (spin_rate_jitter) {
 	diagonaljitter_warning.raise();
 	hamtype=H_REAL; // consolation prize
@@ -2177,16 +2177,33 @@ void parse_start_operator()
   sigma0_specp=parse_setableoperator();
 }
 
-const productoperator_spec& setableoperator_spec::current() const
-{ 
-  return (size()==1)
-    ? front()
-    : (*this)(var_index % size());
+void multioperator_spec::swap(multioperator_spec& a)
+{
+	LIST<productoperator_spec>::swap(a);
+	std::swap(arraytag_, a.arraytag_);
+	std::swap(nuc_, a.nuc_);
 }
 
-productoperator_spec& setableoperator_spec::current()
-{ 
-  return (size()==1) ? front() : (*this)(var_index % size());
+void multioperator_spec::setnucleus()
+{
+	if (empty())
+		throw InternalError("setnucleus() called before any operators defined");
+	nuc_ = front().nucleus();
+	for (size_t j=1; j<size(); j++) {
+		if ((*this)(j).nucleus() != nuc_) {
+			nuc_ = NULL_NUCLEUS;
+			return;
+		}
+	}
+}
+			
+size_t setableoperator_spec::currentindex() const
+{
+	if (size()==1)
+		return 0;
+	size_t transindex;
+	(void)getindex(transindex, arraytag_, size()); //!< note ignores update status (potential missed optimisation with virtual dimension)
+	return transindex;
 }
 
 ListList<int> parse_coherencelist()

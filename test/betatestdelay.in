@@ -1,14 +1,14 @@
 # program to test embedded delays in pulse sequences, while looking at the evolution during the RF sequence
 spinsys {
 	nuclei 1H
-    shift 1 100
+#    shift 1 100
 	channels 1H
 }
 
 par {
     verbose -general
     start_operator I1z
-	detect_operator I1x
+	detect_operator {I1+,I1z}
 	variable nP 1024
 	np $nP
 	variable dT .0001
@@ -30,7 +30,7 @@ par {
 
 # attempt 2 bellow might work if the 0 amplitude pulses did not produce the Undefined: BlockedMatrix<T>::row error.
 
-    pulse [.02e6, .01e6, .02e6, .01e6] [0.0, .25e-2, 0.0, .25e-2] [90,90, -90, -90]
+    pulse [.02e6, .01e6, .02e6, .01e6] [0.0, 25, 0.0, 25] [90,90, -90, -90]
 #above generates Undefined: BlockedMatrix<T>::row error
 
 	store delayandpulse

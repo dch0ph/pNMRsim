@@ -1,4 +1,5 @@
-"26/7/22  Bug and portability fix version of version dated 13/8/15.\n\
+"17/8/22  Extend virtual dimensions to operator lists\n\
+26/7/22  Bug and portability fix version of version dated 13/8/15.\n\
 13/8/15  tensorordering; IUPAC nuclear spin properties; save -original; save -reversefrequency\n\
 10/4/15  V as qualifier to ||; tweaks to fitting; initial support for syntax; -test:<optimisation> (experimental); fitmask -reversefrequency; named function arguments\n\
  8/8/13  Enhanced matrix output (-structure,-eigenbasis,-statistics); fixes to MPI and propagation edge case; change to coherenceorder\n\

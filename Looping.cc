@@ -128,8 +128,11 @@ bool getindex(size_t& transindex, size_t tag, size_t arraylen)
     return false;
   }
   size_t usei;
-  if (tag) 
+  if (tag) { 
+	if (arrayinds.empty())
+		throw InternalError("getindex: called before row iterator set up");
     usei=arrayinds(tag-1);
+  }
   else {
     if (row_index<0) //!< change from var_index 17/10/13 - var index not always updated
       throw InternalError("getindex: row_index not valid");
