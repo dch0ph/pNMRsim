@@ -397,9 +397,9 @@ static void make_nD_par_variables()
   command_Factory_t& par_Factory(get_par_Factory());
   char vname[6];
   for (size_t i=1;i<=MAX_DIMENSIONS;i++) {
-    sprintf(vname,"n%" LCM_PRI_SIZE_T_MODIFIER "u",i);
+    snprintf(vname,sizeof(vname),"n%" LCM_PRI_SIZE_T_MODIFIER "u",i);
     par_Factory[vname]=par_t(&parse_n,i,true);
-    sprintf(vname,"sw%" LCM_PRI_SIZE_T_MODIFIER "u",i);
+    snprintf(vname,sizeof(vname),"sw%" LCM_PRI_SIZE_T_MODIFIER "u",i);
     par_Factory[vname]=par_t(&parse_swn,i,true);
   }
   par_Factory["ni"]=par_t(&parse_n,1,true);

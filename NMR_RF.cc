@@ -172,7 +172,7 @@ void parse_transients()
   bool nonzero=false;
   transient_amps.create(nchannels);
   for (size_t j=0;j<nchannels;j++) {    
-    sprintf(name,"transient_amplitude%" LCM_PRI_SIZE_T_MODIFIER "u",j+1);
+    snprintf(name,sizeof(name),"transient_amplitude%" LCM_PRI_SIZE_T_MODIFIER "u",j+1);
     transient_amps(j)=new SysVar_trans(name,j);
     parse_system_variable(*(transient_amps(j)));
     if (transient_amps(j)->get())

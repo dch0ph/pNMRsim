@@ -2708,7 +2708,7 @@ void parse_variable()
   if (istuple && !isconst) {//!< create base tuple expression
     tuplecount++;
     char tmpname[16];
-    sprintf(tmpname,"<tuple%" LCM_PRI_SIZE_T_MODIFIER "u>",tuplecount);
+    snprintf(tmpname,sizeof(tmpname),"<tuple%" LCM_PRI_SIZE_T_MODIFIER "u>",tuplecount);
     tuplevarp=UserVariable::create(tmpname,*valuep,UserVariable::IGNORE_UNUSED); //!< internal variable
     tuplevarp->flagused(); //!< always used
     markobj.flush(tuplevarp);

@@ -322,7 +322,7 @@ FitCommand* FitMask::create()
     LIST< LIST<bool> > inds(fit_sets.size());
     char scr[60];
     for (size_t i=0;i<fit_sets.size();i++) {
-      sprintf(scr,"Selection for data set %" LCM_PRI_SIZE_T_MODIFIER "u",i+1);
+      snprintf(scr,sizeof(scr),"Selection for data set %" LCM_PRI_SIZE_T_MODIFIER "u",i+1);
       validatesel(sels(i),inds(i),scr,2,fit_sets(i).cols());
     }
     parse_maskflags(inv,rev);
@@ -1698,13 +1698,13 @@ static LIST<double> swstore;
 void makevars(size_t setno, size_t np, size_t ni, const filestruct& info)
 {
   char scratch[64];
-  sprintf(scratch,"sw_exp%" LCM_PRI_SIZE_T_MODIFIER "u",setno);
+  snprintf(scratch,sizeof(scratch),"sw_exp%" LCM_PRI_SIZE_T_MODIFIER "u",setno);
   (void)UserVariable::create(scratch,info.sw,UserVariable::IGNORE_UNUSED);
-  sprintf(scratch,"np_exp%" LCM_PRI_SIZE_T_MODIFIER "u",setno);
+  snprintf(scratch,sizeof(scratch),"np_exp%" LCM_PRI_SIZE_T_MODIFIER "u",setno);
   (void)UserVariable::create(scratch,double(np),UserVariable::IGNORE_UNUSED);
-  sprintf(scratch,"ni_exp%" LCM_PRI_SIZE_T_MODIFIER "u",setno);
+  snprintf(scratch,sizeof(scratch),"ni_exp%" LCM_PRI_SIZE_T_MODIFIER "u",setno);
   (void)UserVariable::create(scratch,double(ni),UserVariable::IGNORE_UNUSED);
-  sprintf(scratch,"ref_exp%" LCM_PRI_SIZE_T_MODIFIER "u",setno);
+  snprintf(scratch,sizeof(scratch),"ref_exp%" LCM_PRI_SIZE_T_MODIFIER "u",setno);
   (void)UserVariable::create(scratch,info.ref,UserVariable::IGNORE_UNUSED);
 
   const bool inseq=((setno-1)==swstore.size());

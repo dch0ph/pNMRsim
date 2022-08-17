@@ -349,9 +349,9 @@ void ensure_dimension(size_t i)
   if (done(i))
     return;
   char vname[6];
-  sprintf(vname,"n%lu",(unsigned long)i);
+  snprintf(vname,sizeof(vname),"n%lu",(unsigned long)i);
   add_systemvarmap(*(new SystemVariable<int*>(vname,&(ns(i-1)),V_ISFIXED | V_ISCONST)));
-  sprintf(vname,"sw%lu",(unsigned long)i);
+  snprintf(vname,sizeof(vname),"sw%lu",(unsigned long)i);
   add_systemvarmap(*(new SystemVariable<double*>(vname,&(sws(i-1)),1.0,V_ISFIXED | V_ISCONST)));
 }
 

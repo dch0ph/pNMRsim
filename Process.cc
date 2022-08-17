@@ -617,9 +617,9 @@ const char* ProcessSave::makefilename(const char* fnamep, const char* name) cons
       break;
     default:
       if (*fnamep)
-	sprintf(scrp,"%s_%s",fnamep,name);
+		sprintf(scrp,"%s_%s",fnamep,name);
       else
-	strcpy(scrp,name);
+		strcpy(scrp,name);
     }
   }
   else {
@@ -1183,7 +1183,7 @@ void ProcessSave::writeparametersoptions(const ProcessSave_state& state, int row
 	  const char* scrp=makefilename(state.fname,"parameters");
 	  FILE* foutp=opencomments(scrp,"w");
 	  for (size_t i=0;i<varnames.size();i++) {
-	    sprintf(buffer,"%s \t%g \t%g",varnames(i),valerrs(i,size_t(0)),valerrs(i,size_t(1)));	  
+	    snprintf(buffer,sizeof(buffer),"%s \t%g \t%g",varnames(i),valerrs(i,size_t(0)),valerrs(i,size_t(1)));	  
 	    writeline(foutp,buffer,'\0');
 	  }
 	  closecomments(foutp,"parameters");	
@@ -2120,7 +2120,7 @@ void ProcessAddLB::set_(double& lb_, double& gfrac_, double& t2_, double& lbg_, 
 {
   char buf[256];
   if ((gfracin<0.0) || (gfracin>1.0)) {
-    sprintf(buf,"addlb: Lorentzian/Gaussian fraction must be between 0 and 1 (given %g)",gfracin);
+    snprintf(buf,sizeof(buf),"addlb: Lorentzian/Gaussian fraction must be between 0 and 1 (given %g)",gfracin);
     throw InvalidParameter(buf);
   }
   lb_=lbin;
@@ -3871,13 +3871,13 @@ void read_spinsight(cmatrix& dest, filestruct& finfo, const char *fname)
   if (strlen(fname)+10>MAXPATH)
     throw Failed("read_spinsight: path name overflow");
 
-  sprintf(buf,"%s/data",fname);
+  snprintf(buf,sizeof(buf),"%s/data",fname);
   if (!isreadable(buf))
     throw Failed("read_spinsight: failed to open <dir>/data file");
 
   parbuf_t pars;
 
-  sprintf(buf,"%s/acq",fname);
+  snprintf(buf,sizeof(buf),"%s/acq",fname);
   if (!isreadable(buf))
     throw Failed("read_spinsight: failed to open <dir>/acq file");
   read_spinsight_parfile(pars,buf);
@@ -3907,7 +3907,7 @@ void read_spinsight(cmatrix& dest, filestruct& finfo, const char *fname)
   size_t ni=1,np;
 
   //Read proc file
-  sprintf(buf,"%s/proc",fname);
+  snprintf(buf,sizeof(buf),"%s/proc",fname);
   pars.clear();
   read_spinsight_parfile(pars,buf);
 
@@ -3939,7 +3939,7 @@ void read_spinsight(cmatrix& dest, filestruct& finfo, const char *fname)
   //	par.title=lPar["com"].remove('\n');
 
   //open data file
-  sprintf(buf,"%s/data",fname);
+  snprintf(buf,sizeof(buf),"%s/data",fname);
   FILE* pFile=file_open(buf, "rb");
   const off_t lSize = file_length(pFile);
   if (lSize & 7) {
