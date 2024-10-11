@@ -20,7 +20,7 @@ The [`libcmatrix` NMR library](https://github.com/dch0ph/libcmatrix).  pNMRsim i
 
 The `Minuit` library (in its C++ incarnation) is required for optimisation problems.  It is not required, however, for data fitting which uses `libcmatrix` routines.  The "version 2" form of the C++ Minuit library is recommended as more up to date, but it must be a stand-alone version rather than one integrated into ROOT (see the README for `libcmatrix`).
 
-The "classic" version of the Boost Spirit library is used for parsing. You will need the standalone version of the final incarnation (1.8.5), not the version that is currently supplied with Boost. A slightly patched version is available at the pNMRsim web page.
+The "classic" version of the Boost Spirit library is used for parsing. You will need a standalone version, [1.8.5](https://github.com/dch0ph/spirit-1.8.5-miniboost-patched), not the later versions of Spirit that are currently supplied with Boost. 
  
 [SIMPLOT](https://inano.au.dk/about/research-centers-and-projects/nmr/software/simpson) is useful for visualising pNMRsim output (although a variety of output formats are supported).
 
@@ -52,7 +52,7 @@ See the installation instructions for `libcmatrix` for more details.
 2.  Configure pNMRsim as above, making sure that `configure` can find the `libcmatrix` header files and library (`CPPFLAGS` and `LDFLAGS` respectively - again the `libcmatrix` INSTALL instructions discuss this).  You will need to add the path to the Spirit files by adding `-I`<Spirit directory (containing boost/spirit)>.
 
 Hence a minimal configure run will typically be
-`CPPFLAGS="-I../spirit-1.8.5-miniboost -I../libcmatrix/include" LDFLAGS="-L../libcmatrix/lib" ./configure`
+`CPPFLAGS="-I../spirit-1.8.5-miniboost-patched -I../libcmatrix/include" LDFLAGS="-L../libcmatrix/lib" ./configure`
 
 3.  `make` will compile pNMRsim and pNMRproc.
 
