@@ -1307,7 +1307,7 @@ int main(int argc, const char* argv[])
 	else {
 	  labelp=curatom.label.c_str();
 	  if (curatom.species==curatom.label) { //!< if no attempt to make label, create one
-	    snprintf(labelbuf,sizeof(labelbuf),"%s:%i",curatom.species.c_str(),curatom.index);
+	    snprintf(labelbuf,sizeof(labelbuf),"%s:%zu",curatom.species.c_str(),curatom.index);
 	    labelp=labelbuf;
 	  } 
 	}

@@ -52,9 +52,11 @@ See the installation instructions for `libcmatrix` for more details.
 2.  Configure pNMRsim as above, making sure that `configure` can find the `libcmatrix` header files and library (`CPPFLAGS` and `LDFLAGS` respectively - again the `libcmatrix` INSTALL instructions discuss this).  You will need to add the path to the Spirit files by adding `-I`<Spirit directory (containing boost/spirit)>.
 
 Hence a minimal configure run will typically be
-`CPPFLAGS="-I../spirit-1.8.5-miniboost -I../libcmatrix/include" LDFLAGS="-L../libcmatrix/lib" ./configure`
+`CPPFLAGS="-I../spirit-1.8.5-miniboost-patched -I<basedir>/libcmatrix/include" LDFLAGS="-L<basedir>/libcmatrix/lib" ./configure`
 
-3.  `make` will compile pNMRsim and pNMRproc.
+Note that absolute paths should be used rather than relative ones so that the paths are transferable.
+
+3.  `make` will compile pNMRsim, pNMRproc and extras/magres2pNMRsim.
 
 These is currently an issue with configure failing to find `std::isnan` on Windows. If compile errors involving `isnan` are raised, try adding `-DISNAN_IN_STD` to `CPPFLAGS`. In general, compilation for Linux is strongly recommended.
 
