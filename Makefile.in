@@ -47,7 +47,7 @@ pNMRsim.o: pNMRsim.cc
 #	libtool --mode=compile $(CXX) $(CXXFLAGS) -c -o extras.lo extras.cc
 #	libtool --mode=link $(CXX) -no-undefined -avoid-version -export-dynamic -module $(CXXFLAGS) -o extras.la extras.lo
 
-VERSION=V150813
+VERSION=V220817p1
 ARCH=linux64
 TOTALVERSION=$(ARCH)_$(VERSION)
 
@@ -60,10 +60,10 @@ binaryarchive: programs
 	cp -r extras/magres2pNMRsim@EXEEXT@ extras/*.inc extras/*.sed extras/*.py ../pNMRsim_$(TOTALVERSION)/extras
 	rm -f ../pNMRsim_$(TOTALVERSION)/*/*~
 # tar.gz option
-	cd ..; tar cf pNMRsim_binaries_$(TOTALVERSION).tar pNMRsim_$(TOTALVERSION)
-	gzip -f ../pNMRsim_binaries_$(TOTALVERSION).tar
+#	cd ..; tar cf pNMRsim_binaries_$(TOTALVERSION).tar pNMRsim_$(TOTALVERSION)
+#	gzip -f ../pNMRsim_binaries_$(TOTALVERSION).tar
 # zip version
-#	cd ..; zip -r pNMRsim_binaries_$(TOTALVERSION).zip pNMRsim_$(TOTALVERSION)
+	cd ..; zip -r pNMRsim_binaries_$(TOTALVERSION).zip pNMRsim_$(TOTALVERSION)
 
 spirittest: spirittest.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o
 	$(LINK) -o $@ spirittest.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o $(LIBRARIES)
@@ -72,7 +72,7 @@ ptrans: ptrans.o Parser.o Action-noexec.o parser_definition.o expression_definit
 	$(LINK) -o $@ ptrans.o Parser.o NMR-noexec.o Action-noexec.o parser_definition.o expression_definition.o standard_functions.o parser_additional.o $(LIBRARIES)
 
 archive: distclean
-	cd .. ; tar --exclude=*~ --exclude config.status --exclude Makefile -cvf pNMRsim_source_$(VERSION).tar pNMRsim
+	cd .. ; tar --exclude=*~ --exclude config.status --exclude Makefile  --exclude extras/Makefile --exclude .git -cvf pNMRsim_source_$(VERSION).tar pNMRsim
 	gzip -f ../pNMRsim_source_$(VERSION).tar
 
 html:
