@@ -828,6 +828,11 @@ void SystemVariable<FUNC_REAL>::print(std::ostream& ostr) const
 //   this->print(ostr,full ? S_NONE : S_ARG1);
 // }
 
+command_Factory_t& get_initialpar_Factory() { 
+  static command_Factory_t initialpar_Factory;
+  return initialpar_Factory;
+}
+
 command_Factory_t& get_par_Factory() { 
   static command_Factory_t par_Factory;
   return par_Factory;

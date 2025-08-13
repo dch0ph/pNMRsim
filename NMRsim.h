@@ -849,6 +849,7 @@ struct par_t {
 
 typedef std::map<std::string,par_t> command_Factory_t; //!< factory type for directives
 extern command_Factory_t& get_par_Factory(); //!< get par block directive factory
+extern command_Factory_t& get_initialpar_Factory(); //!< get initialpar block directive factory
 extern command_Factory_t& get_Global_Factory(); //!< get global directive factory
 bool havekey(const command_Factory_t&, const std::string&); //!< returns \c true if directive has been used
 

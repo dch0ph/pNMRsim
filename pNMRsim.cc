@@ -519,6 +519,7 @@ int main(int argc_,char **argv_)
   if (argc && (argv[0][0]=='-'))
     std::cerr << "Warning: $1 begins with - (" << argv[0] << ").  Misplaced flag?\n";
 
+  declare_builtin_block("initialpar");
   declare_builtin_block("spinsys");
   declare_builtin_block("par");
   //  declare_builtin_block("initialise");
@@ -531,6 +532,7 @@ int main(int argc_,char **argv_)
   parser_init(fname,argc,argv);
 
   if (noexecute) { //scan through blocks
+    scan_block("initialpar", true);
     scan_block("spinsys",true);
     scan_block("par");
     //    scan_block("initialise",true);
@@ -541,6 +543,11 @@ int main(int argc_,char **argv_)
     scan_block("finalise",true);
     return 0;
   }
+
+  // Workaround to allow spinsys block to contain only interactions - proton_frequency must be defined earlier
+  auto initialpar_Factory(get_initialpar_Factory());
+  initialpar_Factory["proton_frequency"]=&parse_proton_frequency;
+  (void)read_block("initialpar",initialpar_Factory,true);
 
   command_Factory_t& spinsys_Factory(initialise_spinsys_Factory());
   spinsys_Factory["channels"]=&parse_channels;
