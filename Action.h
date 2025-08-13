@@ -516,7 +516,7 @@ private:
 };
 
 typedef ActionCommand* (*ActionCommand_function)();
-typedef FASTMAPTYPE(ActionCommand_function) Action_Factory_t;
+typedef FASTMAPTYPE<ActionCommand_function> Action_Factory_t;
 Action_Factory_t& get_Action_Factory(); //!< get registry for pulse sequence directives
 extern LIST<actionstack_t> actionstacks; //!< pulse sequence(s)
 //extern size_t acq_count; 

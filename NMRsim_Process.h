@@ -739,7 +739,7 @@ void apply_procstacks(const BaseList<procstack_t>&, DataStore&); //!< apply proc
 bool process_command(const std::string&, char*, Variable* =nullptr); //!< parse processing directive
 
 typedef ProcessCommand* (*ProcessCommand_function)();
-typedef FASTMAPTYPE(ProcessCommand_function) Process_Factory_t;
+typedef FASTMAPTYPE<ProcessCommand_function> Process_Factory_t;
 Process_Factory_t& get_Process_Factory(); //!< return registry for processing directives
 Process_Factory_t& get_Finalise_Factory(); //!< return registry for objects in \c finalise block
 

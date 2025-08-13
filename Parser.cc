@@ -3,13 +3,13 @@
 #include "ScratchList.h"
 #include "ttyio.h"
 #include "expression_definition.hpp"
-#if NMRSIM_USE_HASH
+//#if NMRSIM_USE_HASH
 #include <unordered_set>
 typedef std::unordered_set<const char*> hashed_set_t;
-#else
-#include "cmatrix_hash_set.h"
-typedef hashed_set<> hashed_set_t;
-#endif
+//#else
+//#include "cmatrix_hash_set.h"
+//typedef hashed_set<> hashed_set_t;
+//#endif
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -1034,7 +1034,7 @@ void funcdef::restart()
   state_.curline=startline ? startline-1 : 0;
 }
 
-typedef MAPTYPE(funcdef*) funcdefmap_type;
+typedef MAPTYPE<funcdef*> funcdefmap_type;
 funcdefmap_type funcdefmap;
 
 void declare_builtin_block(const char* name)

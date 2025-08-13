@@ -124,7 +124,7 @@ template<class T> T auto_opt(MasterObj& Obj, auto_opt_base<T>& optobj, T startva
       const double sqrtchi2=sqrt(chi2);
       if (!silent)
 	std::cout << "Fractional difference (compared to previous iteration) with " << name << "=" << optobj.get() << ": " << sqrtchi2 << std::endl;
-      if (NMRSIM_ISNAN(sqrtchi2))
+      if (std::isnan(sqrtchi2))
 	error_abort("Calculation of chi2 failed - optimised parameter is probably out of range");
       if (sqrtchi2<curopt.chistop)
 	break;

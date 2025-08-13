@@ -664,7 +664,7 @@ private:
   mutable double fvalue; //!< value stored as \c double for ::get_list
 };
 
-typedef MAPTYPE(SystemVariableBase*) systemvarmap_type;
+typedef MAPTYPE<SystemVariableBase*> systemvarmap_type;
 extern systemvarmap_type systemvarmap; //!< map store for \c SystemVariables
 void add_systemvarmap(SystemVariableBase&); //!< add \c SystemVariable to map
 
@@ -801,10 +801,10 @@ inline std::ostream& operator<< (std::ostream& ostr, const UserVariable& a) {
 }
 
 //! dump map contents
-template<class T> std::ostream& operator<< (std::ostream& ostr,const MAPTYPE(T*)& a)
+template<class T> std::ostream& operator<< (std::ostream& ostr,const MAPTYPE<T*>& a)
 {
-  const typename MAPTYPE(T*)::const_iterator aend(a.end());
-  typename MAPTYPE(T*)::const_iterator astart(a.begin());
+  const typename MAPTYPE<T*>::const_iterator aend(a.end());
+  typename MAPTYPE<T*>::const_iterator astart(a.begin());
   while (astart!=aend) {
     ostr << *(astart->second) << '\n';
     ++astart;
@@ -1187,7 +1187,7 @@ void dump_timings(bool abbrev =false); //!< dump timings profile (abbreviated if
 void check_powderarray(); //!< set up powder array (if any)
 void checklogfile(const char* fname, bool otheractive, bool append); //!< crude check for overlapping log files
 
-typedef FASTMAPTYPE(const char*) spell_dictionary_type;
+typedef FASTMAPTYPE<const char*> spell_dictionary_type;
 extern spell_dictionary_type& get_spell_dictionary(); //!< return dictionary for possible spelling errors
 bool check_unrecognised(const char* unknown, const char* name =nullptr); //!< check unrecognised quantity \a unknown of type \a name (default -> "directive") for mis-spelling
 const char* register_and_getenv(const char*); //!< register name of environment variable (to spot later changes) and get value

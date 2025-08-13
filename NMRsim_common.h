@@ -2,14 +2,14 @@
 #define NMRsim_common_h_
 
 // 10/2/16  Removed in favour of configure --disable-CXX11
-//#define NMRSIM_USE_CXX11 1
+//constexpr auto NMRSIM_USE_CXX11 = 1;
 
 /*! \file NMRsim_common.h
  \brief  Header file required by component parsing pNMRsim expressions etc.
 */
 
 //! default error estimate is 10%
-#define NMRSIM_DEFAULT_ERROR 0.1
+constexpr double NMRSIM_DEFAULT_ERROR = 0.1;
 
 #include <string>
 #include <cstring>
@@ -20,7 +20,7 @@
 
 // 13/08/2025 Always use CX11
 // #ifdef NMRSIM_USE_CXX11
-#define NMRSIM_USE_HASH 1
+//#define NMRSIM_USE_HASH 1
 //#endif
 //#if NMRSIM_USE_HASH
 //! type used for directive maps
@@ -48,11 +48,16 @@ struct lcm_string_compare {
   }
 };
 
-#define FASTMAPTYPE(DATA) std::unordered_map<const char*, DATA, lcm_string_hash, lcm_string_compare >
-#define MAPTYPE(DATA) std::unordered_map<std::string, DATA>
+template<typename DATA>
+using FASTMAPTYPE = std::unordered_map<const char*, DATA, lcm_string_hash, lcm_string_compare>;
+template<typename DATA>
+using MAPTYPE = std::unordered_map<std::string, DATA>;
+
+//#define FASTMAPTYPE(DATA) std::unordered_map<const char*, DATA, lcm_string_hash, lcm_string_compare >
+//#define MAPTYPE(DATA) std::unordered_map<std::string, DATA>
 
 //#else
-//#define FASTMAPTYPE MAPTYPE
+//using FASTMAPTYPE = MAPTYPE;
 //#define MAPTYPE(DATA) std::map<std::string, DATA>
 //#endif
 
@@ -61,9 +66,9 @@ struct lcm_string_compare {
 #include "Warnings.h"
 
 //#ifdef NMRSIM_USE_CXX11
-#define NMRSIM_ISNAN std::isnan
+//#define NMRSIM_ISNAN std::isnan
 //#else
-//#define NMRSIM_ISNAN isnan
+//#define NMRSIM_ISNAN isnan;
 //#endif
 
 std::ostream& parser_printcontext(std::ostream& =std::cerr, bool printtoken =false); //!< print current parsing position (prior to warning/error)
@@ -100,7 +105,7 @@ extern libcmatrix::BaseWarning NMRsim_once_warning;
 
 //! type used for list/vector
 /** \note define necessary as mpi.h may define its own List in the global namespace (bad, bad) */
-#define LIST libcmatrix::List
+template<typename T> using LIST = libcmatrix::List<T>;
 
 // big include but required for productoperator_spec
 #include "BaseMetaPropagation.h"
@@ -109,12 +114,12 @@ extern libcmatrix::BaseWarning NMRsim_once_warning;
 using namespace libcmatrix;
 
 //! maximum deviation from integral value
-#define NMRSIM_ROUNDTOL 0.1
+constexpr double NMRSIM_ROUNDTOL = 0.1;
 
 //! recurse level that triggers warning (0 if none)
-#define NMRSIM_RECURSE_WARN 200
+constexpr int NMRSIM_RECURSE_WARN = 200;
 //! recurse level that forces abort (0 if none)
-#define NMRSIM_RECURSE_ABORT 10000
+constexpr int NMRSIM_RECURSE_ABORT = 10000;
 
 //! parse input flags
 enum { F_DENYZERO=1, //!< disallow zero
@@ -397,7 +402,7 @@ struct function_def_t {
   const ExpressionNamedBase& operator*() const; //!< resolve pointer to source function object
 };
 
-#if NMRSIM_USE_HASH
+//#if NMRSIM_USE_HASH
 //! hash for function signature
 class FunctionHash : public std::unary_function<function_spec,size_t> {
  public:
@@ -407,14 +412,14 @@ class FunctionHash : public std::unary_function<function_spec,size_t> {
   lcm_string_hash stringhasher_;
 };
 typedef std::unordered_map<function_spec,function_def_t, FunctionHash> Function_Factory_t;
-#else
+//#else
 
-struct FunctionCompare {
-  bool operator()(const function_spec&, const function_spec&) const;
-};
+//struct FunctionCompare {
+//  bool operator()(const function_spec&, const function_spec&) const;
+//};
 
-typedef std::map<function_spec,function_def_t,FunctionCompare> Function_Factory_t;
-#endif
+//typedef std::map<function_spec,function_def_t,FunctionCompare> Function_Factory_t;
+//#endif
 
 extern Function_Factory_t& get_Function_Factory(); //!< returns registry for function names
 
@@ -505,7 +510,7 @@ std::ostream& dumparray(std::ostream&, const BaseList<double>&, char ='['); //!<
 char matchingbracket(char); //!< return complementing bracket
 
 class CompSequenceBase;
-typedef MAPTYPE(CompSequenceBase*) seqmap_type;
+typedef MAPTYPE<CompSequenceBase*> seqmap_type;
 extern seqmap_type seqmap; //!< map of sequence fragments
 
 template<typename T> void dumpmap(const T& map, const char* name, const char* mapname, bool dumpoptions =true)
@@ -576,7 +581,7 @@ bool try_find_np(); //!< try to find alternative source of np info
 std::ostream& print_syntax_string(std::ostream&, const char*, size_t);
 void verify_syntax(const char* arg, const char* syn, size_t =0); //!< 0 indicates no separate arguments - print whole
 // fragments for constructing syntax strings
-#define NMRSIM_RANGESTR "<range of spectrum as indices numbered from 1>"
-#define NMRSIM_ROWCOLSTR "[<row selection>]#<column selection>"
+constexpr const char* NMRSIM_RANGESTR = "<range of spectrum as indices numbered from 1>";
+constexpr const char* NMRSIM_ROWCOLSTR = "[<row selection>]#<column selection>";
 
 #endif

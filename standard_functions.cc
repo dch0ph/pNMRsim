@@ -29,7 +29,7 @@ Function_Factory_t& get_Function_Factory()
 
 double ExpressionFunctionBase::checknan(double v) const
 {
-  if (NMRSIM_ISNAN(v))
+  if (std::isnan(v))
     throw InvalidParameter(name_);
   return v;
 }
@@ -667,7 +667,7 @@ void declare_function(const char* name, const ExpressionNamedBase& obj)
   Function_Factory[function_spec(namep->c_str(),-1)]=function_def_t(&obj);
 }
  
-#if NMRSIM_USE_HASH
+//#if NMRSIM_USE_HASH
 size_t FunctionHash::operator()(const function_spec& a) const 
 { 
   const size_t val= stringhasher_(a.first) ^ a.second;
@@ -675,7 +675,7 @@ size_t FunctionHash::operator()(const function_spec& a) const
   //std::cout << "Hashed " << a.first << " with " << a.second << " arguments to " << std::hex << val << std::dec << '\n';
   return val;
 }
-#endif
+//#endif
  
 struct proxy_ {
   proxy_() {

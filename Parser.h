@@ -66,7 +66,7 @@ extern ContextWarning<> include_nosubstitution_warning; //!< dynamic include but
 typedef std::map<std::string, smartptr<UserVariable,false> > uservarmap_type;
 extern uservarmap_type vardefmap; //!< registry for user variables
 
-typedef FASTMAPTYPE(size_t) flagsmap_type; //!< type for set of flags - Note that flags must be non-volatile strings for FASTMAP
+typedef FASTMAPTYPE<size_t> flagsmap_type; //!< type for set of flags - Note that flags must be non-volatile strings for FASTMAP
 
 void declare_builtin_block(const char*); //!< register standard block
 

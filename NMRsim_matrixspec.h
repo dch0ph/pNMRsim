@@ -143,7 +143,7 @@ inline bool operator!= (const matrixspec& a, const matrixspec& b)
 
 std::ostream& operator<< (std::ostream&, const matrixspec&);
 
-typedef MAPTYPE(matrixspec) matrixmap_type; 
+typedef MAPTYPE<matrixspec> matrixmap_type; 
 extern matrixmap_type matrixmap; //!< map of matrices
 			    
 			    const filter_def& getfiltermatrix(const char*);

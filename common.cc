@@ -141,14 +141,14 @@ void parse_verbose()
     verbose=def_verbose;
 }
 
-#if NMRSIM_USE_HASH==0
-bool FunctionCompare::operator()(const function_spec& f1, const function_spec& f2) const
-{
-  if (f1.second!=f2.second)//!< sort first on argument number since this is quicker
-    return (f1.second<f2.second);
-  return (strcmp(f1.first,f2.first)<0);
-}
-#endif
+//#if NMRSIM_USE_HASH==0
+//bool FunctionCompare::operator()(const function_spec& f1, const function_spec& f2) const
+//{
+//  if (f1.second!=f2.second)//!< sort first on argument number since this is quicker
+//    return (f1.second<f2.second);
+//  return (strcmp(f1.first,f2.first)<0);
+//}
+//#endif
 
 std::ostream& prettyprint_interval(double t1, double t2, std::ostream& ostr)
 {

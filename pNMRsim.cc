@@ -169,11 +169,11 @@ template<class T> usage_t dump_timer_(const T& v, bool abbrev, std::ostream& ost
 }
       
 
-template<class T> tusage_t dump_timer(const MAPTYPE(T*)& a, const char* name, bool abbrev =false, std::ostream& ostr =std::cout)
+template<class T> tusage_t dump_timer(const MAPTYPE<T*>& a, const char* name, bool abbrev =false, std::ostream& ostr =std::cout)
 {
   usage_t tot;
-  const typename MAPTYPE(T*)::const_iterator end(a.end());
-  typename MAPTYPE(T*)::const_iterator start(a.begin());
+  const typename MAPTYPE<T*>::const_iterator end(a.end());
+  typename MAPTYPE<T*>::const_iterator start(a.begin());
   if (start!=end) {    
     if (!abbrev)
       ostr << name << '\n';

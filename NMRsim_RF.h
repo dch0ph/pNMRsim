@@ -431,7 +431,7 @@ private:
   double phase; //!< phase shift
 };
 
-typedef MAPTYPE(CycledSequence*) cycledseqmap_type;
+typedef MAPTYPE<CycledSequence*> cycledseqmap_type;
 extern cycledseqmap_type cycledseqmap; //!< map of phase cycled sequences
 extern LIST<CycledSequence*> cycledseqlist; //!< list of all cycled sequences
 

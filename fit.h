@@ -37,14 +37,14 @@ void check_extract(cmatrix&); //!< apply any range selection
 
 typedef double (*OptimiseFunction)(const DataStore&); //!< typedef for external optimisation function
 typedef OptimiseFunction (*OptimiseParse)();
-typedef FASTMAPTYPE(OptimiseParse) Optimise_Factory_t; 
+typedef FASTMAPTYPE<OptimiseParse> Optimise_Factory_t; 
 Optimise_Factory_t& get_Optimise_Factory();
 
-typedef FASTMAPTYPE(FitCommand_t) Fit_Factory_t; //!< type of ::FitCommand registry
+typedef FASTMAPTYPE<FitCommand_t> Fit_Factory_t; //!< type of ::FitCommand registry
 Fit_Factory_t& get_Fit_Factory(); //!< get registry for (stacked) fit directives
 Fit_Factory_t& get_minmax_Factory(); //!< get registry for min/max directives
 typedef void (*GlobalFitCommand_function)();
-typedef FASTMAPTYPE(GlobalFitCommand_function) GlobalFit_Factory_t;
+typedef FASTMAPTYPE<GlobalFitCommand_function> GlobalFit_Factory_t;
 GlobalFit_Factory_t& get_setup_fit_Factory(); //!< registry for non-interactive directives
 
 extern ThreadWarning<> impossiblesave_warning; //!< save of data that is not available

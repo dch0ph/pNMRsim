@@ -626,7 +626,7 @@ void VarVariable::printname(std::ostream& ostr) const
   }
 }
 
-typedef MAPTYPE(VarVariable*) namedvarmap_t;
+typedef MAPTYPE<VarVariable*> namedvarmap_t;
 namedvarmap_t namedvarmap; //!< list of named fitting variables
 
 //const double default_step_scale=0.1; //default error is 10%
@@ -941,21 +941,21 @@ size_t get_maxiter()
  
 ContextWarning<> nonterminalstar_warning("* can only be used for parameter matching at end of name e.g. t1* not *t1",&NMRsim_once_warning);
 
-template<typename T> void findpartialmap(LIST<T>& dest, const MAPTYPE(T)& map, const char* name, const char* mapname, bool dumpoptions =true)
+template<typename T> void findpartialmap(LIST<T>& dest, const MAPTYPE<T>& map, const char* name, const char* mapname, bool dumpoptions =true)
 {
   const size_t nchars=strlen(name)-1;
-  const typename MAPTYPE(T)::const_iterator end(map.end());
+  const typename MAPTYPE<T>::const_iterator end(map.end());
   const size_t oldlen=dest.size();
   
   if (name[nchars]!='*') {
-    const typename MAPTYPE(T)::const_iterator curp(map.find(name));
+    const typename MAPTYPE<T>::const_iterator curp(map.find(name));
     if (curp!=end) {
       dest.push_back(curp->second);
       return;
     }
   }
   else {
-    typename MAPTYPE(T)::const_iterator start(map.begin());
+    typename MAPTYPE<T>::const_iterator start(map.begin());
     while (start!=end) {
       const std::string& key(start->first);
       if (key.compare(0,nchars,name,nchars)==0)
@@ -2503,7 +2503,7 @@ void FitRun::exec() const
       if (cvar.isfixed())
 	continue;
       const double Hii=Hessian(active,active);
-      if ((Hii==0.0) || NMRSIM_ISNAN(Hii)) {
+      if ((Hii==0.0) || std::isnan(Hii)) {
 	if (!doneintro) {
 	  std::cerr << "Hessian matrix was singular.  Simulation appears to be invariant to the following parameter(s):\n";
 	  doneintro=true;
