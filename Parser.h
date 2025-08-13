@@ -22,12 +22,12 @@
 void parser_init(const char*, int argc, char* argv[], int flags =0); //!< initialise parser
 bool parser_inblock(); //!< \c true if parsing lines inside a block (as opposed to global)
 const char* parser_getfname(); //!< get input file
-void parser_newblock(const char* blockname_, bool, const char* keynames_[] =NMRSIM_NULL, size_t nkeys_ =0); //!< open new {} block
+void parser_newblock(const char* blockname_, bool, const char* keynames_[] =nullptr, size_t nkeys_ =0); //!< open new {} block
 void parser_getinteractive(const char* intro, std::istream& =std::cin); //!< get parse line from input stream with prompt \a intro 
 bool parser_foundlast(); //!< return \c true if last block was found
 bool parser_isopen(); //!< return \c true if input file open
 const char* clean_variable_name(char*); //!< strip any leading $, warn missing literal quotes
-bool parser_getline(bool executeglobal =true); //!< get input line (NMRSIM_NULL if no more)
+bool parser_getline(bool executeglobal =true); //!< get input line (nullptr if no more)
 const char* parse_variable_name(); //!< get variable name
 size_t parse_counting(const char*); //!< parse counting number (from 1) from string (0 if invalid)
 void parser_insertline(const char*);
@@ -82,12 +82,12 @@ extern bool iscommonPAS; //!< \c true if all interactions share a common PAS
 LIST<int> parse_intarray(int =0); //!< parse list of integers
 LIST<size_t> parse_unsignedintarray(int offset =0, int  flags =0); //!< parse list of unsigned integers, with optional offset
 LIST<size_t> parse_unsignedintarray_syntax(const char*, size_t, int offset =0, int  flags =0); //!< parse list of unsigned integers, with optional offset
-int parse_int(Variable* =NMRSIM_NULL, int =0); //!< parse integer quantity
-int parse_unsigned(Variable* =NMRSIM_NULL, int =0); //!< parse unsigned integer
-int parse_unsigned_syntax(const char*, size_t, Variable* =NMRSIM_NULL, int =0); //!< parse unsigned integer
+int parse_int(Variable* =nullptr, int =0); //!< parse integer quantity
+int parse_unsigned(Variable* =nullptr, int =0); //!< parse unsigned integer
+int parse_unsigned_syntax(const char*, size_t, Variable* =nullptr, int =0); //!< parse unsigned integer
 size_t parse_unsigned_offset(int offset, int =0); //!< parse unsigned integer after subtracting offset 
-double parse_double(Variable* =NMRSIM_NULL, int =0); //!< parse real quantity
-double parse_double_syntax(const char*, size_t, Variable* =NMRSIM_NULL, int =0); //!< parse real quantity
+double parse_double(Variable* =nullptr, int =0); //!< parse real quantity
+double parse_double_syntax(const char*, size_t, Variable* =nullptr, int =0); //!< parse real quantity
 double parse_shift(Variable*, double gamrat, int flags =0); //!< parse shift quantity
 size_t parse_nucleusname(const char*); //!< parse nucleus name (13C etc.)
 VariableBase* parse_double_variable(Variable&, int =0);
@@ -97,7 +97,7 @@ size_t parse_flag(const flagsmap_type&, const char*); //!< parse individual flag
 size_t parse_flags(const flagsmap_type&, size_t def =0, bool oneonly =false); //!< parse flags
 char* get_curline(); //!< get pointer to current parse line
 void set_curline(char *); //!< set current parse point
-char* get_token(int flags =0, const char* type =NMRSIM_NULL); //!< get next token (and advance)
+char* get_token(int flags =0, const char* type =nullptr); //!< get next token (and advance)
 size_t count_left(bool =true); //!< count remaining tokens
 bool are_left(); //!< return \c true if unparsed tokens left
 //PhasedSequence* parse_phasedsequence(int flags =0); //!< parse sequence+phase (NB be careful with setable phase issues)
@@ -125,7 +125,7 @@ struct Splitter {
   
   char* next(char&);
   char* next() { char junk; return next(junk); } //discard
-  bool atend() const { return ((curptr==NMRSIM_NULL) || !(*curptr)); }
+  bool atend() const { return ((curptr==nullptr) || !(*curptr)); }
   
   char* curptr;
   const char* chars;
@@ -207,7 +207,7 @@ template<class Factory> typename Factory::mapped_type factory_parse(const char* 
 //!< call parsing function creating new object
 template<class Func,class T> T* factory_call(Func funcp, Type2Type<T>)
 {
-  T* newac=NMRSIM_NULL;
+  T* newac=nullptr;
   Mark markobj;
   try {
     newac=(*funcp)();
@@ -218,7 +218,7 @@ template<class Func,class T> T* factory_call(Func funcp, Type2Type<T>)
     error_abort();
   }
   if (markobj.needsflush()) {
-    if (newac==NMRSIM_NULL)
+    if (newac==nullptr)
       throw InternalError("factory_call null pointer");
     newac->isconstant(false); //flag is not const
     markobj.flush(newac);
@@ -256,7 +256,7 @@ template<class StackT, class ControlT> bool found_control(const char* keyname, S
   }
   const size_t startindex=controlstack.back();
   ControlT* headp=dynamic_cast<ControlT*>(pstack(controlstack.back()));
-  if (headp==NMRSIM_NULL)
+  if (headp==nullptr)
     throw InternalError("factor_read: bad control block");
   if (strcmp(headp->type(),rest)!=0) {
     parser_printcontext() << "expecting end " << (headp->type()) << " but found end " << rest << '\n';

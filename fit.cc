@@ -81,12 +81,12 @@ static LIST<cmatrix> fit_sets;
 namespace {
   enum { STAT_RELEASE=1, STAT_SILENT=2, STAT_IFCONS=4 };
   double global_chisqr=0;
-  FitObj* fitobjp=NMRSIM_NULL;
+  FitObj* fitobjp=nullptr;
 #ifdef USE_MINUIT
   MasterObj* objp;
   smartptr<LCM_MINUITNAMESPACE::FunctionMinimum,false> globalminp;
   bool min_funcset=false;
-  OptimiseFunction min_externalp=NMRSIM_NULL;
+  OptimiseFunction min_externalp=nullptr;
 #endif
   int dirtystart=-1; //!< pointer to un-named variables in fitting vars stack (-1 nothing to do)
   bool haverun=false;
@@ -391,7 +391,7 @@ FitCommand* FitSystem::create()
   if (restcom && *restcom) {
     substitute_string(comline,sizeof(comline),restcom,SUB_NUMERIC);
     FitCommand* newcom=new FitSystem(comline);
-    set_curline(NMRSIM_NULL);
+    set_curline(nullptr);
     return newcom;
   }
   else
@@ -409,7 +409,7 @@ FitCommand* FitNormalise::create()
     std::cerr << "normalisation mode must be fixed before starting and cannot be changed interactively\n";
   else
     normaliseptr.reset(static_cast<ProcessNormalise*>(ProcessNormalise::create()));
-  return NMRSIM_NULL;  //!< don't return an object
+  return nullptr;  //!< don't return an object
 }
 
 class FitSet : public FitCommand
@@ -491,17 +491,17 @@ struct FitMinuitRun : public FitCommand
 
 struct FitHelp : public FitCommand
 {
-  static FitCommand* create() { return NMRSIM_NULL; }
+  static FitCommand* create() { return nullptr; }
 };
 
 struct FitAbort : public FitCommand
 {
-  static FitCommand* create() { return NMRSIM_NULL; }
+  static FitCommand* create() { return nullptr; }
 };
 
 struct FitFinish : public FitCommand
 {
-  static FitCommand* create() { return NMRSIM_NULL; }
+  static FitCommand* create() { return nullptr; }
 };
 
 class FitTolerance : public FitCommand
@@ -708,7 +708,7 @@ void dump_factory(const Fit_Factory_t& factory)
   Fit_Factory_t::const_iterator start(factory.begin());
   while (start!=end) {
     const char* desc= (start->second).description;
-    if (desc) //!< NMRSIM_NULL indicates command that should not be used interactively
+    if (desc) //!< nullptr indicates command that should not be used interactively
       std::cout << desc << '\n';
     ++start;
   }
@@ -765,7 +765,7 @@ double final_chisquared=0.0;
 static SystemVariable<double*> v_final_optimisation("final_optimisation",&final_optimisation,1.0,V_ISFIXED);
 static SystemVariable<double*> v_final_chisquared("final_chisquared",&final_chisquared,1.0,V_ISFIXED);
 
-prefinalise_callback_t old_prefinalise_callback=NMRSIM_NULL;
+prefinalise_callback_t old_prefinalise_callback=nullptr;
 
 bool parse_optimise_block()
 {
@@ -871,7 +871,7 @@ void runinteractive()
       continue;
     }
     const Fit_Factory_t::mapped_type funcdesc(curdesc->second);
-    FitCommand* fitcom=NMRSIM_NULL;
+    FitCommand* fitcom=nullptr;
     bool parsefailed=false;
     try {
       fitcom=(*(funcdesc.funcp))();
@@ -1155,7 +1155,7 @@ void docalc_statistics(int flags)
 
   const bool ignoreconstraints=flags & (STAT_RELEASE | STAT_IFCONS);
   prepare_paras(true,true);
-  if (fitobjp==NMRSIM_NULL)
+  if (fitobjp==nullptr)
     throw InternalError("docalc_statistics");
   ensure_noisevector(global_np);
   const int fitverb=fit_verbose_level();
@@ -1180,7 +1180,7 @@ void FitStatistics::exec() const
 void ProcessStatistics::rawexec(DataStore& FID) const
 {
   //  build_noisevector();
-  if (masterobjp==NMRSIM_NULL)
+  if (masterobjp==nullptr)
     throw InternalError("ProcessStatistics::rawexec");
   build_fitobjs(*masterobjp);
   ensure_named();
@@ -1439,7 +1439,7 @@ void execfitstack()
       fitstack.push_back(new FitRun(FitRun::allowinteractive));
   }
   else {
-    if (dynamic_cast<FitRun*>(fitstack.back())==NMRSIM_NULL)
+    if (dynamic_cast<FitRun*>(fitstack.back())==nullptr)
       fit_directiveafterrun_warning.raise();
   }
 
@@ -1624,8 +1624,8 @@ FitCommand* FitPrecision::create()
   return are_left() ? new FitPrecision(parse_double()) : new FitPrecision();
 #else
   precwarning.raise();
-  set_curline(NMRSIM_NULL);
-  return NMRSIM_NULL;
+  set_curline(nullptr);
+  return nullptr;
 #endif
 }
 
@@ -1636,7 +1636,7 @@ void checknotbuilt()
     alreadybuilt_warning.raise();
 }
 
-void read_file(cmatrix& tmp_set, filestruct& info, const char* fname, LIST<std::string>* varnamesp =NMRSIM_NULL)
+void read_file(cmatrix& tmp_set, filestruct& info, const char* fname, LIST<std::string>* varnamesp =nullptr)
 {
   checknotbuilt();
   raw_read_file(tmp_set,info,fname,varnamesp);
@@ -1948,7 +1948,7 @@ size_t prepare_paras(bool lsilent, bool nomods)
     switch (cvar.subsid) {
       case S_ASYM: {
 	const Interaction* interp=dynamic_cast<Interaction*>(cvar.ptr);
-	if (interp==NMRSIM_NULL)	
+	if (interp==nullptr)	
 	  notinteraction_warning.raise();
 	else {
 	  if (!(interp->isxy()))
@@ -1966,7 +1966,7 @@ size_t prepare_paras(bool lsilent, bool nomods)
     
 //     if (converteta && (cvar.subsid==S_ETA)) { //turn ETAs into XYs
 //       const Interaction* interp=dynamic_cast<Interaction*>(cvar.ptr);
-//       if (interp==NMRSIM_NULL)
+//       if (interp==nullptr)
 // 	notinteraction_warning.raise();
 //       else {
 // 	interp->convert_anisotropy(cvar);
@@ -2035,7 +2035,7 @@ FitExternal::FitExternal(OptimiseFunction min_externalpv)
   : min_externalp_(min_externalpv) 
 {
   if (!min_externalpv)
-    throw Failed("NMRSIM_NULL optimisation function!");    
+    throw Failed("nullptr optimisation function!");    
   min_funcset=true;
 }
 
@@ -2072,7 +2072,7 @@ void FitSum::exec() const
 {
   col_sel=col_sel_;
   row_sel=row_sel_;
-  min_externalp=NMRSIM_NULL;
+  min_externalp=nullptr;
 }
 
  void parse_minmax(int invert)
@@ -2206,7 +2206,7 @@ void FitMinuitRun::exec() const
     }
   }
 
-    if (objp==NMRSIM_NULL)
+    if (objp==nullptr)
       throw InternalError("FitMinuitRun::exec");
 
   static MinObj minobj(*objp);
@@ -2333,12 +2333,12 @@ void dump_parameters(bool onlyvars, bool ignoreconstraints)
     cvar.printname();
     const double val=cvar.get();
     std::cout << ":\t " << val;
-//     Interaction* interp=NMRSIM_NULL;
+//     Interaction* interp=nullptr;
 //     if (cvar.subsid==S_ASYM) { //report XY as ETA
 //       interp=dynamic_cast<Interaction*>(cvar.ptr);
 //       if (interp) {
 // 	if (interp->isxy() || ((val>-asymtol) && (val<1+asymtol)))
-// 	  interp=NMRSIM_NULL; //!< no problem
+// 	  interp=nullptr; //!< no problem
 //       }
 //       else
 //  	notinteraction_warning.raise();
@@ -2348,7 +2348,7 @@ void dump_parameters(bool onlyvars, bool ignoreconstraints)
 // // 	std::cout << " +/- " << ((cvar.step)/interp->anisotropy()) << " (approx)";
 // //       std::cout << ']';
 // //       if (
-// // 	interp=NMRSIM_NULL; //! everything OK	
+// // 	interp=nullptr; //! everything OK	
 //     }
     if (cvar.isfixed())
       std::cout << "  (fixed)\n";
@@ -2450,7 +2450,7 @@ void FitRun::exec() const
 
   const size_t actiter=get_maxiter();
   const double acttol=get_tolerance();
-  if (fitobjp==NMRSIM_NULL)
+  if (fitobjp==nullptr)
     throw InternalError("FitRun::exec");
   ensure_noisevector(source.size());
   const bool havenoise=havenoisespec();

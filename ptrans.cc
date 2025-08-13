@@ -19,7 +19,7 @@ double proton_freq=0.0;
 // };
 
 // struct TranslateInfinity {
-//   TranslateInfinity(bool isIplusv) : isIplus_(isIplusv), fp_(NMRSIM_NULL {}
+//   TranslateInfinity(bool isIplusv) : isIplus_(isIplusv), fp_(nullptr {}
 //   ~TranslateInfinity() {
 //     if (fp_)
 //       fclose(fp_);
@@ -44,7 +44,7 @@ double proton_freq=0.0;
 // {
 //   checkopen();
 //   fclose(fp_);
-//   fp_=NMRSIM_NULL
+//   fp_=nullptr
 // }
 
 void output_line(const char* buffer)
@@ -62,29 +62,29 @@ bool proton_freq_isconstant()
 Variable* create_fitting_variable(const VarVariable&)
 {
   error_abort("Can't use fitting variables");
-  return NMRSIM_NULL // dummy to avoid warning
+  return nullptr // dummy to avoid warning
 }
 
 ActionCommand* ActionFilter::create()
 {
   std::cerr << "filter cannot be translated (ignored)\n";
-  return NMRSIM_NULL
+  return nullptr
 }
 
 ActionCommand* ActionPutMatrix::create()
 {
-  return NMRSIM_NULL //!< putmatrix is silently ignored
+  return nullptr //!< putmatrix is silently ignored
 }
 
 int auto_vars=0;
-CrystalStructure* cstructp=NMRSIM_NULL //shouldn't be referred to
+CrystalStructure* cstructp=nullptr //shouldn't be referred to
 
 double get_nmrfreq()
 {
   throw InternalError("get_nmrfreq"); //this should never be required
 }
 
-const basespin_system* get_spin_system() { return NMRSIM_NULL }
+const basespin_system* get_spin_system() { return nullptr }
 
 void post_channels() {}
 

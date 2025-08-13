@@ -46,7 +46,7 @@ public:
   static ContextWarning<> ignoring_warning; //!< logging commands will be ignored
   static ContextWarning<> badclose_warning; //!< close request with no open file
 
-  bool supports_composite() const { return (filep_matlab!=NMRSIM_NULL); }
+  bool supports_composite() const { return (filep_matlab!=nullptr); }
   
   void open_composite(const char*);
   void close_composite();
@@ -66,15 +66,15 @@ private:
   logfile_controller& operator= (const logfile_controller&);
 
   int flags; //!< log file flags
-  matlab_controller* filep_matlab; //!< Matlab file controller (NMRSIM_NULL if not Matlab)
-  matlab_controller::composite* filep_composite; //!< used for substructures - NMRSIM_NULL if not used;
+  matlab_controller* filep_matlab; //!< Matlab file controller (nullptr if not Matlab)
+  matlab_controller::composite* filep_composite; //!< used for substructures - nullptr if not used;
 
-  FILE* filep_ascii; //!< ASCII file pointer (NMRSIM_NULL if not ASCII)
+  FILE* filep_ascii; //!< ASCII file pointer (nullptr if not ASCII)
 };
 
 void reset_logcount(); //!< reset counters used to tag log output
 void update_log_file(const char* fname, int flags); //!< change log file to \a fname
 //extern smartptr<logfile_controller,false> log_filep;
-logfile_controller* get_logfile(); //!< pointer to log file controller object (NMRSIM_NULL if non active)
+logfile_controller* get_logfile(); //!< pointer to log file controller object (nullptr if non active)
 
 #endif

@@ -258,7 +258,7 @@ struct ExpressionFunctionBase::End {
 
 struct VariableBuilder::Mismatched
 {
-  explicit Mismatched(char parenv, const char* typev =NMRSIM_NULL)
+  explicit Mismatched(char parenv, const char* typev =nullptr)
     : paren_(parenv), type_(typev) {}
   template<typename IteratorT> void operator()(IteratorT st, const IteratorT& en) const {
     parser_printcontext() << "Parsing stopped before finding closing " << paren_;
@@ -582,7 +582,7 @@ void VariableBuilder::evaluate(LIST<double>& res)
   //  throw Failed("Expression must evaluate to constant");    
   expr_.get(res);
   size_t nels=res.size();
-  Expression* exprp=NMRSIM_NULL;
+  Expression* exprp=nullptr;
   if (expr_.isconstant())
     offsetstmp_.push_back(nels,size_t(-1));
   else {
@@ -742,7 +742,7 @@ void VariableBuilder::addsimple()
   scr_.push_back(var_value);
   steps_.push_back(vstep);
   offsetstmp_.push_back(-1);
-  exprstmp_.push_back((Expression*)NMRSIM_NULL);
+  exprstmp_.push_back((Expression*)nullptr);
 }  
 
 template<> void VariableBuilder::cleanup<VariableBuilder::SIMPLE>()
@@ -956,7 +956,7 @@ double VariableBase::get_error() const
 
  void RealVariable::set_error(double err, size_t i)
  {
-   if (varp_==NMRSIM_NULL)
+   if (varp_==nullptr)
      throw InternalError("RealVariable::set_error");
    varp_->set_error(err,i);
  }
@@ -983,14 +983,14 @@ bool RealVariable::validate() const
  
 const VariableBase& RealVariable::value() const
 {
-  if (varp_==NMRSIM_NULL)
+  if (varp_==nullptr)
     throw Undefined("RealVariable");
   return *varp_;
 }
 
 VariableBase& RealVariable::value()
 {
-  if (varp_==NMRSIM_NULL)
+  if (varp_==nullptr)
     throw Undefined("RealVariable");
   return *varp_;
 }

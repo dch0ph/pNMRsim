@@ -64,8 +64,8 @@ struct autoopt_item {
 template<class T> T auto_opt(MasterObj& Obj, auto_opt_base<T>& optobj, T startval, const autoopt_item&, const char* name, T maxval =T(0));
 
 namespace {
-  precalculation_callback_t old_precalculation_callback=NMRSIM_NULL;
-  VariableBase* autostorep=NMRSIM_NULL;
+  precalculation_callback_t old_precalculation_callback=nullptr;
+  VariableBase* autostorep=nullptr;
   LIST<autoopt_item> autoopt_stack;
 }
 
@@ -202,7 +202,7 @@ void testoptions(MasterObj& Obj)
   }
 
   std::string origname;
-  SystemVariable<std::string>* strpos=NMRSIM_NULL;
+  SystemVariable<std::string>* strpos=nullptr;
   const systemvarmap_type::iterator namepos(systemvarmap.find("name"));
   if (namepos!=systemvarmap.end()) {
     strpos=dynamic_cast< SystemVariable<std::string>* >(namepos->second);

@@ -96,7 +96,7 @@ ContextWarning<> sharedtarget_warning("dirty links have same apparent target",&N
 
 void dirty_stack_push(Variable* varp)
 {
-  if (varp==NMRSIM_NULL)
+  if (varp==nullptr)
     throw InternalError("dirty_stack_push");
   if ((verbose & VER_GEN) && (verbose_level>1))
     std::cout << "Pushing variable link onto dirty links stack (type=" << (varp->subsid) << ")\n";
@@ -176,21 +176,21 @@ namespace {
     return stat(p,&statbuf) ? false : S_ISDIR(statbuf.st_mode);
   }
 
-  //! return pointer to continuation point or NMRSIM_NULL if none
+  //! return pointer to continuation point or nullptr if none
   char* continuation(char* buf)
   {
     char* p=buf+strlen(buf)-1;
     bool doneinc=false;
     for (;;) {
       if (p<buf)
-	return NMRSIM_NULL;
+	return nullptr;
       if (!isspace(*p)) {
 	if (*p=='\\') {
 	  if (doneinc)
 	    postcontinuation_whitespace_warning.raise();
 	  return p;
 	}
-	return NMRSIM_NULL;
+	return nullptr;
       }
       if ((*p!='\n') && (*p!='\r'))
 	doneinc=true; //!< spot any non-CR/LF whitespace
@@ -233,7 +233,7 @@ void checkpathname(pathlist_t& pstore, const char* path)
   char* p=const_cast<char*>(tmp.c_str()); // a bit naughty - but we are not changing the string size
   char* token;
   while ((token=strtok(p,":"))) {
-    p=NMRSIM_NULL;
+    p=nullptr;
     // don't strip white space?
     if (*token) {
       if (isdirectory(token)) {
@@ -267,7 +267,7 @@ FILE* pathopen(const char* fname, const char* mode)
       return fp;
     ++start;
   }
-  return NMRSIM_NULL;
+  return nullptr;
 }
 
 void overflowerror()
@@ -431,7 +431,7 @@ struct funcdef
   size_t endline;
   bool active;
 
-  funcdef() : fp(NMRSIM_NULL) {}
+  funcdef() : fp(nullptr) {}
   funcdef(const char* fname_)
     : state_(fname_), startline(0), endline(0) { open(fname_); }
   
@@ -490,8 +490,8 @@ const char* frame::arg(size_t n) const
   return getargs()(n-1).c_str();
 }
 
-frame* curframep(NMRSIM_NULL);
-frame* topframep(NMRSIM_NULL);
+frame* curframep(nullptr);
+frame* topframep(nullptr);
 std::string inname;
 
 const char* parser_getfname()
@@ -527,7 +527,7 @@ Strpbrk::Strpbrk(const char* matchchars)
 char* Strpbrk::operator()(char* p) const
 {
   for (;tableok_(*p);p++);
-  return *p ? p : NMRSIM_NULL;
+  return *p ? p : nullptr;
 }
 
 char matchingbracket(char start)
@@ -705,7 +705,7 @@ VarVariable::VarVariable(const Variable& varv, Parameter& parv, int arraywhichv)
 // void VarVariable::updatebound()
 // {  
 //   const BaseBoundFunction* funcp=boundstate.function();
-//   if (funcp==NMRSIM_NULL) {
+//   if (funcp==nullptr) {
 //     parameter.unconstrain();
 //     return;
 //   }
@@ -772,7 +772,7 @@ void register_variable(Variable& vardef, VariableBase& newvar)
 
 double handle_variable(Variable* vardefp, int flags)
 {
-  VariableBase* newvarp=NMRSIM_NULL;
+  VariableBase* newvarp=nullptr;
   if (vardefp && vardefp->ptr) {
     varmap_t::iterator iter=varmap.find(vardefp->key());
     if (iter!=varmap.end()) {
@@ -793,7 +793,7 @@ double handle_variable(Variable* vardefp, int flags)
     //  throw InternalError("handle_variable:2");
     if (vardefp) {
       vardefp->subsid=S_NONE;
-      vardefp->valuep=NMRSIM_NULL;
+      vardefp->valuep=nullptr;
     }
     expr_parser.builder_.reset(); //reset parser so another variable can be parsed
     return value;
@@ -835,7 +835,7 @@ double handle_variable(Variable* vardefp, int flags)
 
 double handle_variable(int flags, size_t subsid)
 {
-  Variable cvar(subsid_t(subsid),NMRSIM_NULL);
+  Variable cvar(subsid_t(subsid),nullptr);
   return handle_variable(&cvar,flags);
 }
 
@@ -904,7 +904,7 @@ void funcdef::open(const char* fname_)
   }
   else {//postpone opening file until required
     state_.fname=fname_;
-    fp=NMRSIM_NULL;
+    fp=nullptr;
   }
   active=false;
 }
@@ -921,7 +921,7 @@ bool funcdef::getline(char* linebuf, size_t max)
   if (!active)
     return false;
 
-  const char* cptr=NMRSIM_NULL;
+  const char* cptr=nullptr;
   const bool usestack=!(curframep->coms.empty());
   size_t lines=0;
   if (usestack) {
@@ -1039,7 +1039,7 @@ funcdefmap_type funcdefmap;
 
 void declare_builtin_block(const char* name)
 {
-  funcdefmap[name]=NMRSIM_NULL;
+  funcdefmap[name]=nullptr;
 }
 
 void par_t::operator()()
@@ -1070,11 +1070,11 @@ Splitter::Splitter(char* source, const char* charsv, bool uniquev)
 char* Splitter::next(char& retsepchar)
 {
   if (atend())
-    return NMRSIM_NULL;
+    return nullptr;
 
   retsepchar=sepchar;
 
-  s=NMRSIM_NULL;
+  s=nullptr;
   for (const char* trychar=chars;*trychar;trychar++) {
     char *cur(strchr((*trychar=='-') ? curptr+1 : curptr,*trychar));
     if ( cur && ((cur<s) || !s))
@@ -1107,12 +1107,12 @@ char* Splitter::next(char& retsepchar)
     chewwhite(curptr);
   }
   else
-    curptr=NMRSIM_NULL;
+    curptr=nullptr;
   return oldptr;
 }
 
 //Parser state
-const char* blockname=NMRSIM_NULL;
+const char* blockname=nullptr;
 bool insection=false;
 bool needfresh=false;
 bool lastblockwasdefinition=false;
@@ -1152,8 +1152,8 @@ bool parser_isopen()
 const char delims[3]={ ' ','\t','\0' };
 static const double deg_to_rad=M_PI/180.0;
 
-static char* placeholder=NMRSIM_NULL;
-static char* lasttoken=NMRSIM_NULL;
+static char* placeholder=nullptr;
+static char* lasttoken=nullptr;
 
 #ifndef HAVE_STRTOK_R
 // replacement for strtok_r if missing
@@ -1166,7 +1166,7 @@ char* strtok_r( char *str, const char *delim, char **save_ptr )
 
   if (!*str) {
     *save_ptr=str;
-    return NMRSIM_NULL;
+    return nullptr;
   }
 
   char* ptr = str;
@@ -1206,7 +1206,7 @@ char* token_search(char*& cptr, char endpar ='\0', bool optional =false)
     parstack.create(size_t(0)); //reset paren stack
 
   char* lptr=cptr;
-  char* nextdelimp=NMRSIM_NULL;
+  char* nextdelimp=nullptr;
   bool stripquote=false;
   char insideliteral='\0';
   for (;;) {
@@ -1215,13 +1215,13 @@ char* token_search(char*& cptr, char endpar ='\0', bool optional =false)
     if (!nextdelimp) {
       if (endpar) {
 	if (optional)
-	  return NMRSIM_NULL;
+	  return nullptr;
 	parser_printcontext() << "Failed to find expected " << endpar << '\n';
 	error_abort();
       }
       nextdelimp=lptr+strlen(lptr);
     }
-    char* nextpar=NMRSIM_NULL;
+    char* nextpar=nullptr;
     if (insideliteral) {
       for (;;) {
 	nextpar=strchr(lptr,insideliteral);
@@ -1242,7 +1242,7 @@ char* token_search(char*& cptr, char endpar ='\0', bool optional =false)
 	*nextdelimp=delimchar; //!< restore
     }
     
-    if (nextpar==NMRSIM_NULL)
+    if (nextpar==nullptr)
       break;
     if (insideliteral)
       insideliteral='\0';
@@ -1299,7 +1299,7 @@ char* token_search(char*& cptr, char endpar ='\0', bool optional =false)
   return nextdelimp;
 }
 
-char* get_token_raw(char*& holder, int flags =0, const char* argtype =NMRSIM_NULL)
+char* get_token_raw(char*& holder, int flags =0, const char* argtype =nullptr)
 {
   char* cptr=holder;
   if (cptr) {
@@ -1310,7 +1310,7 @@ char* get_token_raw(char*& holder, int flags =0, const char* argtype =NMRSIM_NUL
       holder=nextdelimp+1;
     }
     else 
-      holder=NMRSIM_NULL;
+      holder=nullptr;
     
 //     if (*cptr=='\"') {
 //       holder=strchr(++cptr,'\"');
@@ -1319,9 +1319,9 @@ char* get_token_raw(char*& holder, int flags =0, const char* argtype =NMRSIM_NUL
 //       *holder++='\0';
 //     }
 //     else
-//       cptr=strtok_r(NMRSIM_NULL,delims,&holder);
+//       cptr=strtok_r(nullptr,delims,&holder);
   }
-  if ((cptr==NMRSIM_NULL) && !(flags & F_ALLOWMISSING)) {
+  if ((cptr==nullptr) && !(flags & F_ALLOWMISSING)) {
     if (!argtype)
       argtype="";
     parser_printcontext(std::cerr) << "Missing " << (*argtype) << " argument\n";
@@ -1385,7 +1385,7 @@ bool popinclude()
 {
   fps.pop();
   if (fps.empty()) {
-    curframep=topframep=NMRSIM_NULL; //finished all files?
+    curframep=topframep=nullptr; //finished all files?
     if (insection) {
       parser_printcontext() << "Reached end of input while still parsing " << blockname << " block!\n";
       error_abort();
@@ -1425,7 +1425,7 @@ void frame::open(funcdef* sourcep_, const BaseList<char*>& largs, bool persist)
 
 bool frame::skipcomments()
 {
-  lasttoken=NMRSIM_NULL; //!< clear references to previous lines
+  lasttoken=nullptr; //!< clear references to previous lines
   char rawlinebuf[MAXLINE];
   while (sourcep->getline(rawlinebuf,MAXLINE)) {
     substitute_string(linebuf,sizeof(linebuf),rawlinebuf,SUB_NUMERIC | SUB_ABORTHASH);
@@ -1716,7 +1716,7 @@ bool isenvironment(const char* str)
 inline char* strchrlimit(char* s, char* tail, char c)
 {
   char* p=strchr(s,c);
-  return (!p || (p>=tail)) ? NMRSIM_NULL : p;
+  return (!p || (p>=tail)) ? nullptr : p;
 }
 
 namespace {
@@ -1789,7 +1789,7 @@ char* substitute_string(char* buffer, int nchars, const char* rawcptr, int flags
     }
     bool hasparen=false;
     int skip=0;
-    char* tail=NMRSIM_NULL;
+    char* tail=nullptr;
     if (*dollar=='(') {
       hasparen=true;
 //       tail=strchr(++dollar,')');
@@ -1841,8 +1841,8 @@ char* substitute_string(char* buffer, int nchars, const char* rawcptr, int flags
       if (*dollar=='\0')
 	error_abort("invalid use of $: following variable name can contain only alphanumeric characters (letters and numbers)");
     }
-    char* qualifier=NMRSIM_NULL;
-    char* haspositive=NMRSIM_NULL;
+    char* qualifier=nullptr;
+    char* haspositive=nullptr;
     bool emptycountsasundefined=false;
     if (hasparen) {            
       qualifier=(n<0) ? strchr(dollar,'?') : strchrlimit(dollar,tail,'?');
@@ -1870,7 +1870,7 @@ char* substitute_string(char* buffer, int nchars, const char* rawcptr, int flags
     }
 
     if (flags & SUB_NUMERIC) {      
-      const char* varval=NMRSIM_NULL;
+      const char* varval=nullptr;
       if (n>=0) {
 	if (curframep->isargdefined(n))
 	  varval=curframep->arg(n);	  
@@ -1888,7 +1888,7 @@ char* substitute_string(char* buffer, int nchars, const char* rawcptr, int flags
 	}
       }
       if (varval && (*varval=='\0') && emptycountsasundefined)
-	varval=NMRSIM_NULL;
+	varval=nullptr;
 
       cptr=tail+skip;
       if (!varval) { //not defined?
@@ -2000,7 +2000,7 @@ char* parse_string_syntax(const char* syn, size_t narg, int flags)
   char* cptr=get_token(flags,"string");
   if (!cptr || !(*cptr)) {
     if (flags & F_ALLOWMISSING)
-      return NMRSIM_NULL;
+      return nullptr;
     error_abort("Null string argument");
   }
   else {
@@ -2057,8 +2057,8 @@ size_t parse_flags(const flagsmap_type& map, size_t defflags, bool oneonly)
 {
   size_t flags=0;
   for (;;) {
-    char* cptr= parser_isflag() ? get_token(F_ALLOWMISSING) : NMRSIM_NULL;
-    if (cptr==NMRSIM_NULL)
+    char* cptr= parser_isflag() ? get_token(F_ALLOWMISSING) : nullptr;
+    if (cptr==nullptr)
       return flags ? flags : defflags;
     if (flags & oneonly) {
       parser_printcontext() << "Only one flag allowed out of ";
@@ -2110,7 +2110,7 @@ template<> size_t parse_raw(char* cptr, Variable* vardefp, int flags)
 
 int parse_unsigned(Variable* vardefp, int flags)
 {
-  return parse_unsigned_syntax(NMRSIM_NULL,0,vardefp,flags);
+  return parse_unsigned_syntax(nullptr,0,vardefp,flags);
 }
 
 int parse_unsigned_syntax(const char* syn, size_t narg, Variable* vardefp, int flags)
@@ -2184,7 +2184,7 @@ void verify_syntax(const char* arg, const char* syn, size_t n)
     throw InvalidParameter("verify_syntax: NULL argument");
   if (strcmp(arg,"?")!=0)
     return;
-  if (syn==NMRSIM_NULL)
+  if (syn==nullptr)
     error_abort("Sorry - don't have syntax for this argument!");
 
   if (n==0)
@@ -2226,7 +2226,7 @@ Variable::Variable(subsid_t subsidv, Setable* ptrv, VariableBase* valuepv)
   if (ptrv)
     setptr(ptrv);
   else
-    ptr=NMRSIM_NULL;
+    ptr=nullptr;
 }
 
 const char* Variable::name() const
@@ -2353,7 +2353,7 @@ UserVariable* isvardefined(const char* varchar)
     error_abort("Can't redefine system variable");
   const uservarmap_type& usemap(vardefmap);
   const uservarmap_type::const_iterator iter=usemap.find(varchar);
-  return (iter==usemap.end()) ? NMRSIM_NULL : iter->second.get();
+  return (iter==usemap.end()) ? nullptr : iter->second.get();
 }
 
 UserVariable* makevariable(const char* varchar, VariableBase& var, int flagsv =0)
@@ -2422,7 +2422,7 @@ size_t maxslot(const char* str)
   size_t maxn=0;
   for (;;) {
     str=strchr(str,'#');
-    if (str==NMRSIM_NULL)
+    if (str==nullptr)
       return maxn;
     char* end;
     str++;
@@ -2519,7 +2519,7 @@ void parse_function()
   if (startargsp) {
     *startargsp++='\0';
     char* endargsp=strchr(startargsp,')');
-    if ((endargsp==NMRSIM_NULL) || (endargsp[1]!='\0'))
+    if ((endargsp==nullptr) || (endargsp[1]!='\0'))
       error_abort("syntax of function arguments is <function>(<args>) - failed to find matching ()");
     *endargsp='\0';
     char* strtokarg=startargsp;
@@ -2527,7 +2527,7 @@ void parse_function()
       char* arg=strtok(strtokarg,",");
       if (arg==NULL)
 	break;
-      strtokarg=NMRSIM_NULL;
+      strtokarg=nullptr;
       check_variable_name(arg);
       if ((strcmp(arg,"L")==0) || (strcmp(arg,"S")==0))
 	error_abort("L and S are reserved and can't be used for function argument names");
@@ -2585,7 +2585,7 @@ void parse_function()
   const function_spec spec(funcname,argcount);
   checkredefine(spec);
 
-  expr_pointer_stack.push_back((const Expression*)NMRSIM_NULL); //!< create space for new indirect pointer
+  expr_pointer_stack.push_back((const Expression*)nullptr); //!< create space for new indirect pointer
   ExpressionUserFunction* funcp=new ExpressionUserFunction(spec,argtype,expr_pointer_stack.back());
   doredefine(spec,funcp);
   const Expression& expr(*parse_expression(exprval));
@@ -2664,7 +2664,7 @@ void parse_variable()
 
   Mark markobj;
   const bool istuple=(varnames.size()>1);
-  UserVariable* oldvarp=istuple ? NMRSIM_NULL : isvardefined(varnames.front());
+  UserVariable* oldvarp=istuple ? nullptr : isvardefined(varnames.front());
   //Postpone until UserVariable::create ?
 //   if (oldvarp && oldvarp->islinked())
 //     error_abort("can't redefine variable that is used");
@@ -2681,7 +2681,7 @@ void parse_variable()
   const int userflags=parse_flags(vflags);
 
   VariableBase* valuep=cvar.valuep;
-  if (valuep==NMRSIM_NULL)
+  if (valuep==nullptr)
     throw InternalError("parse_variable");
   LIST<double> tmpvars;
   const size_t nvalues=valuep->value().size();
@@ -2704,7 +2704,7 @@ void parse_variable()
   }
   static ScratchList<size_t,2> extargs(3U);
   static size_t tuplecount=0;
-  UserVariable* tuplevarp=NMRSIM_NULL;
+  UserVariable* tuplevarp=nullptr;
   if (istuple && !isconst) {//!< create base tuple expression
     tuplecount++;
     char tmpname[16];
@@ -2766,7 +2766,7 @@ void parse_variable()
 std::ostream& parser_printcontext(std::ostream& ostr, bool printtoken)
 {
   parser_printthread(ostr);
-  const bool havetoken=((lasttoken!=NMRSIM_NULL) && printtoken);
+  const bool havetoken=((lasttoken!=nullptr) && printtoken);
   if (curframep)
     ostr << "At " << curframep->state();
   if (havetoken)
@@ -2795,7 +2795,7 @@ bool isregistered(const char* name)
     
 void parse_nmrsim_format(const char* nmrsimformat)
 {
-  const bool useexplicit=(nmrsimformat!=NMRSIM_NULL) && (*nmrsimformat!='\0');
+  const bool useexplicit=(nmrsimformat!=nullptr) && (*nmrsimformat!='\0');
   if (useexplicit) {
     formatstr[0]='%';
     if (strchr(nmrsimformat,'%'))
@@ -2811,7 +2811,7 @@ void parse_nmrsim_format(const char* nmrsimformat)
     else
       std::cout << "default)\n";
   }
-  hasprec=(strchr(formatstr,'*')!=NMRSIM_NULL);
+  hasprec=(strchr(formatstr,'*')!=nullptr);
 }
 
 void snprintf_prec(char* buf, size_t s, double val, bool ignoreformat)
@@ -2836,7 +2836,7 @@ void snprintf_prec(char* buf, size_t s, double val, bool ignoreformat)
 
 void parse_ignored()
 {
-  set_curline(NMRSIM_NULL);
+  set_curline(nullptr);
   ignoreddirective_warning.raise();
 }
 
@@ -3216,7 +3216,7 @@ ContextWarning<> ExpressionVariableFunction::outofmainloop_expression_warning("v
 
 void ExpressionVariableFunction::verify_initialised() const
 {
-  if (varp==NMRSIM_NULL)
+  if (varp==nullptr)
     throw InternalError("variable function not initialised");
 }
 
@@ -3256,7 +3256,7 @@ void FunctionValuesof::operator()(LIST<double>& dest) const
 
 bool FunctionValuesof::rawisconstant() const
 {
-//   assert(varp!=NMRSIM_NULL);
+//   assert(varp!=nullptr);
 //   if (!(varp->value().isarray()) || varp->value().isexprarray())
 //     nonarray_warning.raise(varp->name());
   return true;
@@ -3264,7 +3264,7 @@ bool FunctionValuesof::rawisconstant() const
  
 void FunctionErrorof::operator()(LIST<double>& dest) const
 {
-  if (varp==NMRSIM_NULL)
+  if (varp==nullptr)
     throw InternalError("FunctionErrorof");
   double err=varp->get_error();
   if (err<0.0)
@@ -3274,7 +3274,7 @@ void FunctionErrorof::operator()(LIST<double>& dest) const
 
 bool FunctionErrorof::rawisconstant() const
 {
-  if (varp==NMRSIM_NULL)
+  if (varp==nullptr)
     throw InternalError("FunctionErrorof::rawisconstant");
   return (varp->value().issimple());
 } 
@@ -3282,7 +3282,7 @@ bool FunctionErrorsof::rawisconstant() const { return true; }
 
 void FunctionErrorsof::operator()(LIST<double>& dest) const
 {
-  if (varp==NMRSIM_NULL)
+  if (varp==nullptr)
     throw InternalError("FunctionErrorsof");
   dest=varp->get_errors();
   for (size_t i=dest.size();i--;) {
@@ -3294,7 +3294,7 @@ void FunctionErrorsof::operator()(LIST<double>& dest) const
 void ExpressionVariableFunction::rawprint(std::ostream& ostr) const
 {
   ostr << name_;
-  if (varp!=NMRSIM_NULL)
+  if (varp!=nullptr)
     ostr << "(\'" << varp->name() << "\')";
   else
     ostr << "(<UNDEFINED!>)";

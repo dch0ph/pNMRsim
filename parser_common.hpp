@@ -40,7 +40,7 @@ template<typename IteratorT =def_iteratorT> struct MarkState_t {
   size_t nargs;
 
   MarkState_t(size_t stackposv)
-    : begin(NMRSIM_NULL), end(NMRSIM_NULL), stackpos(stackposv), nargs(-1) {} //!< list (no function name)
+    : begin(nullptr), end(nullptr), stackpos(stackposv), nargs(-1) {} //!< list (no function name)
 
   MarkState_t(IteratorT beginv, IteratorT endv, size_t stackposv)
     : begin(beginv), end(endv), stackpos(stackposv), nargs(-1) {} //!< function

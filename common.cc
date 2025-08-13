@@ -37,8 +37,8 @@ SystemVariable<double*> v_sw("sw",&sw,1.0,V_ISCONST);
 static bool donenp=false;
 static bool donesw=false;
 
-bool logfile_active() { return (get_logfile()!=NMRSIM_NULL); }
-inline bool allowoutput() { return (!silent || (get_logfile()!=NMRSIM_NULL)); }
+bool logfile_active() { return (get_logfile()!=nullptr); }
+inline bool allowoutput() { return (!silent || (get_logfile()!=nullptr)); }
 
 flagsmap_type verbose_flags;
 
@@ -182,13 +182,13 @@ void parse_precision()
 void parse_par_echo(int isecho)
 {
   if (!allowoutput()) {
-    set_curline(NMRSIM_NULL); //!< need to swallow rest of line
+    set_curline(nullptr); //!< need to swallow rest of line
     return;
   }
   char buffer[MAXLINE];
   substitute_string(buffer,sizeof(buffer),isecho ? get_curline() : get_token(),SUB_ESCAPE);
   if (isecho)
-    set_curline(NMRSIM_NULL);
+    set_curline(nullptr);
   output_line(buffer);
 }
 
@@ -412,7 +412,7 @@ static LIST< smartptr<logfile_controller,false> > logfile_stack;
 
 logfile_controller* get_logfile()
 {
-  return logfile_stack.empty() ? NMRSIM_NULL : logfile_stack.back().get();
+  return logfile_stack.empty() ? nullptr : logfile_stack.back().get();
 }
 
 logfile_controller::composite_guard::~composite_guard()
@@ -424,19 +424,19 @@ ThreadWarning<> logfile_controller::unexpectedcompositeclose_warning("logfile_co
 
 void logfile_controller::close_composite()
 {
-  if (filep_composite==NMRSIM_NULL)
+  if (filep_composite==nullptr)
     unexpectedcompositeclose_warning.raise();
   if (!(filep_composite->ok_to_close())) {
     parser_printthread(std::cerr) << "Can't close structured object - no items written? File will be corrupt\n";
     error_abort();
   }
   delete filep_composite;
-  filep_composite=NMRSIM_NULL;
+  filep_composite=nullptr;
 }
 
 void logfile_controller::open_composite(const char* name)
 {
-  if (filep_matlab==NMRSIM_NULL)
+  if (filep_matlab==nullptr)
     throw Failed("logfile_controller::open_composite can only be used for Matlab output format");
 
   if (filep_composite)
@@ -452,7 +452,7 @@ logfile_controller::composite_guard::composite_guard(logfile_controller& logconv
 }
 
 logfile_controller::logfile_controller(const char* name, int flagsv) 
-  : flags(flagsv), filep_composite(NMRSIM_NULL)
+  : flags(flagsv), filep_composite(nullptr)
 {
   if (flags & MATLAB) {
     int mcflags=0;
@@ -462,10 +462,10 @@ logfile_controller::logfile_controller(const char* name, int flagsv)
       mcflags|=matlab_controller::append;
 
     filep_matlab=new matlab_controller(name,5,mcflags);
-    filep_ascii=NMRSIM_NULL;
+    filep_ascii=nullptr;
   }
   else {
-    filep_matlab=NMRSIM_NULL;
+    filep_matlab=nullptr;
     filep_ascii=fopen(name,(flags & APPEND) ? "a" : "w");
     if (!filep_ascii)
       throw Failed("logfile_controller: couldn't open file");
@@ -637,7 +637,7 @@ void logfile_controller::parse_raw(char*& name, int& log_flags)
     }
   }
   else
-    name=NMRSIM_NULL;
+    name=nullptr;
 }
 
 ContextWarning<> logfile_controller::ignoring_warning("logging commands will be ignored during powder averaging",&NMRsim_once_warning);
@@ -688,7 +688,7 @@ double hist_gfrac=0.0;
 int hist_flags=0;
 double hist_min=0.0;
 double hist_max=0.0;
-LorentzianGaussian* lineshape_genp=NMRSIM_NULL;
+LorentzianGaussian* lineshape_genp=nullptr;
 ThreadWarning<> HistogramMaker::loss_warning("lost histogram intensity: ",&NMRsim_repeat_warning);
 
 namespace {
@@ -778,7 +778,7 @@ void update_lineshapegen()
   else {
     if (lineshape_genp) { //!< kill lineshape generator
       delete lineshape_genp;
-      lineshape_genp=NMRSIM_NULL;
+      lineshape_genp=nullptr;
     }
   }
 }

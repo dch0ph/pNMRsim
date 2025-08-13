@@ -346,7 +346,7 @@ class option {
     void setdefault(optional_t);
     const char* name() const { return label_.c_str(); }
     const char* description() const { return desc_.c_str(); }
-    void check(bool used, const char* desc =NMRSIM_NULL);
+    void check(bool used, const char* desc =nullptr);
     void setusage(bool);
     used_t getusage() const { return used_; }
     optional_t get() const { return value_; }
@@ -384,7 +384,7 @@ extern option optforcepointbypoint;
 extern option optphasemod;
 extern option optclassicQ;
 
-//void check_optional(const option& enable, const char* desc, bool isused, const char* name =NMRSIM_NULL); //!< check actual used status (\a isused) against user request (\a enable)
+//void check_optional(const option& enable, const char* desc, bool isused, const char* name =nullptr); //!< check actual used status (\a isused) against user request (\a enable)
 
 extern bool abortonwarning; //!< if \c true abort on precision / accuracy warning
 extern bool noexecute; //!< \c true if only parsing
@@ -398,10 +398,10 @@ extern size_t ndims; //!< number of dimensions in data set
 extern size_t nacqdims; //!< number of acquisition dimensions
 extern size_t nobs; //!< observations per acquisition period (0 if no sync)
 extern HamiltonianStore<space_T>* interactions_MFp; //!< NMR interaction set
-extern spin_system* sysp; //!< spin system definition (NMRSIM_NULL if unset)
-extern MasterObj* masterobjp; //!< master control object (NMRSIM_NULL if unset)
-extern setableoperator_spec* sigma0_specp; //!< sigma0 definition (NMRSIM_NULL if unset)
-extern setableoperator_spec* detect_specp; //!< detection operator def (NMRSIM_NULL if unset, sign reflects gamma)
+extern spin_system* sysp; //!< spin system definition (nullptr if unset)
+extern MasterObj* masterobjp; //!< master control object (nullptr if unset)
+extern setableoperator_spec* sigma0_specp; //!< sigma0 definition (nullptr if unset)
+extern setableoperator_spec* detect_specp; //!< detection operator def (nullptr if unset, sign reflects gamma)
 extern BlockedOperator sigma0; //!< current sigma0
 extern BlockedOperator detect; //!< current detection operator
 extern BlockedOperator density; //!< current density matrix
@@ -414,7 +414,7 @@ extern int nzcw; //!< powder orientation (ZCW) factor
 extern bool zcwisindex; //!< \c true if ZCW value should be always be interpreted as index
 extern bool havepowderquality(); //!< \c true if powder quality can be varied
 bool isfrequency(); //!< \c true if data is frequency domain
-//extern FILE* transitions_fp; //!< file pointer for transition list (NMRSIM_NULL if none)
+//extern FILE* transitions_fp; //!< file pointer for transition list (nullptr if none)
 bool transitions_log_active(); //!< \c true if transitions log file is active
 bool logfile_active(); //!< \c true if log file is active
 extern rmatrix vararray; //!< variable values per row of data set
@@ -690,7 +690,7 @@ struct Variable {
   mutable char buf[20]; //!< buffer for external representation
   mutable std::string namestr; //!< buffer for name (not created by default)
 
-  Variable(subsid_t subsidv =S_NONE, Setable* ptrv =NMRSIM_NULL, VariableBase* valuepv =NMRSIM_NULL);
+  Variable(subsid_t subsidv =S_NONE, Setable* ptrv =nullptr, VariableBase* valuepv =nullptr);
 
   const char* name() const; //!< create and return pointer to name
 
@@ -837,12 +837,12 @@ struct par_t {
   bool done; //!< \c true if directive has been used
 
   //! unqualified directive
-  par_t(Parse_function func_ =NMRSIM_NULL, bool allowmultiple_ =false)
-    : parsefunc(func_), parsefunc_qual(NMRSIM_NULL), allowmultiple(allowmultiple_), done(false) {}
+  par_t(Parse_function func_ =nullptr, bool allowmultiple_ =false)
+    : parsefunc(func_), parsefunc_qual(nullptr), allowmultiple(allowmultiple_), done(false) {}
 
   //! qualified directive
   par_t(Parse_function_qual func_, int ident_, bool allowmultiple_ =false)
-    : parsefunc(NMRSIM_NULL), parsefunc_qual(func_), allowmultiple(allowmultiple_), ident(ident_), done(false) {}
+    : parsefunc(nullptr), parsefunc_qual(func_), allowmultiple(allowmultiple_), ident(ident_), done(false) {}
 
   void operator()(); //!< parse directive
 };
@@ -977,7 +977,7 @@ extern bool ammaster; //!< \c true if master control "thread"
 class BaseEcho
 {
 public:
-  BaseEcho(const char* str_ =NMRSIM_NULL) : str(str_ ? str_ : "") {}
+  BaseEcho(const char* str_ =nullptr) : str(str_ ? str_ : "") {}
   void exec() const;
   void print(std::ostream& ostr) const
   { ostr << "echo " << str.c_str() << '\n'; }
@@ -995,7 +995,7 @@ struct array_iter {
     row_index=-1;
   } //!< clears global row indices to trap misuse
 
-  bool next(const DataStore* =NMRSIM_NULL); //next 'row', returns \c true if variables need updating, optional pass data set for setting current row
+  bool next(const DataStore* =nullptr); //next 'row', returns \c true if variables need updating, optional pass data set for setting current row
 
   size_t size() const; //!< number of steps in iterator
 
@@ -1180,7 +1180,7 @@ bool checkflags(bool& fl, const char* com, const char* name);
 void setwarnings(BaseWarning::warning_t); //!< global override of warnings
 extern ThreadWarning<> syncfailed_warning;
 extern ThreadWarning<> library_version; //mismatch between libcmatrix versions
-extern Matrix<accumulating_timer<> >* timers_arrayp; //!< array of timers for profiling individual row/summation indices (NMRSIM_NULL if not being used)
+extern Matrix<accumulating_timer<> >* timers_arrayp; //!< array of timers for profiling individual row/summation indices (nullptr if not being used)
 void dump_arrayprofile(const Matrix<accumulating_timer<> >&, double =1.0, const char* ="s"); //!< dump profile
 void dump_timings(bool abbrev =false); //!< dump timings profile (abbreviated if \a abbrev set)
 void check_powderarray(); //!< set up powder array (if any)
@@ -1188,7 +1188,7 @@ void checklogfile(const char* fname, bool otheractive, bool append); //!< crude 
 
 typedef FASTMAPTYPE(const char*) spell_dictionary_type;
 extern spell_dictionary_type& get_spell_dictionary(); //!< return dictionary for possible spelling errors
-bool check_unrecognised(const char* unknown, const char* name =NMRSIM_NULL); //!< check unrecognised quantity \a unknown of type \a name (default -> "directive") for mis-spelling
+bool check_unrecognised(const char* unknown, const char* name =nullptr); //!< check unrecognised quantity \a unknown of type \a name (default -> "directive") for mis-spelling
 const char* register_and_getenv(const char*); //!< register name of environment variable (to spot later changes) and get value
 bool isregistered(const char*); //!< return true if environment variable name already used
 bool parse_optimise_block(); //!< return true if read

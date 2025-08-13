@@ -37,9 +37,9 @@ bool default_calculation(MasterObj& masterobj, DataStore& Spec)
   return true;
 }
 
-precalculation_callback_t precalculation_callback=NMRSIM_NULL;
-calculation_callback_t calculation_callback=NMRSIM_NULL;
-prefinalise_callback_t prefinalise_callback=NMRSIM_NULL;
+precalculation_callback_t precalculation_callback=nullptr;
+calculation_callback_t calculation_callback=nullptr;
+prefinalise_callback_t prefinalise_callback=nullptr;
 
 bool need_spinsys=true;
 option optperiodic("periodic");
@@ -50,7 +50,7 @@ option optmergeproc("mergeprocessing","merge processing blocks",option::AUTO,opt
 bool randomise=false;
 
 LIST<procstack_t> procstacks,postprocstacks,finalisestacks;
-InternalCommand* startup_cp=NMRSIM_NULL;
+InternalCommand* startup_cp=nullptr;
 
 // template<typename T> class Deref {
 // public:
@@ -423,7 +423,7 @@ int main(int argc_,char **argv_)
   setdefaultoptions();
 
   bool noshortcuts=false;  
-  const char* qualstr=NMRSIM_NULL;
+  const char* qualstr=nullptr;
 
   while (count<argc_) {
     const char* com=argv_[count];
@@ -582,9 +582,9 @@ int main(int argc_,char **argv_)
       error_abort("Boundary conditions of periodic system incorrect");
 
     matrixmap["start"]=matrixspec(*(new operator_def(sigma0_specp,sigma0)));
-    matrixmap["density"]=matrixspec(*(new operator_def(NMRSIM_NULL,density)));
+    matrixmap["density"]=matrixspec(*(new operator_def(nullptr,density)));
     matrixmap["detect"]=matrixspec(*(new operator_def(detect_specp,detect)));
-    matrixmap["hamiltonian"]=matrixspec(NMRSIM_NULL,matrixspec::SPECIAL);
+    matrixmap["hamiltonian"]=matrixspec(nullptr,matrixspec::SPECIAL);
   }
   
   make_par_variables();
@@ -822,7 +822,7 @@ int main(int argc_,char **argv_)
   
   startup_cp->leave(); //<! finished initialisation
 
-  if (masterobjp==NMRSIM_NULL)
+  if (masterobjp==nullptr)
     throw InternalError("masterobjp is NULL");
 
   if (precalculation_callback)

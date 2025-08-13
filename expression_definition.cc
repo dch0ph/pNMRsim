@@ -31,7 +31,7 @@ struct ExpressionUserFunction::stack {
 
 ExpressionUserFunction::ExpressionUserFunction(const function_spec& fspec, argdef_t islistv, const Expression*& exprpv)
   : ExpressionFunctionBase(fspec.first,fspec.second), 
-    exprp_(exprpv),   //!< NMRSIM_NULL expression is valid for parsing
+    exprp_(exprpv),   //!< nullptr expression is valid for parsing
     islist_(islistv)
 {}
 
@@ -474,7 +474,7 @@ bool ExpressionGeneralFunction::islist(unsigned short M) const
 }
 
 struct accargs {
-  accargs(const char* namev =NMRSIM_NULL)
+  accargs(const char* namev =nullptr)
     : maxrep(1U),name_(namev) {}
 
   void add(size_t);
@@ -593,7 +593,7 @@ ExpressionGeneralFunction::Evaluator::Evaluator(const ExpressionGeneralFunction&
     done(objv.nargs(),false),
     acc(objv.name_)
 {
-  ExpressionGeneralFunction::argstack_.push_back( (Evaluator*)NMRSIM_NULL); //new stack frame, but flag not complete
+  ExpressionGeneralFunction::argstack_.push_back( (Evaluator*)nullptr); //new stack frame, but flag not complete
   checkstack(argstack_.size());
   for (size_t i=0;i<nargs();i++) {
     if (!(obj_.islist(i))) {
@@ -738,7 +738,7 @@ void ExpressionInclude::get(LIST<double>& res, const Expression&) const
 {
   if (!isdynamic_) {
     FILE* fp=pathopen(filename_.c_str(),"r");
-    int fail=(fp==NMRSIM_NULL);
+    int fail=(fp==nullptr);
     if (fail)
       parser_printcontext(std::cerr) << "failed to read: " << filename_ << '\n';
     else {
@@ -759,7 +759,7 @@ void ExpressionInclude::get(LIST<double>& res, const Expression&) const
   if ((verbose && VER_GEN) && (verbose_level>1))
     std::cout << "Executing dynamic include: " << buffer << '\n';
   FILE* pfp=popen(buffer,"r");
-  if (pfp==NMRSIM_NULL) {
+  if (pfp==nullptr) {
     parser_printcontext(std::cerr) << "`` expression failed: " << buffer << '\n';
     error_abort();
   }

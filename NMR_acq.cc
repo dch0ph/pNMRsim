@@ -46,8 +46,8 @@ size_t get_thread_num() {
 #include "powder.h"
 #include <sstream>
 
-FILE* transitions_fp=NMRSIM_NULL;
-const char* lastlogfilename=NMRSIM_NULL;
+FILE* transitions_fp=nullptr;
+const char* lastlogfilename=nullptr;
 
 size_t global_workers=0; // number of *workers* (0 if unset)
 Matrix<accumulating_timer<> >* timers_arrayp;
@@ -126,14 +126,14 @@ void init_row(DataStore& a)
 
 enum powder_t { POW_NONE, POW_ZCW, POW_BETA, POW_FILE, POW_ZCW3, POW_ALPHABETA, POW_SPHERICALZCW };
 powder_t powder_type=POW_NONE;
-char* crystal_filep=NMRSIM_NULL;
+char* crystal_filep=nullptr;
 void parse_powderquality();
 
 void parse_histogram(int);
 void parse_crystal_file();
 
 const BlockedOperator empty_op;
-const BlockedOperator* use_detectp=NMRSIM_NULL;
+const BlockedOperator* use_detectp=nullptr;
 bool detectED=false;
 
 option optgamma("gammacompute");
@@ -650,7 +650,7 @@ void parse_histogram_log_file()
   //}
 }
 
-bool transitions_log_active() { return (transitions_fp!=NMRSIM_NULL); }
+bool transitions_log_active() { return (transitions_fp!=nullptr); }
 
 ContextWarning<> excessivecutoff_warning("histogram lineshape cutoff is more than " NMRSIM_STRINGISE(CUTOFF_TRIGGER) "%",&NMRsim_once_warning);
 
@@ -949,7 +949,7 @@ template<class PropGen> void MasterObj::add_freq(BaseHistogram<complex>& hist, c
 
 template<class StaticObj,class SpinObj> void MasterObj::add_freq(BaseHistogram<complex>& hist, complex scale, const StaticObj& Hstaticp, const SpinObj& Hspinp, const ActionDirectAcq& acq)
 {
-  //  assert(acqp!=NMRSIM_NULL);
+  //  assert(acqp!=nullptr);
   const CompSequenceBase* acqseqp = acq.sequence();
 
   if (Hempty() && !acqseqp) {
@@ -1347,7 +1347,7 @@ template<class StaticObj,class SpinObj> void MasterObj::add_td(BaseList<complex>
     // 	  obj.set_Us(dUs);	  
     // 	  obj.add_FID(FID,scale,density(),detect());
     // 	}
-    if (acqseqp!=NMRSIM_NULL)
+    if (acqseqp!=nullptr)
       throw InternalError("add_td");
     MetaPropagator propgen(*Hspindp,0.0,prop_verbose,prop_flags);
     set_partitioning(propgen);
@@ -1714,7 +1714,7 @@ void MasterObj::add_FID_orientation(DataStore& Specall, size_t lorient)
   
   array_iter variter;
   while (variter.next()) {
-    accumulating_timer<>* timerp= timers_arrayp ? &( (*timers_arrayp)(sum_index,row_index)) : NMRSIM_NULL;
+    accumulating_timer<>* timerp= timers_arrayp ? &( (*timers_arrayp)(sum_index,row_index)) : nullptr;
     if (timerp)
       timerp->enter();
 
@@ -2281,7 +2281,7 @@ void read_simpsoncry(rmatrix& angles, const char *fname)
 {
   char errmess[128];
   FILE *fp=pathopen(fname,"r");
-  if (fp==NMRSIM_NULL) {
+  if (fp==nullptr) {
     snprintf(errmess,sizeof(errmess),"read_simpsoncry: failed to open %s",fname);
     throw Failed(errmess);
   }

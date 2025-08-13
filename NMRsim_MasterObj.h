@@ -250,7 +250,7 @@ void initialise_simulation_environment(); //!< initialise objects / values prior
 typedef std::pair<state_t, const filter_def*>  statistics_t;
 std::pair<int,statistics_t> get_putmatrix_flags();
 
-void dump_matrix(const matrixspec&, const char*, MasterObj* =NMRSIM_NULL, int flags =0, statistics_t = statistics_t(0, (const filter_def*)NMRSIM_NULL ) );
+void dump_matrix(const matrixspec&, const char*, MasterObj* =nullptr, int flags =0, statistics_t = statistics_t(0, (const filter_def*)nullptr ) );
 
 extern ThreadWarning<> freq_warning; //!< warn about frequency domain propagation
 extern ThreadWarning<> changedsw_warning; //!< spectral width for row has changed

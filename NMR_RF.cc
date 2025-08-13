@@ -255,7 +255,7 @@ template<class HType> void CompSequenceBase::updatepm_(const HType& H)
     propgenp->Hsys_offset(timeoff);
   }
   else {
-    const matrix_partition_set* partp=partitioning().empty() ? NMRSIM_NULL : &(partitioning());
+    const matrix_partition_set* partp=partitioning().empty() ? nullptr : &(partitioning());
     propgenp.clear(); // clear old to clear cache
     size_t jumpsteps=0;
     double tcommon=0.0;
@@ -460,29 +460,29 @@ const BlockedMatrix<complex>* Usequentialcache::rawfind(size_t n) const
     return &(Ulist(1U));
   if (n==incr)
     return &(Ulist(2U));
-  return NMRSIM_NULL;
+  return nullptr;
 }
 
 const BlockedMatrix<complex>* Udurcache::operator()(const MasterObj& obj, double t, double dur) const
 {
   if (empty())
-    return NMRSIM_NULL;
+    return nullptr;
   const bool beverb=(verbose & VER_GEN) && (verbose_level>1);
   if (fabs(dur-duration)>tolerance) {
     if (beverb)
       std::cout << "Uduration cache: rejecting cache match because durations differ\n";
-    return NMRSIM_NULL;
+    return nullptr;
   }
   const double rphase(get_rotor_phase(t));
   if (fabs(rphase-phase)>phasetolerance) {
     if (beverb)
       std::cout << "Uduration cache: rejecting cache match because rotor phase doesn't match\n";
-    return NMRSIM_NULL;
+    return nullptr;
   }
   if (obj.hamiltonian_state()!=state) {
     if (beverb)
       std::cout << "Uduration cache: rejecting cache match because Hamiltonian states differ\n";
-    return NMRSIM_NULL;
+    return nullptr;
   }
   return &U;
 }
@@ -498,7 +498,7 @@ void Udurcache::store(const BlockedMatrix<complex>& Ulast, const MasterObj& obj,
 // const BlockedMatrix<complex>* Usequentialcache::find(const MasterObj& obj, double t, size_t n, double dur) const
 // {
 //   if (!isvalid(obj,t,dur))
-//     return NMRSIM_NULL;
+//     return nullptr;
 //   return rawfind(n);
 // }
 
@@ -631,7 +631,7 @@ BlockedMatrix<complex>& CompSequenceBase::evaluate(MasterObj* objp, double t, do
     throw InternalError("CompSequenceBase::evaluate called before sequence rebuilt");
 
   //if static, use global store, otherwise use object store
-  BlockedMatrix<complex>* Up=NMRSIM_NULL;
+  BlockedMatrix<complex>* Up=nullptr;
   bool transproblem=transients_active();
   if (!optcache || transproblem || disablecache || offset)
     Up=&Utmp;
@@ -710,15 +710,15 @@ const BlockedMatrix<complex>& PhasedSequence::evaluate(MasterObj* objp, double t
 LIST<CycledSequence*> cycledseqlist; //!< list of all cycled sequences
 seqmap_type seqmap;
 
-CompSequenceBase* acqseqp=NMRSIM_NULL;
+CompSequenceBase* acqseqp=nullptr;
 
 cycledseqmap_type cycledseqmap;
-static CompSequenceBase* CurSeqp=NMRSIM_NULL; //!< sequence under construction
+static CompSequenceBase* CurSeqp=nullptr; //!< sequence under construction
 
 //! reset current sequence to empty state
 void reset_sequence() 
 {
-  CurSeqp=NMRSIM_NULL;
+  CurSeqp=nullptr;
   curchannel=0; // revert to synchronous
   usedchannels=0U;
 }
@@ -1105,10 +1105,10 @@ EventID* EventID::create(CompSequenceBase* seqp,id_t type_, char sync_)
   subsid_t basesubsid=S_NONE;
   Variable cvar(S_DUR);
   Mark markobj;
-  VariableBase* durp=NMRSIM_NULL;
+  VariableBase* durp=nullptr;
 
   const double dur=parse_double(&cvar,F_ALLOWLIST)*1e-6; 
-  if (cvar.valuep==NMRSIM_NULL)
+  if (cvar.valuep==nullptr)
     checkdur(dur);
   else {
     durp=&(cvar.variable());
@@ -1168,7 +1168,7 @@ EventID* EventID::create(CompSequenceBase* seqp,id_t type_, char sync_)
 	error_abort("-transients cannot be specified for ideal pulses");
     }
     else { //0 RF
-      pulsedef.rf=NMRSIM_NULL;
+      pulsedef.rf=nullptr;
       parse_double(); //swallow phase
       if (incoffset)
 	parse_double(); //swallow offset
@@ -1273,7 +1273,7 @@ void PhasedSequence::printvariablename(std::ostream& ostr, subsid_t) const
 void parse_delay()
 {
   ensure_sequence();
-  Variable cvar(S_DUR,NMRSIM_NULL);
+  Variable cvar(S_DUR,nullptr);
   Mark markobj;
   const double dt=parse_double(&cvar)*1e-6;
   EventID* evidp=new EventID(CurSeqp,dt);
@@ -1652,7 +1652,7 @@ void CompSequenceBase::checkpm(dirty_t level)
       }
       char buf[256];
       snprintf(buf,sizeof(buf)-1,"phase modulated optimisation for sequence %s",name());
-      optphasemod.check( (phasemodp.get()!=NMRSIM_NULL), buf);
+      optphasemod.check( (phasemodp.get()!=nullptr), buf);
     }
   }
   if (level)
@@ -1883,7 +1883,7 @@ cacheset_t* sequencestate_t::getcache(double offsetv)
     return &cachezero_;
   if ((cacheoffset_>0.0) && (fabs(offsetv-cacheoffset_)<tolerance))
     return &cachenonzero_;
-  return NMRSIM_NULL;
+  return nullptr;
 }
   
 sequencestate_t::sequencestate_t()
@@ -2098,7 +2098,7 @@ bool EventID::buildevents()
     double offset=offsetlist.empty() ? 0.0 : offsetlist.front();
     PulseGeneratorBase& pgen=*(pgenstack(actchan));
 
-    RFEvent* newpulse=NMRSIM_NULL;
+    RFEvent* newpulse=nullptr;
     for (size_t i=0;i<common_length;i++) {
       if (!simple || (i==0)) {
 	const double dur=timevar ? durs_->value()(i)*1e-6 : nomdur_;
@@ -2273,7 +2273,7 @@ double EventID::totalduration() const
   if (type==ideal)
     return 0.0;
 
-  if (durs_==NMRSIM_NULL) {
+  if (durs_==nullptr) {
     const int npulses=size();
     if (npulses<0)
       return -1.0; //!< flag duration unknown

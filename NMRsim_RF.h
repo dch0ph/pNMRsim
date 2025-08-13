@@ -44,8 +44,8 @@ struct Usequentialcache {
 
   void initialise(const MasterObj&, double t, const BlockedMatrix<complex>&, double durv); //!< initialise with 1 cycle propagator referenced to time \a t
   const BlockedMatrix<complex>& operator()(const MasterObj&, double t, size_t n, double durv); //!< get propagator for \a n cycles, creating if necessary
-  //  const BlockedMatrix<complex>* find(const MasterObj&, double t, size_t n, double durv) const; //!< return pointer to cached propagator for \a n cycles, NMRSIM_NULL if not cached
-  const BlockedMatrix<complex>* rawfind(size_t n) const; //!< return pointer to cached propagator for \a n cycles, NMRSIM_NULL if not cached
+  //  const BlockedMatrix<complex>* find(const MasterObj&, double t, size_t n, double durv) const; //!< return pointer to cached propagator for \a n cycles, nullptr if not cached
+  const BlockedMatrix<complex>* rawfind(size_t n) const; //!< return pointer to cached propagator for \a n cycles, nullptr if not cached
   bool isvalid(const MasterObj&, double t, double dur) const; //!< \c true if cache is valid for this \a t and state
   LIST< BlockedMatrix<complex> > Ulist;
   size_t lastn,incr;
@@ -176,7 +176,7 @@ inline std::ostream& operator<< (std::ostream& ostr, const CycledSequence& a) {
 //! to a complex variable.  Although wasteful for simple variables, the only
 //! significant efficiency losses occur once during parsing
 struct RawPulseDef {
-  RawPulseDef() : rf(NMRSIM_NULL), phase(NMRSIM_NULL), offset(NMRSIM_NULL), master_subsid(S_NONE) {}
+  RawPulseDef() : rf(nullptr), phase(nullptr), offset(nullptr), master_subsid(S_NONE) {}
   VariableBase* rf; //!< RF nutation rate
   VariableBase* phase; //!< RF phase
   VariableBase* offset; //!< RF offset
@@ -195,13 +195,13 @@ struct EventID : public Setable {
   enum id_t { ideal, soft, automatic }; //!< pulse types
 
   EventID(CompSequenceBase* seqp, double nomdurv)
-    : seqp_(seqp), type(soft), nomdur_(nomdurv), durs_(NMRSIM_NULL), chanoff(-1) { } //!< create delay period
+    : seqp_(seqp), type(soft), nomdur_(nomdurv), durs_(nullptr), chanoff(-1) { } //!< create delay period
 
   EventID(CompSequenceBase* seqp, size_t nchans, size_t chanoff_,id_t type_, double nomdurv, char sync_)
-    : seqp_(seqp), type(type_), nomdur_(nomdurv), durs_(NMRSIM_NULL), sync(sync_) { init(nchans,chanoff_); } //!< create soft pulse
+    : seqp_(seqp), type(type_), nomdur_(nomdurv), durs_(nullptr), sync(sync_) { init(nchans,chanoff_); } //!< create soft pulse
 
   EventID(CompSequenceBase* seqp, size_t nchans, size_t chanoff_) //!< create hard pulse
-    : seqp_(seqp), type(ideal), nomdur_(0.0), durs_(NMRSIM_NULL), sync('|') { init(nchans,chanoff_); } 
+    : seqp_(seqp), type(ideal), nomdur_(0.0), durs_(nullptr), sync('|') { init(nchans,chanoff_); } 
 
   size_t channels() const { return pulses.size(); } //!< number of RF channels (1 if asychronous)
   void duration(double); //!< set duration
@@ -334,7 +334,7 @@ public:
 
   PhaseModulatedPropagator& updatepm(const MasterObj&);
 
-  bool isphasemodulated() const { return (phasemodp.get()!=NMRSIM_NULL); } //!< return \c true if sequence is phase modulated
+  bool isphasemodulated() const { return (phasemodp.get()!=nullptr); } //!< return \c true if sequence is phase modulated
   //  void buildpm(double dt); //!< rebuild phase modulation (e.g. following change in synchronisation)
   void checksync(double dt); //!< check synchronisation
 
@@ -350,7 +350,7 @@ private:
   void checkpm(dirty_t); //!< check whether phase modulation can be used
   virtual double raw_rebuild() =0; //!< \internal raw rebuild
 
-  smartptr<PhaseModulation,false> phasemodp; //!< pointer to ::PhaseModulation object (NMRSIM_NULL if phase modulation not active)
+  smartptr<PhaseModulation,false> phasemodp; //!< pointer to ::PhaseModulation object (nullptr if phase modulation not active)
   smartptr<PhaseModulatedPropagator,false> propgenp; //!< pointer to ::PhaseModulatedPropagator (propagator generator needs to be cached to be worthwhile)
 
   template<class T> void updatepm_(const T&); //!< \internal

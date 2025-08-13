@@ -11,7 +11,7 @@ void ensure_sigma0detect() {}
 
 rmatrix vararray,valerrs;
 LIST<const char*> varnames;
-Matrix<accumulating_timer<> >* timers_arrayp=NMRSIM_NULL;
+Matrix<accumulating_timer<> >* timers_arrayp=nullptr;
 
 size_t global_workers=0;
 void save_parameters() {}

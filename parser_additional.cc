@@ -386,14 +386,14 @@ productoperator_spec* create_productoperator(char* curptr, int flags)
 productoperator_spec* parse_productoperator(int flags)
 {
   productoperator_spec* result=create_productoperator(get_curline(),flags);
-  set_curline(NMRSIM_NULL);
+  set_curline(nullptr);
   return result;
 }
 
 setableoperator_spec* parse_setableoperator(int flags)
 {
   setableoperator_spec* result=create_setableoperator(get_curline(),flags);
-  set_curline(NMRSIM_NULL);
+  set_curline(nullptr);
   return result;
 }
 

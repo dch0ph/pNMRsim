@@ -21,11 +21,8 @@
 // 13/08/2025 Always use CX11
 // #ifdef NMRSIM_USE_CXX11
 #define NMRSIM_USE_HASH 1
-#define NMRSIM_NULL nullptr
 //#endif
-
-
-#if NMRSIM_USE_HASH
+//#if NMRSIM_USE_HASH
 //! type used for directive maps
 #include <unordered_map>
 
@@ -54,10 +51,10 @@ struct lcm_string_compare {
 #define FASTMAPTYPE(DATA) std::unordered_map<const char*, DATA, lcm_string_hash, lcm_string_compare >
 #define MAPTYPE(DATA) std::unordered_map<std::string, DATA>
 
-#else
-#define FASTMAPTYPE MAPTYPE
-#define MAPTYPE(DATA) std::map<std::string, DATA>
-#endif
+//#else
+//#define FASTMAPTYPE MAPTYPE
+//#define MAPTYPE(DATA) std::map<std::string, DATA>
+//#endif
 
 #include "List.h"
 #include "ListList.h"
@@ -213,7 +210,7 @@ class VariableBase;
 class RealVariable {
 public:
   RealVariable(const char* namev, bool issetv, bool isconstv, int usesv =0)
-    : name_(namev), varp_(NMRSIM_NULL), issetable_(issetv), isconst_(isconstv), isused_(false), uses_(usesv) {
+    : name_(namev), varp_(nullptr), issetable_(issetv), isconst_(isconstv), isused_(false), uses_(usesv) {
     if (!namev)
       throw InvalidParameter("RealVariable");
   }
@@ -230,7 +227,7 @@ public:
       throw InternalError("RealVariable: can't be fixed and non-const");
     isconst_=isconstv;
   }
-  bool hasbase() const { return (varp_!=NMRSIM_NULL); }
+  bool hasbase() const { return (varp_!=nullptr); }
   int uses() const { return uses_; }
   bool isused() const { return isused_; } //!< returns \c true if the variable has been referred to
   void flagused() { //!< flag that variable is linked
@@ -250,7 +247,7 @@ public:
 
 private:
   std::string name_; //!< variable name
-  VariableBase* varp_; //!< pointer to associated VariableBase (NMRSIM_NULL if none)
+  VariableBase* varp_; //!< pointer to associated VariableBase (nullptr if none)
   bool issetable_; //!< \c true if parameter can be altered
   bool isconst_; //!< \c true if parameter is fixed
   bool isused_; //!< \c true if parameter has been used
@@ -395,7 +392,7 @@ struct function_spec : public std::pair<const char*,int> {
 struct function_def_t {
   const ExpressionNamedBase* objp; //!< pointer to "parent" object from which copies are cloned
   bool used; //!< \c true if function is `in use'
-  explicit function_def_t(const ExpressionNamedBase* objpv =NMRSIM_NULL)
+  explicit function_def_t(const ExpressionNamedBase* objpv =nullptr)
     : objp(objpv), used(false) {}
   const ExpressionNamedBase& operator*() const; //!< resolve pointer to source function object
 };

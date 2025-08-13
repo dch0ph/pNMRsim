@@ -104,7 +104,7 @@ class ActionDo : public ActionControl
 
 //! \c echo directive in \c pulseq block
 struct ActionEcho : public ActionCommand, public BaseEcho  {
-  ActionEcho(const char* str_ =NMRSIM_NULL) : BaseEcho(str_) {}
+  ActionEcho(const char* str_ =nullptr) : BaseEcho(str_) {}
   DECLARE_EXEC
   void print(std::ostream& ostr) const { BaseEcho::print(ostr); }
   static ActionCommand* create(); //!< parse input to create new ::ActionEcho object
@@ -114,7 +114,7 @@ struct ActionEcho : public ActionCommand, public BaseEcho  {
 class ActionPutMatrix : public ActionCommand
 {
 public:
-  ActionPutMatrix(const matrixspec& curm_, const char* name_, int flagsv =0, statistics_t statsselv =statistics_t(0, (const filter_def*)NMRSIM_NULL) )
+  ActionPutMatrix(const matrixspec& curm_, const char* name_, int flagsv =0, statistics_t statsselv =statistics_t(0, (const filter_def*)nullptr) )
     : name(name_), curm(curm_), flags_(flagsv), statssel(statsselv), done_(false) {}
   
   DECLARE_EXEC
@@ -169,7 +169,7 @@ private:
 	 //	 PROP_FULL=4 //!< -full flag
 	 PROP_RESET=8 //!< \c -reset flag
   };
-  CycledSequence* seqp; //!< pointer to sequence (NMRSIM_NULL if none)
+  CycledSequence* seqp; //!< pointer to sequence (nullptr if none)
   double propfor; //!< time to propagate for (contents valid for \c propfor only)
   int ntimes; //!< times to apply (-1 indicates \c propfor form)
   int flags_;
@@ -198,7 +198,7 @@ private:
   UserVariable& dest_; //!< destination variable
   std::string name_; //!< name of coherence matrix
   const BlockedOperator& op_; //!< associated operator matrix
-  std::string fromname_; //!< name of source (NMRSIM_NULL for current density matrix)
+  std::string fromname_; //!< name of source (nullptr for current density matrix)
   matrixspec from_; //!< reference to source matrix
   bool isdensity() const { return (*fromname_.c_str()=='\0'); } //!< \c true if source is current density matrix
 
@@ -268,7 +268,7 @@ private:
 //! \c scale directive
 class ActionScale : public ActionCommand {
 public:
-  ActionScale(double scale_, const char* name_ =NMRSIM_NULL, const filter_def* filterp_ =NMRSIM_NULL)
+  ActionScale(double scale_, const char* name_ =nullptr, const filter_def* filterp_ =nullptr)
     : scale(scale_), name(name_), filterp(filterp_) {}
 
   void set(double scale_, subsid_t =S_NONE) { scale=scale_; }
@@ -307,8 +307,8 @@ private:
 class ActionDirectAcq : public ActionCommand
 {
 public:
-  ActionDirectAcq(double, CompSequenceBase* seqp_ =NMRSIM_NULL, double =0.0); 
-  //  ActionDirectAcq(size_t, double, CompSequenceBase* seqp_ =NMRSIM_NULL, double =0.0); 
+  ActionDirectAcq(double, CompSequenceBase* seqp_ =nullptr, double =0.0); 
+  //  ActionDirectAcq(size_t, double, CompSequenceBase* seqp_ =nullptr, double =0.0); 
   void print(std::ostream&) const;
   void printvariablename(std::ostream&, subsid_t) const;
   usage_t usage() const; //!< return memory usage
@@ -321,7 +321,7 @@ public:
   void checksync(); //!< check synchronisation of acquisition (called by ::MasterObj::restart)
   void set(double,subsid_t);
   bool ispoint_by_point() const { return point_by_point; } //!< getter for ::point_by_point
-  static ActionDirectAcq* create(double, CompSequenceBase* =NMRSIM_NULL, double =0.0); //!< parse to create new ::ActionDirectAcq object
+  static ActionDirectAcq* create(double, CompSequenceBase* =nullptr, double =0.0); //!< parse to create new ::ActionDirectAcq object
 
   static ThreadWarning<> zerodurationacq_warning; //!< sw specified with zero duration acquisition sequence
   static ThreadWarning<> frequencydomainRF_warning; //!< RF + frequency domain unstable?
@@ -344,7 +344,7 @@ public:
 
 private:
   double dphs; //!< phase shift
-  CompSequenceBase* seqp; //!< pointer to acquisition sequence (NMRSIM_NULLif none)
+  CompSequenceBase* seqp; //!< pointer to acquisition sequence (nullptrif none)
   bool point_by_point; //!< accumulating time-domain point by point?
   double synctime; //!< time for synchronisation between detection and MAS/RF (0 if unset)
   bool checkedsync; //!< \c true if synchronisation has been checked (only required once)
@@ -354,7 +354,7 @@ private:
   //static void finishacq(); //!< called when FID complete
 };
 
-//extern ActionDirectAcq* acqp; //!< pointer to (unique) direct dimension acquisition object (NMRSIM_NULLif none)
+//extern ActionDirectAcq* acqp; //!< pointer to (unique) direct dimension acquisition object (nullptrif none)
 
 class ActionAcqN;
 
@@ -397,7 +397,7 @@ public:
 
   friend class ActionAcqN;
 private:
-  CompSequenceBase* seqp; //!< pointer to acquisition sequence (NMRSIM_NULLif none)
+  CompSequenceBase* seqp; //!< pointer to acquisition sequence (nullptrif none)
   //  double dt; //!< dwell time
   size_t nrep; //!< periodic synchronisation factor
   size_t ndim; //!< indirect dimension number (from 0)

@@ -215,7 +215,7 @@ PhasedSequence* handle_phasedsequence(int flags, subsid_t subsid)
 // PhasedSequence* parse_phasedsequence(int flags)
 // {
 //   char* cptr=parse_string(flags);
-//   return cptr ? parse_phasedsequence(cptr,flags) : NMRSIM_NULL
+//   return cptr ? parse_phasedsequence(cptr,flags) : nullptr
 // }
 
 CycledSequence* parse_cycledsequence(int flags)
@@ -251,7 +251,7 @@ CycledSequence* parse_cycledsequence(char* ptr, int flags)
 			  space_p));
   if (!info.full) {
     if (flags & F_ALLOWMISSING)
-      return NMRSIM_NULL;
+      return nullptr;
     parser_printcontext() << "parsing of cycled sequence failed at: \"" << info.stop << "\"\n";
     error_abort();  
   }

@@ -255,7 +255,7 @@ public:
     : ExpressionNamedBase(name), nargs_(nargsv) {}
   
   bool ismultivariate() const { return (nargs_<0); } //!< \c true if multivariate
-  //  bool isfunction() const { return (name_!=NMRSIM_NULL); } //!< returns \c true if function (rather than list)
+  //  bool isfunction() const { return (name_!=nullptr); } //!< returns \c true if function (rather than list)
   void print(std::ostream& ostr, const Expression&) const { rawprint(ostr); }
   virtual void rawprint(std::ostream&) const;
   size_t nargs() const { return (nargs_<0) ? args_.size() : nargs_; } //!< return number of arguments
@@ -279,7 +279,7 @@ class ExpressionVariableFunction : public ExpressionStringFunction
 {
 public:
   explicit ExpressionVariableFunction(const char* name, int nargsv =0)
-    : ExpressionStringFunction(name,nargsv), varp(NMRSIM_NULL) {}
+    : ExpressionStringFunction(name,nargsv), varp(nullptr) {}
 
   void create(BaseList<std::string>&);
   void rawprint(std::ostream&) const;
@@ -306,7 +306,7 @@ public:
     : ExpressionNamedBase(name), nargs_(nargsv) {}
   
   bool ismultivariate() const { return (nargs_<0); }
-  bool isfunction() const { return (name_!=NMRSIM_NULL); } //!< returns \c true if function (rather than list)
+  bool isfunction() const { return (name_!=nullptr); } //!< returns \c true if function (rather than list)
   void print(std::ostream&, const Expression&) const;
   size_t nargs() const { return (nargs_<0) ? children.size() : nargs_; }
 
@@ -326,7 +326,7 @@ class ExpressionSimpleFunction : public ExpressionFunctionBase
 {
 public:
   explicit ExpressionSimpleFunction()
-    : ExpressionFunctionBase(NMRSIM_NULL) {}
+    : ExpressionFunctionBase(nullptr) {}
 
   ExpressionSimpleFunction(const char* name, const BaseList<size_t>& offs)
     : ExpressionFunctionBase(name,offs),

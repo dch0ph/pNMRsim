@@ -144,8 +144,8 @@ void operator_stats::log(logfile_controller& logcon, const char* title) const
 {
   smartptr<logfile_controller::composite_guard,false> guardp;
 
-  const char* usetitle=logcon.supports_composite() ? NMRSIM_NULL : title;
-  if (usetitle==NMRSIM_NULL)
+  const char* usetitle=logcon.supports_composite() ? nullptr : title;
+  if (usetitle==nullptr)
     guardp.reset(new logfile_controller::composite_guard(logcon,title));
   
   logstats(logcon,coherence_stats,"coherence",usetitle);
@@ -173,7 +173,7 @@ operator_stats::operator_stats(const BlockedOperator& op, const statistics_t& st
   const int lverbose=(verbose & VER_GEN) ? verbose_level : 0;
   state_t sel=statssel.first;
 
-  const Matrix<bool>* filterp = statssel.second ? &((statssel.second)->ensurefull()) : NMRSIM_NULL;
+  const Matrix<bool>* filterp = statssel.second ? &((statssel.second)->ensurefull()) : nullptr;
 
   nstates=a.rows();
   nspins_all=log2(nstates); //!< deduce number of spins from matrix size (emergency catch of non-spin-1/2-system)
@@ -266,7 +266,7 @@ double spin_rate_jitter_cortime=0.0;
 int gamma_angles=0;
 double def_rotor_angle=MAGIC_ANGLE; 
 double rotor_orient=0.0;
-CrystalStructure* cstructp=NMRSIM_NULL;
+CrystalStructure* cstructp=nullptr;
 double maxdtv=1.0e-6;
 double maxjumpdt=0.0;
 //bool forcegcompute=false;
@@ -277,7 +277,7 @@ int eigenvalue=NMRSIM_INVALID;
 int eigenvalues=NMRSIM_INVALID;
 int sideband=NMRSIM_INVALID;
 double current_gamma=NMRSIM_INVALID;
-spin_system* sysp=NMRSIM_NULL;
+spin_system* sysp=nullptr;
 Euler global_powder(0.0,0.0,0.0);
 double gamma_zero=0.0;
 
@@ -401,7 +401,7 @@ template<class M> void spyprint(std::ostream& ostr,const M& a) {
   ostr << a;
 }
 
-MasterObj* masterobjp=NMRSIM_NULL;
+MasterObj* masterobjp=nullptr;
 bool istimedomain;
 
 double get_rotor_phase(double t)
@@ -695,7 +695,7 @@ matrixspec& matrixspec::operator= (const matrixspec& from)
 //     return *this;
   case NONE:
     type=NONE;
-    ptr=NMRSIM_NULL;
+    ptr=nullptr;
     return *this;
   case EXCHANGE:
     set_exchange(from.asexchange());
@@ -1201,9 +1201,9 @@ ThreadWarning<> commonPAS_warning("Optimisation for special case of common PAS i
 MasterObj::MasterObj(const basespin_system& sys,const HamiltonianStore<space_T>& Hstorev,const BaseList<nuclei_spec>& blockingnuc,int flags, bool use_crystal)
     : 
   Hstructp(new HamiltonianStructure(sys,Hstorev,blockingnuc,weakints,flags)), 
-  simple_opgenp(use_crystal ? NMRSIM_NULL : new SpinOpGenerator(*Hstructp,*cstructp,(verbose & VER_GEN) ? verbose_level : 0))
+  simple_opgenp(use_crystal ? nullptr : new SpinOpGenerator(*Hstructp,*cstructp,(verbose & VER_GEN) ? verbose_level : 0))
 #ifndef NOPERIODIC
-  ,crystal_opgenp(use_crystal ? new CrystalOpGenerator(*Hstructp,*cstructp,(verbose & VER_GEN) ? verbose_level : 0) : NMRSIM_NULL)
+  ,crystal_opgenp(use_crystal ? new CrystalOpGenerator(*Hstructp,*cstructp,(verbose & VER_GEN) ? verbose_level : 0) : nullptr)
 #endif
   ,hamtype(H_NULL), hamobjtype(M_NULL)
 {
@@ -1363,7 +1363,7 @@ void MasterObj::recreate_Hs()
   if ((verbose & VER_GEN) && (verbose_level>1))
     std::cout << "Recreating Hamiltonian\n";
 
-  //const CompSequenceBase* acqseqp = acqp ? acqp->sequence() : NMRSIM_NULL
+  //const CompSequenceBase* acqseqp = acqp ? acqp->sequence() : nullptr
   hamtype=H_COMPLEX;
   hamobjtype=M_NULL;
 
@@ -1645,7 +1645,7 @@ void parse_generalmatrix(const char* name, bool isgeneral =true)
   Variable cvar(S_ARG1);
   VariableBase* elsp=parse_double_variable(cvar,F_ALLOWLIST);
   bool isconst=elsp->isconst();
-  //  ExchangeMatrix* matrixp=NMRSIM_NULL;
+  //  ExchangeMatrix* matrixp=nullptr;
 //   if (are_left()) {
 //     if (!isgeneral)
 //       error_abort("cannot specify imaginary component to exchange matrix (use matrix set general to create a general complex (square) matrix)");
@@ -1718,11 +1718,11 @@ void parse_matrix()
 //   if (specp->isconstant()) {    
 //     *opexprp=masterobjp->make(specp->current());
 //     delete specp; //!< can now delete definition
-//     specp=NMRSIM_NULL;
+//     specp=nullptr;
 //   }
   operator_def* defp=new operator_def(specp,*opexprp);
   matrixmap[matname]=matrixspec(*defp);
-  set_curline(NMRSIM_NULL);
+  set_curline(nullptr);
 }
    
 //! ensure all operator matrices are up-to-date
@@ -1757,8 +1757,8 @@ ThreadWarning<> zerofilterhermitian_warning("All zero filter matrix created. Fil
 
 bool filter_def::ensure(bool needed)
 {
-  const char* sourcename=NMRSIM_NULL;
-  const BlockedOperator* sourcep=NMRSIM_NULL;
+  const char* sourcename=nullptr;
+  const BlockedOperator* sourcep=nullptr;
   if (!!density) {
     sourcename="density";
     sourcep=&density;
@@ -1775,11 +1775,11 @@ bool filter_def::ensure(bool needed)
     }
   }
   const block_pattern& sourcepattern=sourcep->blockstructure();
-  if ((filterp!=NMRSIM_NULL) && (filterp->blockstructure()==sourcepattern))
+  if ((filterp!=nullptr) && (filterp->blockstructure()==sourcepattern))
     return true;
 
   if (verbose & VER_GEN)
-    std::cout << ((filterp==NMRSIM_NULL) ? "" : "Re-") << "Building spin-order/coherence filter " << spec << " using " << sourcename << " structure\n";
+    std::cout << ((filterp==nullptr) ? "" : "Re-") << "Building spin-order/coherence filter " << spec << " using " << sourcename << " structure\n";
       
   //  blkspec=sourcepattern;
   
@@ -1833,7 +1833,7 @@ void matrixspec::update()
   switch (type) {
   case OPERATOR: {
     const operator_def& def(asoperator());
-    if ( (&(def.op)==&sigma0) || (&(def.op)==&detect) || (def.specp==NMRSIM_NULL))
+    if ( (&(def.op)==&sigma0) || (&(def.op)==&detect) || (def.specp==nullptr))
       return; //!< ignore built-ins
     if ( !(def.specp->isconstant()) || !(def.op)) {
       const productoperator_spec spec(def.specp->current());
@@ -1902,8 +1902,8 @@ size_t nchannels=0; //!< number of RF channels (0 before channels)
 //double dphs=0.0; //!< receiver phase shift
 double master_time=0.0; //!< current sequence time
 
-setableoperator_spec* sigma0_specp=NMRSIM_NULL; //!< initial density matrix specification (\c NMRSIM_NULLif unset)
-setableoperator_spec* detect_specp=NMRSIM_NULL; //!< detect operator specification (\c NMRSIM_NULLif unset)
+setableoperator_spec* sigma0_specp=nullptr; //!< initial density matrix specification (\c nullptrif unset)
+setableoperator_spec* detect_specp=nullptr; //!< detect operator specification (\c nullptrif unset)
 
 //SystemVariable<double*> v_dphs("dphs",&dphs,rad_to_deg);
 //SystemVariable<double*> v_synctime("acq_synctime",&acqseq_synctime,1e6);
@@ -2095,7 +2095,7 @@ std::pair<int,statistics_t> get_putmatrix_flags()
 {
   const int flags=parse_flags(putmatrix_flags());
   const int sflags=flags & PM_STRUCTUREFLAGS;
-  statistics_t statssel(0, (const filter_def*)NMRSIM_NULL );
+  statistics_t statssel(0, (const filter_def*)nullptr );
   if (sflags) {
     if ( (flags & PM_FULL) && sflags)
       error_abort("-full and -structure/-eigenbasis flags cannot be sensibly combined");
@@ -2133,7 +2133,7 @@ void parse_par_putmatrix()
     if (curm.type!=matrixspec::OPERATOR)
       error_abort("statistics output only defined for operator matrices");
   }
-  dump_matrix(curm,name, NMRSIM_NULL, flags, flaginfo.second);
+  dump_matrix(curm,name, nullptr, flags, flaginfo.second);
 }
 
 void make_1d_par_variables()
@@ -2243,7 +2243,7 @@ BlockedFilter* MasterObj::create_spinorder(const spinorder_spec& spec, const blo
     std::cerr << "Couldn't create filter matrix - " << exc;
   }
   error_abort("Re-try with -disable:mzblocking flag?");
-  return NMRSIM_NULL; //!< suppresses warning
+  return nullptr; //!< suppresses warning
 }
 
 // void parse_coherencematrix(const char* matname)
@@ -2311,7 +2311,7 @@ template<bool iscoher> filter_def* parse_ordermatrix_(bool onlytotal)
     parser_printcontext() << "Couldn't create spin- / coherence- order specification: " << exc.what() << '\n';
     error_abort();
   }
-  return NMRSIM_NULL; //!< shouldn't get this far
+  return nullptr; //!< shouldn't get this far
 }
 
 void parse_ordermatrix(const char* matname, bool iscoher, bool onlytotal)
@@ -2378,7 +2378,7 @@ void MasterObj::propagator(BlockedMatrix<complex>& U, double t1, double t2)
 //     U*=Utrans;//U = U * Utrans (i.e. Utrans applied first)
 }
 
-bool have_spinsys() { return (sysp!=NMRSIM_NULL); }
+bool have_spinsys() { return (sysp!=nullptr); }
 
 ExchangeMatrix::ExchangeMatrix(const char* namev, const BaseList<double>& rawvalsv, bool isconstv, bool isgeneralv) :
   name_(namev),

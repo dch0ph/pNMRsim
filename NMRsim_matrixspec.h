@@ -53,9 +53,9 @@ struct operator_def {
 
 //! object linking filter specification with resulting matrix
 struct filter_def {
-/*   filter_def(const filter_spec& specv, const BlockedFilter* filterpv =NMRSIM_NULL) */
+/*   filter_def(const filter_spec& specv, const BlockedFilter* filterpv =nullptr) */
 /*     : spec(specv), filterp(filterpv) {} */
-  filter_def(const spinorder_spec& specv, const BlockedFilter* filterpv =NMRSIM_NULL)
+  filter_def(const spinorder_spec& specv, const BlockedFilter* filterpv =nullptr)
     : spec(specv), filterp(filterpv) {}
 
   const spinorder_spec spec;
@@ -63,7 +63,7 @@ struct filter_def {
   mutable Matrix<bool> filterfull; //!< cache for expanded
   mutable block_pattern blkspec; //!< block pattern of *expanded* filter
 
-  bool operator!() const { return (filterp==NMRSIM_NULL); }
+  bool operator!() const { return (filterp==nullptr); }
   bool isspinorder() const { return spec.isspinorder(); }
   // { return spec.istype(Type2Type<spinorder_spec>()); }
   bool ensure(bool needed =true); //!< return true if able to construct, and check if current
@@ -85,7 +85,7 @@ struct matrixspec {
   const void* ptr; //!< pointer to object
   matrix_t type; //!< matrix type
 
-  matrixspec() : ptr(NMRSIM_NULL), type(NONE) {} //!< default constructor creates unset object
+  matrixspec() : ptr(nullptr), type(NONE) {} //!< default constructor creates unset object
 
   //! only useful for SPECIAL type
   matrixspec(const void* ptr_, matrix_t type_)

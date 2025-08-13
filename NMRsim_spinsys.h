@@ -8,7 +8,7 @@
 
 #include "NMRsim_common.h"
 
-extern HamiltonianStore<space_T>* interactions_MFp; //!< NMR interactions store (NMRSIM_NULL if unset)
+extern HamiltonianStore<space_T>* interactions_MFp; //!< NMR interactions store (nullptr if unset)
 
 void refresh_interactions(); //!< ensure that tensor information is up-to-date in Hamiltonian store
 void dump_interactions(std::ostream& =std::cout); //!< display spin system information

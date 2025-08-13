@@ -7,7 +7,7 @@ context_t evaluation_state=CONTEXT_MAINLOOP; //!< unless over-ridden, in main lo
 bool proton_freq_isconstant() { return true; }
 bool isallowed_nonconst_var(SystemVariableBase*) { return false; }
 size_t parse_nucleusname(const char*) { throw Failed("parsing of nucleus names is not valid here"); }
-spin_system* sysp=NMRSIM_NULL;
+spin_system* sysp=nullptr;
 
 // flagsmap_type verbose_flags;
 

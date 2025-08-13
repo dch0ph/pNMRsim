@@ -199,7 +199,7 @@ struct FunctionIndicesof : public ExpressionStringFunction {
     : ExpressionStringFunction("Indicesof",nargsv), nuc(NULL_NUCLEUS) {}
 
   ExpressionBase* clone() const { return new FunctionIndicesof(*this); }
-  bool rawisconstant() const { return (sysp!=NMRSIM_NULL); } //!< will block evaluation until spin system defined
+  bool rawisconstant() const { return (sysp!=nullptr); } //!< will block evaluation until spin system defined
 
   void operator()(LIST<double>& dest) const;
   void create(BaseList<std::string>& args) {

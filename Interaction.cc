@@ -42,7 +42,7 @@ namespace {
 void parse_truncate();
 void parse_tensorordering();
 void parse_interaction(int);
-Euler parse_orient(Variable* =NMRSIM_NULL); 
+Euler parse_orient(Variable* =nullptr); 
 option optgeneralisedQ("generalisedQ","",option::AUTO,option::NOTUSED);
 option optclassicQ("classicQ","",option::AUTO,option::NOTUSED);
 
@@ -77,7 +77,7 @@ double getgrat(size_t qualifier)
 {
   double grat=curgrat;
   if (qualifier) {
-    if (sysp==NMRSIM_NULL)
+    if (sysp==nullptr)
       error_abort("can't qualify shift with nucleus type - no spin system set");
     if ((qualifier<1) || (qualifier>sysp->nspins()))
       error_abort("nucleus index out of range");  
@@ -488,7 +488,7 @@ static void parse_spinargs(int& ni, int& nj, size_t nargs, size_t nspins_cell, s
 
 ContextWarning<> nonzeroasymmetry_warning("non-zero asymmetry with zero anisotropy",&NMRsim_repeat_warning);
 
-static asym_spec parse_asym(double aniso, double ratX, Variable* cvarp =NMRSIM_NULL)
+static asym_spec parse_asym(double aniso, double ratX, Variable* cvarp =nullptr)
 {
   if (cvarp)
     cvarp->subsid=S_ASYM;
@@ -646,7 +646,7 @@ static void parse(const interaction_info& info)
 {
   Mark markobj;
   Variable cvar;
-  Interaction* newint=NMRSIM_NULL;
+  Interaction* newint=nullptr;
   int nni,nj,order;
   double caniso=0.0;
   double ciso=0.0;
@@ -942,7 +942,7 @@ void parse_cells()
     error_abort("can't set cells after spin system has been created");
 
   LIST<size_t> lcells;
-  Permutation* permp=NMRSIM_NULL;
+  Permutation* permp=nullptr;
   while (are_left()) {
     if (parser_isarray()) {
       const LIST<size_t> tmp(parse_unsignedintarray(1)); //!< subtract 1 from indices

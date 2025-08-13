@@ -170,7 +170,7 @@ extern DataStore fit_set; //!< fit_set needs to be externally visible for Revers
 
 class ReverseGuard {
 public:
-  ReverseGuard(DataStore& FIDv, const char* labelv =NMRSIM_NULL, bool dorevv =true);
+  ReverseGuard(DataStore& FIDv, const char* labelv =nullptr, bool dorevv =true);
   ~ReverseGuard(); //!< flip back when guard drops out of scope
   bool isflipped() const { return flipped_; }
   void flip();
@@ -214,7 +214,7 @@ public:
 
   bool compositesave() const { return (saveflags_ & MATLAB); } //!< \c true if data saved in single composite file
   template<class T> void save(const T& data, const ProcessSave_state&, const char* qual) const; //!< save raw data object
-  void save(const DataStore&, const ProcessSave_state&, const char* qual =NMRSIM_NULL) const; //!< save data set
+  void save(const DataStore&, const ProcessSave_state&, const char* qual =nullptr) const; //!< save data set
   void save(const BaseList<complex>& data, const processing_state&, const ProcessSave_state&, const char* qual) const; //!< save row of data set
   bool checkoverwrite(const char*) const; //!< warn and return \c true (or raise error) if overwriting file (if STOPOVERWRITE set)
   static bool defaultstopoverwrite; //!< default stopoverwrite state
@@ -263,7 +263,7 @@ private:
   const char* makefilename(const char* base, const char* qual) const; //!< make qualified filename from \a base and qualifier \a qual (e.g. "residuals")
   // void rawexec_(const DataStore&, const char* base, const char* qual) const; //!< \internal raw save of ::DataStore
 
-  FILE* opencomments(const char* outname, const char* mode ="a") const; //!< create file pointer for comment/source writing (NMRSIM_NULL for Matlab output)
+  FILE* opencomments(const char* outname, const char* mode ="a") const; //!< create file pointer for comment/source writing (nullptr for Matlab output)
   void writeline(FILE*, const char*, char comchar ='#') const; //!< write comment/source line
   void closecomments(FILE*, const char* name) const; //!< close comment stream
   void savesource(const char* source) const; //!< write file \a source to comment stream
@@ -736,7 +736,7 @@ struct procstack_t : public std::list<ProcessCommand*> {
 
 void apply_procstacks(const BaseList<procstack_t>&, DataStore&); //!< apply processing stack to data set
 
-bool process_command(const std::string&, char*, Variable* =NMRSIM_NULL); //!< parse processing directive
+bool process_command(const std::string&, char*, Variable* =nullptr); //!< parse processing directive
 
 typedef ProcessCommand* (*ProcessCommand_function)();
 typedef FASTMAPTYPE(ProcessCommand_function) Process_Factory_t;
@@ -765,7 +765,7 @@ struct filestruct {
   double ref1;
   filestruct& operator= (const libcmatrix::simpsonFD&);
 };
-void raw_read_file(cmatrix&, filestruct&, const char*, LIST<std::string>* =NMRSIM_NULL);
+void raw_read_file(cmatrix&, filestruct&, const char*, LIST<std::string>* =nullptr);
 void raw_build_set(DataStore&, const BaseList<cmatrix>&, const BaseList<processing_state>&, int verbose =0);
 void process_set_n(int,int,int =1);
 extern option optsaveprotect; //!< overwrite protection

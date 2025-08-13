@@ -19,7 +19,7 @@ const double rational::tolerance=1e-8;  //!< tolerance within which two ratios a
 
 // struct inversionhandle {
 //   explicit inversionhandle(nuclei_spec nucv =H_NUCLEUS)
-//     : nuc_(nucv), invgenp(NMRSIM_NULL) {}
+//     : nuc_(nucv), invgenp(nullptr) {}
 //   const InversionGenerator& operator()() const;
 //   nuclei_spec nuc_;
 //   mutable const InversionGenerator* invgenp;
@@ -222,7 +222,7 @@ ActionProp::ActionProp(CycledSequence& seq_, double propforv, int flags)
 }
 
 ActionProp::ActionProp(double propforv, int flags)
-  : seqp(NMRSIM_NULL), ntimes(-1), flags_(flags)
+  : seqp(nullptr), ntimes(-1), flags_(flags)
     //invert(flags & PROP_INV)
 {
   set_propfor(propforv);
@@ -231,7 +231,7 @@ ActionProp::ActionProp(double propforv, int flags)
 ActionCommand* ActionEcho::create()
 {
   ActionCommand* newac = new ActionEcho(get_curline());
-  set_curline(NMRSIM_NULL);
+  set_curline(nullptr);
   return newac;
 }
 
@@ -246,7 +246,7 @@ ActionCommand* ActionInversion::create()
     else
       error_abort("can only omit nucleus type if system is homonuclear");
   }
-  const InversionGenerator* invgenp=NMRSIM_NULL;
+  const InversionGenerator* invgenp=nullptr;
   const inversionmap_type::const_iterator iter(inversionmap.find(nuc));
   if (iter==inversionmap.end()) {
     invgenp=create_inversiongenerator(nuc);
@@ -310,7 +310,7 @@ ActionDirectAcq* ActionDirectAcq::create(double phasev, CompSequenceBase* acqseq
 
 // bool hasacquisition_rf()
 // {
-//   return acqp ? (acqp->sequence()!=NMRSIM_NULL) : false;
+//   return acqp ? (acqp->sequence()!=nullptr) : false;
 // }
 
 ActionCommand* ActionAcqPoint::create()
@@ -382,7 +382,7 @@ ActionCommand* ActionAcq::create_(bool israw)
     //      parse_system_variable(v_dphs,F_ISPHASE);
   }
 
-  CompSequenceBase* acqseqp=NMRSIM_NULL;
+  CompSequenceBase* acqseqp=nullptr;
   if (parser_isnormal()) {
     char* seqname(parse_string_syntax(syntax,offset+1,F_REPLACEDOLLAR));
     if (strcmp(seqname,"-")!=0)
@@ -418,13 +418,13 @@ static BlockedOperator* verifyspec(const char* name, const matrixspec& op, bool 
     break;
   case matrixspec::SPECIAL:
     if (allowH)
-      return NMRSIM_NULL;
+      return nullptr;
   default:
     break;
   }
   parser_printcontext() << name << " is not a valid operator matrix\n";
   error_abort();
-  return NMRSIM_NULL; //just to avoid warning
+  return nullptr; //just to avoid warning
 }
 
 // void ActionSet::print(std::ostream& ostr, subsid_t subsid) const
@@ -585,7 +585,7 @@ void ActionGet::print(std::ostream& ostr) const
 }
 
 // ActionSet::ActionSet(double scalev, const char* namev, const BlockedOperator& opv)
-//   : scale_(scalev), name_(namev), op_(opv), top_(NMRSIM_NULL) {}
+//   : scale_(scalev), name_(namev), op_(opv), top_(nullptr) {}
 
 // ActionSet::ActionSet(double scalev, const char* namev, const BlockedOperator& opv, const char* tonamev, BlockedOperator& tov)
 //   : scale_(scalev), name_(namev), op_(opv),
@@ -619,7 +619,7 @@ ActionCommand* ActionGet::create()
     matrixspec from=findmap(matrixmap,name,"matrix");
     if (from.type!=matrixspec::OPERATOR) {
       notimpl_warning.raise();
-      return NMRSIM_NULL;
+      return nullptr;
     }
     return new ActionGet(var,name,op,fromname,from);
   }
@@ -697,7 +697,7 @@ void ActionProp::print(std::ostream& ostr) const
       seqp->printshort(ostr);
   }
   else {
-    if (seqp==NMRSIM_NULL)
+    if (seqp==nullptr)
       throw InternalError("ActionProp::print");
     seqp->printshort(ostr);
     //  ostr << seqp->name;
@@ -760,7 +760,7 @@ ActionCommand* ActionProp::create_(bool ispropfor)
 {
   if (local_acq_count>nacqdims) {
     propafteracq_warning.raise();
-    return NMRSIM_NULL;
+    return nullptr;
   }
 
   Variable cvar(S_ARG1);
@@ -773,7 +773,7 @@ ActionCommand* ActionProp::create_(bool ispropfor)
       error_abort("duration cannot be negative");
   }
 
-  CycledSequence* curseqp=NMRSIM_NULL;
+  CycledSequence* curseqp=nullptr;
   if (!ispropfor || parser_isnormal()) {
     curseqp=parse_cycledsequence();
     const size_t len=curseqp->cyclelength();
@@ -798,7 +798,7 @@ ActionCommand* ActionProp::create_(bool ispropfor)
     nocache_warning.raise();
 
   int lflags=parse_flags(get_flags());
-  if ((lflags & PROP_RESET) && (curseqp==NMRSIM_NULL)) {
+  if ((lflags & PROP_RESET) && (curseqp==nullptr)) {
     invalidreset_warning.raise();
     lflags-=PROP_RESET;
   }
@@ -1030,7 +1030,7 @@ namespace {
     const iterator after=std::lower_bound(ratios.begin(),ratios.end(),ratio);
     if (after==ratios.end())
       throw InternalError("calcsync");
-    const rational* bestp=NMRSIM_NULL;
+    const rational* bestp=nullptr;
     if (after==ratios.begin())
       bestp=&(*after);
     else {
@@ -1147,7 +1147,7 @@ bool ActionProp::iszeroduration() const
 void ActionProp::exec(MasterObj* objp, BlockedOperator& sigma, double& mastert) const
 {
   if (flags_ & PROP_RESET) {
-    if (seqp==NMRSIM_NULL)
+    if (seqp==nullptr)
       throw InternalError("ActionProp::exec");
     seqp->currentstate().reset(false);
   }
@@ -1224,10 +1224,10 @@ void ActionProp::exec(MasterObj* objp, BlockedOperator& sigma, double& mastert) 
     
     if (nsynctimes) {
       const size_t repeats=nsynctimes;
-      cacheset_t* cachesp=disablecache ? NMRSIM_NULL : cstate.getcache(lastoff);
-      //      const BlockedMatrix<complex>* Ucachep = cachesp ? (cachesp->Ucache_).find(*objp,mastert,repeats,synctime) : NMRSIM_NULL; //!< see if cached
+      cacheset_t* cachesp=disablecache ? nullptr : cstate.getcache(lastoff);
+      //      const BlockedMatrix<complex>* Ucachep = cachesp ? (cachesp->Ucache_).find(*objp,mastert,repeats,synctime) : nullptr; //!< see if cached
       const bool canuse=cachesp ? (cachesp->Ucache_).isvalid(*objp,mastert,synctime) : false;
-      const BlockedMatrix<complex>* Ucachep = canuse ? &((cachesp->Ucache_)(*objp,mastert,repeats,synctime)) : NMRSIM_NULL; //!< see if cached
+      const BlockedMatrix<complex>* Ucachep = canuse ? &((cachesp->Ucache_)(*objp,mastert,repeats,synctime)) : nullptr; //!< see if cached
       if (verbose & VER_GEN)
 	std::cout << "Can use already cached propagators (smartprop) for " << repeats << " repeat(s) (" << seqp->name() << "): " << (Ucachep ? "Yes\n" : "No\n");
       if (Ucachep) {
@@ -1305,9 +1305,9 @@ void ActionProp::exec(MasterObj* objp, BlockedOperator& sigma, double& mastert) 
       const double dur=(propfor*1e-6)-(mastert-initt);
       finished=(fabs(dur)<tolerance);
       if (!finished) {
-	cacheset_t* cachesp=disablecache ? NMRSIM_NULL : cstate.getcache(lastoff);
+	cacheset_t* cachesp=disablecache ? nullptr : cstate.getcache(lastoff);
 	PhasedSequence* pseqp=curlist.front();
-	const BlockedMatrix<complex>* Udurp=cachesp ? (cachesp->Udurcache_)(*objp,mastert,dur) : NMRSIM_NULL;
+	const BlockedMatrix<complex>* Udurp=cachesp ? (cachesp->Udurcache_)(*objp,mastert,dur) : nullptr;
 	if (verbose & VER_GEN)
 	  std::cout << "Found cache match for duration " << (dur*1e6) << " us: " << (Udurp ? "Yes\n" : "No\n");
 	const double seqdur=pseqp->duration();
@@ -1610,7 +1610,7 @@ void ActionAcq::increment(MasterObj* objp, double t, int oldindex) const
   
   const double starttime=t+oldindex*dt;
   const double endtime=starttime+dt;
-  BlockedMatrix<complex>* Up=NMRSIM_NULL;
+  BlockedMatrix<complex>* Up=nullptr;
   
   double junk;
   if (checksync(junk)!=nrep)

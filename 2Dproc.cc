@@ -49,7 +49,7 @@ class ProcessAutoPhase {
 public:
   static ProcessCommand* create() {
     error_abort("autophase unsupported (requires MINUIT)");
-    return NMRSIM_NULL;
+    return nullptr;
   }
 };
 #endif

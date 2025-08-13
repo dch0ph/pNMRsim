@@ -623,7 +623,7 @@ const char* ProcessSave::makefilename(const char* fnamep, const char* name) cons
     }
   }
   else {
-    if (fnamep==NMRSIM_NULL)
+    if (fnamep==nullptr)
       throw InternalError("makefilename");
     strncpy(scrp,fnamep,scr.size());
     //    bname=getbasename(fnamep);
@@ -774,12 +774,12 @@ FILE* ProcessSave::opencomments(const char* outname, const char* mode) const
 {
   if (saveflags_ & MATLAB) {
     strbuffer="";
-    return NMRSIM_NULL;
+    return nullptr;
   }
-  FILE* fp=NMRSIM_NULL;
+  FILE* fp=nullptr;
   if (!checkoverwrite(outname))
     fp=fopen(outname,mode);
-  if (fp==NMRSIM_NULL)
+  if (fp==nullptr)
     throw Failed("opencomments: failed to open output file");
   return fp;
 }
@@ -818,7 +818,7 @@ void ProcessSave::savesource(const char* outname) const
 {  
   const char* origin(parser_getfname());
   FILE* finp=fopen(origin,"r");
-  FILE* foutp=NMRSIM_NULL;
+  FILE* foutp=nullptr;
   if (!finp)
     throw Failed("ProcessSave::savesource: can't open original input file!");
   try {
@@ -881,7 +881,7 @@ void ProcessSave::save(const DataStore& a, const ProcessSave_state& state, const
     return;
   }
 
-  //const char* scrp=NMRSIM_NULL;
+  //const char* scrp=nullptr;
   // if (bname)
   const char* scrp=makefilename(state.fname,bname);
 //   else {
@@ -971,14 +971,14 @@ void ProcessSave::save(const DataStore& a, const ProcessSave_state& state, const
 
       if (save_isrealnD) {
 	write_simpson_rows(scrp,a.matrix(),lsw,save_isspec,lsfrq);
-	scrp=NMRSIM_NULL;
+	scrp=nullptr;
       }
       else {
 	if (a.isnD() || (a.rows()==1))
 	  write_simpson_wrapper(scrp,a.row(),lsw,save_isspec,lsfrq,lref);
 	else {
 	  write_simpson_rows(scrp,a.listlist(),a.states(),saveflags_);
-	  scrp=NMRSIM_NULL; //!< flag can't write
+	  scrp=nullptr; //!< flag can't write
 	}	  
       }
       break;
@@ -1034,14 +1034,14 @@ void ProcessSave::exec(BaseList<complex> FID, processing_state& pflags) const
   ProcessSave_state state(scr_fname);
 
   //   smartptr<matlab_controller,false> matlabrawp;
-  if (matlabp.get()!=NMRSIM_NULL)
+  if (matlabp.get()!=nullptr)
     throw InternalError("ProcessSave::exec");
    const bool ismatlab=(saveflags_ & MATLAB);
    if (ismatlab && !openmatlab(state.fname))
      return;
 
    if (!(saveflags_ & NODATA)) {
-     save(FID,pflags,state,ismatlab ? "data" : (const char*)NMRSIM_NULL); //!< use "data" qualifier for Matlab "struct" write
+     save(FID,pflags,state,ismatlab ? "data" : (const char*)nullptr); //!< use "data" qualifier for Matlab "struct" write
      if (saveflags_ & MATLAB) {
        if (pflags.istimedomain)
 	 save(ExplicitList<1,double>(pflags.sw),state,"sw");
@@ -1260,7 +1260,7 @@ void ReverseGuard::flip()
   ProcessReverse revobj;
   revobj.rawexec(FID_);
   flipped_ = !flipped_;
-  if ((label_!=NMRSIM_NULL) && (verbose & VER_GEN) && (verbose_level>1))
+  if ((label_!=nullptr) && (verbose & VER_GEN) && (verbose_level>1))
     std::cout << "Reversed data set: " << label_ << '\n';
 }
 
@@ -1275,7 +1275,7 @@ void ProcessSave::rawexec(DataStore& FID) const
     rawexec_postrev(FID);
   }
   else {
-    original_revguardp=NMRSIM_NULL;
+    original_revguardp=nullptr;
     rawexec_postrev(FID);
   }
 }
@@ -1290,7 +1290,7 @@ void ProcessSave::rawexec_postrev(DataStore& FID) const
   save_isrealnD=isnD && (save_cols>1);
 
   //  smartptr<matlab_controller,false> matlabrawp;
-  if (matlabp.get()!=NMRSIM_NULL)
+  if (matlabp.get()!=nullptr)
     throw InternalError("ProcessSave::rawexec");
   const bool ismatlab=(saveflags_ & MATLAB);
   if (ismatlab && !openmatlab(state.fname))
@@ -1305,7 +1305,7 @@ void ProcessSave::rawexec_postrev(DataStore& FID) const
       const BaseList<complex> rawdata(FID.row());
       std::cout << "Saving data with first point " << rawdata.front() << " and last point " << rawdata(rawdata.size()-1) << '\n';
     }
-    save(FID,state,ismatlab ? "data" : (const char*)NMRSIM_NULL); //!< use "data" qualifier for Matlab "struct" write
+    save(FID,state,ismatlab ? "data" : (const char*)nullptr); //!< use "data" qualifier for Matlab "struct" write
     if (saveflags_ & MATLAB) {
       const size_t nsws=FID.states().size();
       bool isalltd=true;
@@ -1444,9 +1444,9 @@ ProcessEcho::ProcessEcho(const char* str_)
 ProcessCommand* ProcessEcho::create()
 {
   const char* echoline=get_curline();
-  // const bool hasdollar=(strchr(echoline,'$')!=NMRSIM_NULL); //!< if contains $ then indicate that echo string might vary - NASTY HACK
+  // const bool hasdollar=(strchr(echoline,'$')!=nullptr); //!< if contains $ then indicate that echo string might vary - NASTY HACK
   ProcessCommand* newac = new ProcessEcho(echoline);
-  set_curline(NMRSIM_NULL);
+  set_curline(nullptr);
   return newac;
 }
 
@@ -1507,7 +1507,7 @@ ProcessCommand* ProcessSave::create()
   size_t flags=parse_flags(saveflags);
   if (((flags & ~SAVE_FORMATS)==NODATA) && vars.empty()) {
     nothingtosave_warning.raise("data");
-    return NMRSIM_NULL;
+    return nullptr;
   }
   if (defaultstopoverwrite)
     flags|=STOPOVERWRITE;
@@ -1882,14 +1882,14 @@ ProcessCommand* ProcessExtract::create()
     const LIST<size_t> row_sel(parse_unsignedintarray(1));
     if (row_sel.empty() && col_sel.empty()) {
       nullselection_warning.raise();
-      return NMRSIM_NULL;
+      return nullptr;
     }
     checkrowchangeok();
     return new ProcessExtract(col_sel,row_sel);
   }
   if (col_sel.empty()) {
     nullselection_warning.raise();
-    return NMRSIM_NULL;
+    return nullptr;
   }
   return new ProcessExtract(col_sel);
 }
@@ -3544,7 +3544,7 @@ namespace {
   }
 
   struct varname_search {
-    varname_search(const LIST<std::string>* =NMRSIM_NULL);
+    varname_search(const LIST<std::string>* =nullptr);
     LIST<const char*> basenames;
     LIST<const char*> leafnames;
     LIST<const char*> varnames;
@@ -4434,7 +4434,7 @@ ProcessCommand* ProcessSystem::create()
   if (restcom && *restcom) {
     substitute_string(comline,sizeof(comline),restcom,SUB_NUMERIC);
     ProcessCommand* newcom=new ProcessSystem(comline);
-    set_curline(NMRSIM_NULL);
+    set_curline(nullptr);
     return newcom;
   }
   else

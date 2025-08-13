@@ -29,7 +29,7 @@ typedef FitCommand* (*FitCommand_function)(); //!< pointer to function creating 
 struct FitCommand_t {
   FitCommand_function funcp; //!< pointer to create function
   const char* description; //!< pointer to description (help string)
-  FitCommand_t(FitCommand_function funcpv =NMRSIM_NULL, const char* descv =NMRSIM_NULL)
+  FitCommand_t(FitCommand_function funcpv =nullptr, const char* descv =nullptr)
     : funcp(funcpv), description(descv) {}
 };
 
