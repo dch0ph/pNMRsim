@@ -44,8 +44,6 @@ See the installation instructions for `libcmatrix` for more details.
 
 `--enable-static`  Use static linkage (default off). This is recommended when compiling for Windows. It will generate stand-alone (but rather large) .exe files.
 
-`--disable-CXX11`  Disable C++11 features (default enabled). Up-to-date compilers should be happy with the minimal use of C++11 features. Note that the flags used to enable C++11 features may need tweaking depending on compiler (uses `-std=c++11`)
-
 
 1.  Ensure `libcmatrix` is compiled and (optionally) installed.
 
@@ -57,8 +55,6 @@ Hence a minimal configure run will typically be
 Note that absolute paths should be used rather than relative ones so that the paths are transferable.
 
 3.  `make` will compile pNMRsim, pNMRproc and extras/magres2pNMRsim.
-
-These is currently an issue with configure failing to find `std::isnan` on Windows. If compile errors involving `isnan` are raised, try adding `-DISNAN_IN_STD` to `CPPFLAGS`. In general, compilation for Linux is strongly recommended.
 
 
 ### Other files

@@ -50,7 +50,7 @@ dnl This check is currently unreliable. Assuming C++11 behaviour
 dnl AC_CHECK_DECL(std::isnan,CXXFLAGS="$CXXFLAGS -DISNAN_IN_STD",,[#include <cmath>])
 
 AC_ARG_ENABLE(static,[  --enable-static  use static linkage],LDFLAGS="$LDFLAGS -static -static-libgcc -static-libstdc++",)
-AC_ARG_ENABLE(CXX11,[  --disable-CXX11  disable C++11 features],,CPPFLAGS="$CPPFLAGS -std=c++11 -DNMRSIM_USE_CXX11")
+dnl AC_ARG_ENABLE(CXX11,[  --disable-CXX11  disable C++11 features],,CPPFLAGS="$CPPFLAGS -std=c++11 -DNMRSIM_USE_CXX11")
 
 dnl AC_CHECK_HEADERS(dlfcn.h,USEMODULE="yes",USEMODULE="no")
 dnl #AC_ARG_WITH(module,[  --with-module  enable loadable modules],USEMODULE="yes",USEMODULE="no")

@@ -18,18 +18,14 @@
 
 #include "config.h"
 
-#ifdef NMRSIM_USE_CXX11
+// 13/08/2025 Always use CX11
+// #ifdef NMRSIM_USE_CXX11
 #define NMRSIM_USE_HASH 1
 #define NMRSIM_NULL nullptr
-#endif
-
-#ifndef NMRSIM_NULL
-#define NMRSIM_NULL NULL
-#endif
+//#endif
 
 
 #if NMRSIM_USE_HASH
-//#include "cmatrix_hash_map.h"
 //! type used for directive maps
 #include <unordered_map>
 
@@ -67,11 +63,11 @@ struct lcm_string_compare {
 #include "ListList.h"
 #include "Warnings.h"
 
-#ifdef NMRSIM_USE_CXX11
+//#ifdef NMRSIM_USE_CXX11
 #define NMRSIM_ISNAN std::isnan
-#else
-#define NMRSIM_ISNAN isnan
-#endif
+//#else
+//#define NMRSIM_ISNAN isnan
+//#endif
 
 std::ostream& parser_printcontext(std::ostream& =std::cerr, bool printtoken =false); //!< print current parsing position (prior to warning/error)
 
